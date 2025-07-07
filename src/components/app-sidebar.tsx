@@ -9,19 +9,20 @@ import {
   SidebarFooter,
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/logo';
-import { Home, User, Heart, Settings, LifeBuoy } from 'lucide-react';
+import { Home, Settings, LifeBuoy, LogIn, PlusCircle, User } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const menuItems = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/profile', label: 'My Profile', icon: User },
-  { href: '/saved-searches', label: 'Saved Searches', icon: Heart },
+  { href: '/create-listing', label: 'Create Listing', icon: PlusCircle },
 ];
 
 const bottomMenuItems = [
     { href: '/settings', label: 'Settings', icon: Settings },
     { href: '/support', label: 'Support', icon: LifeBuoy },
+    { href: '/login', label: 'Login', icon: LogIn },
 ]
 
 export function AppSidebar() {

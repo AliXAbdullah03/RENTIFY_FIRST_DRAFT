@@ -20,13 +20,23 @@ export default function HomePage() {
 
   return (
     <div className="container mx-auto">
-      <div className="mb-8 text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-          Find Your Next Rental
-        </h1>
-        <p className="mt-3 text-lg text-muted-foreground sm:mt-5">
-          Browse cars, rooms, apartments, and commercial spaces all in one place.
-        </p>
+       <div className="relative mb-12 h-[50vh] min-h-[300px] w-full overflow-hidden rounded-lg">
+          <Image
+              src="https://placehold.co/1600x900.png"
+              alt="Modern building exterior"
+              fill
+              className="z-0 object-cover"
+              data-ai-hint="modern architecture"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+          <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white p-4">
+              <h1 className="text-5xl font-extrabold tracking-tighter drop-shadow-md md:text-7xl">
+                  Your Next Chapter, Found
+              </h1>
+              <p className="mt-4 max-w-2xl text-lg text-primary-foreground/80 drop-shadow-sm md:text-xl">
+                  Discover a place you&apos;ll love to live. Unforgettable rentals at your fingertips.
+              </p>
+          </div>
       </div>
 
       <div className="mb-6 flex flex-col items-center justify-between gap-4 md:flex-row">
