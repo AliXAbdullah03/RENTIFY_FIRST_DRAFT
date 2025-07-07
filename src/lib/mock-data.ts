@@ -1,0 +1,95 @@
+import type { Property, Owner } from './types';
+
+export const owners: Owner[] = [
+  {
+    id: 'owner-1',
+    name: 'Alice Johnson',
+    avatar: 'https://placehold.co/100x100.png',
+    email: 'alice.j@example.com',
+  },
+  {
+    id: 'owner-2',
+    name: 'Bob Williams',
+    avatar: 'https://placehold.co/100x100.png',
+    email: 'bob.w@example.com',
+  },
+];
+
+export const properties: Property[] = [
+  {
+    id: 'prop-1',
+    title: 'Modern Downtown Apartment',
+    description: 'A stylish and modern apartment in the heart of the city. Perfect for young professionals. Comes with all modern amenities and a great view of the city skyline.',
+    type: 'apartment',
+    price: 2200,
+    location: 'New York, NY',
+    images: ['https://placehold.co/600x400.png', 'https://placehold.co/600x400.png'],
+    featured: true,
+    ownerId: 'owner-1',
+    details: {
+      beds: 2,
+      baths: 2,
+    },
+    amenities: ['WiFi', 'Kitchen', 'Air Conditioning', 'Gym', 'Pool'],
+  },
+  {
+    id: 'prop-2',
+    title: 'Cozy Suburban House',
+    description: 'Charming house in a quiet suburban neighborhood. Ideal for families. Features a large backyard and a newly renovated kitchen.',
+    type: 'house',
+    price: 3500,
+    location: 'San Francisco, CA',
+    images: ['https://placehold.co/600x400.png', 'https://placehold.co/600x400.png'],
+    featured: false,
+    ownerId: 'owner-2',
+    details: {
+      beds: 4,
+      baths: 3,
+    },
+     amenities: ['WiFi', 'Kitchen', 'Washer', 'Dryer', 'Parking', 'Garden'],
+  },
+  {
+    id: 'prop-3',
+    title: 'Reliable Sedan for City Driving',
+    description: 'A fuel-efficient and reliable sedan, perfect for navigating the city. Available for short-term and long-term rentals.',
+    type: 'car',
+    price: 500,
+    location: 'Chicago, IL',
+    images: ['https://placehold.co/600x400.png'],
+    featured: false,
+    ownerId: 'owner-1',
+    details: {},
+    amenities: ['Automatic Transmission', 'Air Conditioning', 'Bluetooth'],
+  },
+  {
+    id: 'prop-4',
+    title: 'Spacious Commercial Space',
+    description: 'Prime commercial space on a busy street. Excellent for a retail store or a modern office. High foot traffic area.',
+    type: 'commercial',
+    price: 5000,
+    location: 'Miami, FL',
+    images: ['https://placehold.co/600x400.png'],
+    featured: true,
+    ownerId: 'owner-2',
+    details: {
+      sqft: 2000,
+    },
+    amenities: ['High-Speed Internet', 'Central Air', 'Parking', 'Security System'],
+  },
+  {
+    id: 'prop-5',
+    title: 'Sunny Studio Apartment',
+    description: 'Bright and airy studio apartment with large windows. Fully furnished. Close to public transportation and local cafes.',
+    type: 'apartment',
+    price: 1800,
+    location: 'Los Angeles, CA',
+    images: ['https://placehold.co/600x400.png'],
+    featured: false,
+    ownerId: 'owner-1',
+    details: {
+      beds: 1,
+      baths: 1,
+    },
+    amenities: ['WiFi', 'Kitchenette', 'Air Conditioning'],
+  },
+];
