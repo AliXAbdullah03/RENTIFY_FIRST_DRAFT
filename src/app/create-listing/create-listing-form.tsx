@@ -4,7 +4,7 @@ import { useState, useTransition, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Wand2, AlertTriangle, Info, UploadCloud, X } from 'lucide-react';
+import { Wand2, AlertTriangle, Info, UploadCloud, X, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
@@ -26,8 +26,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useToast } from '@/hooks/use-toast';
-import { enhanceDescriptionAction } from './actions';
+import { enhanceDescriptionAction, generateTitleAction } from './actions';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const formSchema = z.object({
@@ -52,8 +53,11 @@ type FormValues = z.infer<typeof formSchema>;
 
 export function CreateListingForm() {
   const { toast } = useToast();
-  const [isPending, startTransition] = useTransition();
+  const [isEnhancing, startDescriptionTransition] = useTransition();
+  const [isGeneratingTitles, startTitleTransition] = useTransition();
   const [aiSuggestions, setAiSuggestions] = useState<string | null>(null);
+  const [suggestedTitles, setSuggestedTitles] = useState<string[]>([]);
+  const [titlePopoverOpen, setTitlePopoverOpen] = useState(false);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
   const form = useForm<FormValues>({
@@ -130,7 +134,7 @@ export function CreateListingForm() {
       return;
     }
 
-    startTransition(async () => {
+    startDescriptionTransition(async () => {
       try {
         const result = await enhanceDescriptionAction({
           description,
@@ -155,6 +159,38 @@ export function CreateListingForm() {
       }
     });
   };
+  
+  const handleGenerateTitles = () => {
+    const { propertyType, location, keyFeatures } = form.getValues();
+    if (!propertyType || !location) {
+      toast({
+        variant: 'destructive',
+        title: 'Missing Information',
+        description: 'Please provide a property type and location to generate titles.',
+      });
+      return;
+    }
+
+    startTitleTransition(async () => {
+      try {
+        const result = await generateTitleAction({
+          propertyType,
+          location,
+          keyFeatures,
+        });
+        setSuggestedTitles(result.titles);
+        setTitlePopoverOpen(true);
+      } catch (error) {
+        toast({
+          variant: 'destructive',
+          title: 'AI Title Generation Failed',
+          description:
+            error instanceof Error ? error.message : 'An unknown error occurred.',
+        });
+      }
+    });
+  };
+
 
   return (
     <Form {...form}>
@@ -166,9 +202,50 @@ export function CreateListingForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Listing Title</FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g., Modern Downtown Apartment" {...field} />
-                </FormControl>
+                <div className="flex items-center gap-2">
+                  <FormControl>
+                    <Input placeholder="e.g., Modern Downtown Apartment" {...field} />
+                  </FormControl>
+                  <Popover open={titlePopoverOpen} onOpenChange={setTitlePopoverOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        onClick={handleGenerateTitles}
+                        disabled={isGeneratingTitles}
+                        aria-label="Generate titles with AI"
+                      >
+                         <Sparkles className={`h-4 w-4 ${isGeneratingTitles ? 'animate-spin' : ''}`} />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80">
+                      <div className="grid gap-4">
+                        <div className="space-y-2">
+                          <h4 className="font-medium leading-none">Suggested Titles</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Click a title to use it.
+                          </p>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          {suggestedTitles.map((title, index) => (
+                            <Button
+                              key={index}
+                              variant="ghost"
+                              className="h-auto justify-start text-left"
+                              onClick={() => {
+                                form.setValue('title', title, { shouldValidate: true });
+                                setTitlePopoverOpen(false);
+                              }}
+                            >
+                              {title}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -213,10 +290,10 @@ export function CreateListingForm() {
                   variant="outline"
                   size="sm"
                   onClick={handleEnhanceDescription}
-                  disabled={isPending}
+                  disabled={isEnhancing}
                 >
-                  <Wand2 className="mr-2 h-4 w-4" />
-                  {isPending ? 'Enhancing...' : 'Enhance with AI'}
+                  <Wand2 className={`mr-2 h-4 w-4 ${isEnhancing ? 'animate-spin' : ''}`} />
+                  {isEnhancing ? 'Enhancing...' : 'Enhance with AI'}
                 </Button>
               </div>
               <FormControl>
@@ -306,7 +383,7 @@ export function CreateListingForm() {
                     A comma-separated list of key features.
                 </FormDescription>
                 <FormMessage />
-              </FormItem>
+              </I>
             )}
           />
 
