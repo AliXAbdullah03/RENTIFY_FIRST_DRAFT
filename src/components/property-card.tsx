@@ -20,13 +20,6 @@ interface PropertyCardProps {
   view: 'grid' | 'list';
 }
 
-const typeIcons = {
-  house: <BedDouble className="h-4 w-4" />,
-  apartment: <BedDouble className="h-4 w-4" />,
-  car: <Car className="h-4 w-4 text-muted-foreground" />,
-  commercial: <Building className="h-4 w-4 text-muted-foreground" />,
-};
-
 export function PropertyCard({ property, view }: PropertyCardProps) {
   const isGridView = view === 'grid';
   return (
@@ -38,7 +31,7 @@ export function PropertyCard({ property, view }: PropertyCardProps) {
           'overflow-hidden'
         )}
       >
-        <div className={cn('relative', isGridView ? 'w-full h-48' : 'w-1/3 h-full')}>
+        <div className={cn('relative flex-shrink-0', isGridView ? 'w-full h-48' : 'w-1/3 h-full')}>
           <Image
             src={property.images[0]}
             alt={property.title}
@@ -48,7 +41,7 @@ export function PropertyCard({ property, view }: PropertyCardProps) {
           />
         </div>
 
-        <div className={cn('flex flex-col', isGridView ? '' : 'w-2/3')}>
+        <div className={cn('flex flex-1 flex-col', isGridView ? '' : 'w-2/3')}>
           <CardHeader>
             <div className="flex items-start justify-between">
               <CardTitle className="text-lg leading-tight group-hover:text-primary">
@@ -63,24 +56,39 @@ export function PropertyCard({ property, view }: PropertyCardProps) {
               {property.location}
             </CardDescription>
           </CardHeader>
-          <CardContent className={isGridView ? '' : 'flex-grow'}>
+          <CardContent className="flex-grow">
             <p className="text-sm text-muted-foreground line-clamp-2">
               {property.description}
             </p>
           </CardContent>
-          <CardFooter className="flex items-end justify-between">
+          <CardFooter className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              {typeIcons[property.type]}
               {(property.type === 'house' || property.type === 'apartment') && (
                 <>
-                  <span>{property.details.beds} Beds</span>
-                  <Bath className="h-4 w-4" />
-                  <span>{property.details.baths} Baths</span>
+                  <div className="flex items-center gap-1.5">
+                    <BedDouble className="h-4 w-4" />
+                    <span>{property.details.beds} Beds</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Bath className="h-4 w-4" />
+                    <span>{property.details.baths} Baths</span>
+                  </div>
                 </>
               )}
-               {property.type === 'commercial' && <span>{property.details.sqft} sqft</span>}
+               {property.type === 'commercial' && (
+                <div className="flex items-center gap-1.5">
+                  <Building className="h-4 w-4" />
+                  <span>{property.details.sqft} sqft</span>
+                </div>
+                )}
+               {property.type === 'car' && (
+                <div className="flex items-center gap-1.5">
+                  <Car className="h-4 w-4" />
+                  <span>Car</span>
+                </div>
+                )}
             </div>
-            <div className="text-lg font-bold text-foreground">
+            <div className="shrink-0 text-lg font-bold text-foreground">
               ${property.price}
               <span className="text-sm font-normal text-muted-foreground">/mo</span>
             </div>
