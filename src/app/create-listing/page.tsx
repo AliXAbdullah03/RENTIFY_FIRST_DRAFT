@@ -1,4 +1,5 @@
 import { CreateListingForm } from './create-listing-form';
+import { Separator } from '@/components/ui/separator';
 
 export default function CreateListingPage() {
   return (
@@ -9,6 +10,7 @@ export default function CreateListingPage() {
           Fill out the form below to post your property on Rentify.
         </p>
       </div>
+      <Separator className="my-6" />
       <CreateListingForm />
     </div>
   );

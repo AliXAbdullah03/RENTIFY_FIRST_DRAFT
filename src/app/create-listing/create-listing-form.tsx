@@ -27,7 +27,6 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { enhanceDescriptionAction } from './actions';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Separator } from '@/components/ui/separator';
 
 const formSchema = z.object({
   title: z.string().min(5, 'Title must be at least 5 characters.'),
@@ -107,8 +106,6 @@ export function CreateListingForm() {
   };
 
   return (
-    <>
-    <Separator className="my-6" />
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -250,6 +247,5 @@ export function CreateListingForm() {
         </Button>
       </form>
     </Form>
-    </>
   );
 }
