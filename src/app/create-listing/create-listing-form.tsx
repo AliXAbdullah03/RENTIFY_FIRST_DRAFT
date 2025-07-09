@@ -383,7 +383,7 @@ export function CreateListingForm() {
                     A comma-separated list of key features.
                 </FormDescription>
                 <FormMessage />
-              </I>
+              </FormItem>
             )}
           />
 
