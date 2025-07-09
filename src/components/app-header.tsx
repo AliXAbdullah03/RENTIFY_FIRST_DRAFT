@@ -17,8 +17,8 @@ export function AppHeader() {
           className="w-full rounded-full bg-background pl-10 md:w-2/3 lg:w-1/2"
         />
       </div>
-      <div className="flex items-center gap-4">
-        <Button variant="outline" asChild>
+      <div className="flex items-center gap-2 md:gap-4">
+        <Button variant="outline" asChild className="hidden md:flex">
             <Link href="/create-listing">
               <PlusCircle className="mr-2 h-4 w-4" />
               Create Listing
@@ -27,7 +27,8 @@ export function AppHeader() {
         <Button asChild>
           <Link href="/login">
             <LogIn className="mr-2 h-4 w-4" />
-            Login / Sign Up
+            <span className="hidden sm:inline">Login / Sign Up</span>
+            <span className="sm:hidden">Login</span>
           </Link>
         </Button>
       </div>

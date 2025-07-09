@@ -30,10 +30,10 @@ export default function HomePage() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
           <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white p-4">
-              <h1 className="text-5xl font-extrabold tracking-tighter drop-shadow-md md:text-7xl">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tighter drop-shadow-md">
                   Your Next Chapter, Found
               </h1>
-              <p className="mt-4 max-w-2xl text-lg text-primary-foreground/80 drop-shadow-sm md:text-xl">
+              <p className="mt-4 max-w-2xl text-base text-primary-foreground/80 drop-shadow-sm md:text-xl">
                   Discover a place you&apos;ll love to live. Unforgettable rentals at your fingertips.
               </p>
           </div>
@@ -43,8 +43,9 @@ export default function HomePage() {
         <Tabs
           defaultValue="all"
           onValueChange={(value) => setFilter(value as PropertyType | 'all')}
+          className="w-full md:w-auto"
         >
-          <TabsList className="grid w-full grid-cols-2 md:w-auto md:grid-cols-5">
+          <TabsList className="h-auto flex-wrap justify-center md:grid md:h-10 md:w-auto md:grid-cols-5">
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="apartment">Apartments</TabsTrigger>
             <TabsTrigger value="house">Houses</TabsTrigger>
