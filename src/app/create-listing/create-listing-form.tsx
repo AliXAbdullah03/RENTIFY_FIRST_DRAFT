@@ -1,9 +1,11 @@
+
 'use client';
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Wand2, AlertTriangle, Info } from 'lucide-react';
+import { Wand2, AlertTriangle, Info, UploadCloud, X } from 'lucide-react';
+import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -40,6 +42,10 @@ const formSchema = z.object({
   price: z.coerce.number().positive('Price must be a positive number.'),
   location: z.string().min(2, 'Location is required.'),
   keyFeatures: z.string().optional(),
+  images: z
+    .array(z.instanceof(File))
+    .min(1, { message: 'Please upload at least one image.' })
+    .max(5, { message: 'You can upload a maximum of 5 images.' }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -48,6 +54,7 @@ export function CreateListingForm() {
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const [aiSuggestions, setAiSuggestions] = useState<string | null>(null);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -57,8 +64,52 @@ export function CreateListingForm() {
       price: 0,
       location: '',
       keyFeatures: '',
+      images: [],
     },
   });
+
+  useEffect(() => {
+    // Cleanup object URLs on component unmount
+    return () => {
+      imagePreviews.forEach((url) => URL.revokeObjectURL(url));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files ? Array.from(event.target.files) : [];
+    if (!files.length) return;
+
+    const currentFiles = form.getValues('images') || [];
+    const spaceLeft = 5 - currentFiles.length;
+    if (spaceLeft <= 0) {
+      toast({
+        variant: 'destructive',
+        title: 'Upload Limit Reached',
+        description: 'You can only upload a maximum of 5 images.',
+      });
+      return;
+    }
+
+    const filesToAdd = files.slice(0, spaceLeft);
+    form.setValue('images', [...currentFiles, ...filesToAdd], { shouldValidate: true });
+
+    const previewsToAdd = filesToAdd.map((file) => URL.createObjectURL(file));
+    setImagePreviews((prev) => [...prev, ...previewsToAdd]);
+  };
+
+  const handleRemoveImage = (index: number) => {
+    const currentFiles = [...(form.getValues('images') || [])];
+    const currentPreviews = [...imagePreviews];
+
+    URL.revokeObjectURL(currentPreviews[index]); // Clean up memory
+
+    currentFiles.splice(index, 1);
+    currentPreviews.splice(index, 1);
+
+    form.setValue('images', currentFiles, { shouldValidate: true });
+    setImagePreviews(currentPreviews);
+  };
 
   function onSubmit(values: FormValues) {
     console.log(values);
@@ -186,6 +237,60 @@ export function CreateListingForm() {
             <AlertTitle>AI Suggestions</AlertTitle>
             <AlertDescription>{aiSuggestions}</AlertDescription>
           </Alert>
+        )}
+
+        <FormField
+            control={form.control}
+            name="images"
+            render={() => (
+                <FormItem>
+                    <FormLabel>Property Images (up to 5)</FormLabel>
+                     <div className="p-6 border-2 border-dashed rounded-lg border-muted-foreground/30 bg-card hover:border-primary">
+                        <FormControl>
+                            <div className="relative flex flex-col items-center justify-center w-full">
+                                <UploadCloud className="w-10 h-10 mb-2 text-muted-foreground" />
+                                <p className="mb-2 text-sm text-muted-foreground">
+                                    <span className="font-semibold">Click to upload</span> or drag and drop
+                                </p>
+                                <p className="text-xs text-muted-foreground">PNG, JPG, etc. (max 5 images)</p>
+                                <Input
+                                    type="file"
+                                    multiple
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                    accept="image/*"
+                                    onChange={handleFileChange}
+                                />
+                            </div>
+                        </FormControl>
+                    </div>
+                    <FormMessage />
+                </FormItem>
+            )}
+        />
+        
+        {imagePreviews.length > 0 && (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            {imagePreviews.map((src, index) => (
+              <div key={src} className="relative group aspect-square">
+                <Image
+                  src={src}
+                  alt={`Image preview ${index + 1}`}
+                  fill
+                  className="object-cover rounded-md"
+                />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="icon"
+                  className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                  onClick={() => handleRemoveImage(index)}
+                >
+                  <X className="w-4 h-4" />
+                  <span className="sr-only">Remove image</span>
+                </Button>
+              </div>
+            ))}
+          </div>
         )}
 
         <FormField
