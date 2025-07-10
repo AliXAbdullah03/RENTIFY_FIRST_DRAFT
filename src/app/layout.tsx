@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { SidebarProvider, Sidebar, SidebarInset } from '@/components/ui/sidebar';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { Toaster } from '@/components/ui/toaster';
 import { AppSidebar } from '@/components/app-sidebar';
 import { AppHeader } from '@/components/app-header';
+import { PropertyProvider } from '@/context/property-context';
 
 export const metadata: Metadata = {
   title: 'Rentify',
@@ -23,15 +24,17 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"></link>
       </head>
       <body className="font-body antialiased">
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarInset>
-            <div className="flex h-full flex-col overflow-y-auto">
-              <AppHeader />
-              <main className="flex-1 p-4 md:p-6 lg:p-8">{children}</main>
-            </div>
-          </SidebarInset>
-        </SidebarProvider>
+        <PropertyProvider>
+          <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset>
+              <div className="flex h-full flex-col overflow-y-auto">
+                <AppHeader />
+                <main className="flex-1 p-4 md:p-6 lg:p-8">{children}</main>
+              </div>
+            </SidebarInset>
+          </SidebarProvider>
+        </PropertyProvider>
         <Toaster />
       </body>
     </html>

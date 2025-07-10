@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Wand2, AlertTriangle, Info, UploadCloud, X, Sparkles } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -30,6 +31,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useToast } from '@/hooks/use-toast';
 import { enhanceDescriptionAction, generateTitleAction } from './actions';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { usePropertyContext } from '@/context/property-context';
 
 const formSchema = z.object({
   title: z.string().min(5, 'Title must be at least 5 characters.'),
@@ -53,6 +55,8 @@ type FormValues = z.infer<typeof formSchema>;
 
 export function CreateListingForm() {
   const { toast } = useToast();
+  const router = useRouter();
+  const { addProperty } = usePropertyContext();
   const [isEnhancing, startDescriptionTransition] = useTransition();
   const [isGeneratingTitles, startTitleTransition] = useTransition();
   const [aiSuggestions, setAiSuggestions] = useState<string | null>(null);
@@ -116,11 +120,29 @@ export function CreateListingForm() {
   };
 
   function onSubmit(values: FormValues) {
-    console.log(values);
+    // In a real app, you would upload files and get back URLs.
+    // Here we'll just use the local object URLs for display.
+    const newProperty = {
+      id: `prop-${Date.now()}`,
+      title: values.title,
+      description: values.description,
+      type: values.propertyType,
+      price: values.price,
+      location: values.location,
+      images: imagePreviews, // Use the generated preview URLs
+      featured: false,
+      ownerId: 'owner-1', // Mock owner
+      details: {}, // Add details based on property type if needed
+      amenities: values.keyFeatures?.split(',').map(s => s.trim()) || [],
+    };
+
+    addProperty(newProperty);
+
     toast({
       title: 'Listing Created!',
       description: 'Your property has been successfully listed.',
     });
+    router.push('/');
   }
 
   const handleEnhanceDescription = () => {

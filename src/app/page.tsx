@@ -6,15 +6,16 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { PropertyCard } from '@/components/property-card';
-import { properties as allProperties } from '@/lib/mock-data';
 import type { PropertyType } from '@/lib/types';
 import Image from 'next/image';
+import { usePropertyContext } from '@/context/property-context';
 
 export default function HomePage() {
+  const { properties } = usePropertyContext();
   const [view, setView] = useState('grid');
   const [filter, setFilter] = useState<PropertyType | 'all'>('all');
 
-  const filteredProperties = allProperties.filter(
+  const filteredProperties = properties.filter(
     (property) => filter === 'all' || property.type === filter
   );
 
@@ -78,7 +79,7 @@ export default function HomePage() {
            <Image
             src="https://placehold.co/1200x800.png"
             alt="Map of properties"
-            layout="fill"
+            fill
             objectFit="cover"
             data-ai-hint="map city"
             className="transition-transform duration-300 ease-in-out group-hover:scale-105"
