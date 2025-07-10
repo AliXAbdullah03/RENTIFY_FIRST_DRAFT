@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { AppHeader } from '@/components/app-header';
 import { PropertyProvider } from '@/context/property-context';
 import { Inter } from 'next/font/google';
+import { cn } from '@/lib/utils';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -18,8 +19,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
-      <body className="font-sans antialiased">
+    <html lang="en" suppressHydrationWarning>
+      <body className={cn('font-sans antialiased', inter.variable)}>
         <PropertyProvider>
             <div className="relative z-10 flex min-h-screen w-full flex-col">
                 <AppHeader />
