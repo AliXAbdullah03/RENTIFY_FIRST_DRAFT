@@ -36,7 +36,7 @@ const navItems = [
 export function AppHeader() {
   const pathname = usePathname();
   return (
-    <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur md:px-6">
+    <header className="sticky top-0 z-50 flex h-20 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur md:px-6">
       <div className="flex items-center gap-6">
         <Link
           href="/"
