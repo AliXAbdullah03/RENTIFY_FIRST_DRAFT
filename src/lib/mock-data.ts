@@ -68,7 +68,7 @@ export const properties: Property[] = [
     type: 'commercial',
     price: 5000,
     location: 'Miami, FL',
-    images: ['/listing-6.jpg'],
+    images: ['/listing-6.jpg', '/listing-4.jpg'],
     featured: true,
     ownerId: 'owner-2',
     details: {
@@ -83,7 +83,7 @@ export const properties: Property[] = [
     type: 'apartment',
     price: 1800,
     location: 'Los Angeles, CA',
-    images: ['/listing-7.jpg'],
+    images: ['/listing-7.jpg', '/listing-1.jpg'],
     featured: false,
     ownerId: 'owner-1',
     details: {
