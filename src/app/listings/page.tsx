@@ -29,11 +29,10 @@ export default function ListingsPage() {
     <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-transparent">
       <div className="relative mb-8 h-80 w-full overflow-hidden rounded-lg bg-card/50 backdrop-blur-sm border border-white/10">
         <Image
-            src="https://placehold.co/1200x800.png"
-            alt="Hero image for listings"
+            src="/main-logo.png"
+            alt="Hero image with text 'Your Next Chapter, Found'"
             fill
-            className="object-cover opacity-20"
-            data-ai-hint="skyline city"
+            className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/40 to-transparent" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
