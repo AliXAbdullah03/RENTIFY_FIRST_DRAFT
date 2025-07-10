@@ -50,7 +50,7 @@ export default function LandingPage() {
                 <section id="categories" className="w-full pt-12 pb-24 md:pt-24 md:pb-32">
                   <div className="container px-4 md:px-6">
                     <h2 className="text-3xl font-bold tracking-tighter text-center mb-12 sm:text-4xl text-white">Browse by Category</h2>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-2 justify-center md:grid-cols-4 gap-6">
                       {categories.map((category) => (
                         <Link key={category.name} href={category.href}>
                           <Card className="text-center p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 bg-card/60 backdrop-blur-sm border-white/10 text-white">
