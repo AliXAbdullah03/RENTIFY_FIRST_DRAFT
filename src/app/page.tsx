@@ -24,7 +24,7 @@ export default function LandingPage() {
       <main className="flex-1">
         <section className="relative w-full py-20 lg:py-32 text-center bg-primary/10">
             <div className="container mx-auto max-w-4xl space-y-6 px-4">
-                <h1 className="text-4xl font-extrabold tracking-tighter text-primary-foreground sm:text-5xl md:text-6xl">
+                <h1 className="text-4xl font-extrabold tracking-tighter text-foreground sm:text-5xl md:text-6xl">
                     Find Your Next Rental
                 </h1>
                 <p className="max-w-2xl mx-auto text-lg text-muted-foreground md:text-xl">
