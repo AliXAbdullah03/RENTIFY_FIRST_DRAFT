@@ -27,11 +27,11 @@ export default function LandingPage() {
                 loop
                 muted
                 playsInline
-                className="absolute top-0 left-0 w-full h-full object-cover -z-10"
+                className="absolute top-0 left-0 w-full h-full object-cover z-0"
                 src="/loop-video.mp4"
             />
-            <div className="absolute inset-0 bg-black/60 -z-10" />
-            <div className="container mx-auto max-w-4xl space-y-6 px-4">
+            <div className="absolute inset-0 bg-black/60 z-0" />
+            <div className="relative z-10 container mx-auto max-w-4xl space-y-6 px-4">
                 <h1 className="text-4xl font-extrabold tracking-tighter text-white sm:text-5xl md:text-6xl">
                     The Modern Way to Rent Anything
                 </h1>
