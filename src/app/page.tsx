@@ -34,8 +34,8 @@ export default function LandingPage() {
                 <div className="absolute inset-0 bg-black/60" />
             </div>
             <div className="relative z-10">
-                <section className="relative w-full flex-col items-center justify-center text-center py-20 md:py-28">
-                    <div className="container mx-auto max-w-4xl space-y-6 px-4">
+                <section className="relative w-full py-20 md:py-28">
+                    <div className="container mx-auto flex flex-col items-center justify-center text-center max-w-4xl space-y-6 px-4">
                         <h1 className="text-4xl font-extrabold tracking-tighter text-white sm:text-5xl md:text-6xl">
                             The Modern Way to Rent Anything
                         </h1>
@@ -50,22 +50,20 @@ export default function LandingPage() {
                     </div>
                 </section>
                 <section id="categories" className="w-full pt-12 pb-24 md:pt-24 md:pb-32">
-                  <div className="container px-4 md:px-6">
-                    <div className="flex flex-col items-center text-center">
-                        <h2 className="text-3xl font-bold tracking-tighter mb-12 sm:text-4xl text-white">Browse by Category</h2>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                        {categories.map((category) => (
-                            <Link key={category.name} href={category.href}>
-                            <Card className="text-center p-8 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 bg-card/60 backdrop-blur-sm border-white/10 text-white">
-                                <CardContent className="flex flex-col items-center justify-center gap-4">
-                                <category.icon className="h-12 w-12 text-primary" />
-                                <span className="font-semibold text-lg">{category.name}</span>
-                                </CardContent>
-                            </Card>
-                            </Link>
-                        ))}
-                        </div>
-                    </div>
+                  <div className="container px-4 md:px-6 flex flex-col items-center text-center">
+                      <h2 className="text-3xl font-bold tracking-tighter mb-12 sm:text-4xl text-white">Browse by Category</h2>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                      {categories.map((category) => (
+                          <Link key={category.name} href={category.href}>
+                          <Card className="text-center p-8 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 bg-card/60 backdrop-blur-sm border-white/10 text-white">
+                              <CardContent className="flex flex-col items-center justify-center gap-4">
+                              <category.icon className="h-12 w-12 text-primary" />
+                              <span className="font-semibold text-lg">{category.name}</span>
+                              </CardContent>
+                          </Card>
+                          </Link>
+                      ))}
+                      </div>
                   </div>
                 </section>
             </div>
