@@ -26,33 +26,32 @@ export default function ListingsPage() {
   );
 
   return (
-    <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      <div className="relative mb-8 h-80 w-full overflow-hidden rounded-lg">
-        <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover"
-            src="/loop-video.mp4"
+    <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-transparent">
+      <div className="relative mb-8 h-80 w-full overflow-hidden rounded-lg bg-card/50 backdrop-blur-sm border border-white/10">
+        <Image
+            src="https://placehold.co/1200x800.png"
+            alt="Hero image for listings"
+            fill
+            className="object-cover opacity-20"
+            data-ai-hint="skyline city"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/40 to-transparent" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter">Your Next Chapter, Found</h1>
-          <p className="mt-4 max-w-2xl text-lg text-neutral-300">
+          <p className="mt-4 max-w-2xl text-lg text-neutral-200">
             Discover a place you'll love to live. Unforgettable rentals at your fingertips.
           </p>
         </div>
       </div>
 
-      <div className="mb-6 rounded-lg border border-border bg-card p-4 shadow-sm">
+      <div className="mb-6 rounded-lg border border-border bg-card/80 backdrop-blur-sm p-4 shadow-sm">
         <div className="flex flex-col items-center gap-4 md:flex-row">
             <div className="relative w-full flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
                     type="search"
                     placeholder="Search properties by location, type, or feature..."
-                    className="w-full rounded-lg bg-background pl-10 py-3 text-base"
+                    className="w-full rounded-lg bg-background/80 pl-10 py-3 text-base"
                 />
             </div>
              <Button asChild size="lg">
@@ -68,7 +67,7 @@ export default function ListingsPage() {
             onValueChange={(value) => setFilter(value as PropertyType | 'all')}
             className="w-full md:w-auto"
             >
-            <TabsList className="grid h-auto grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
+            <TabsList className="grid h-auto grid-cols-2 sm:grid-cols-3 md:grid-cols-5 bg-background/80">
                 <TabsTrigger value="all">All</TabsTrigger>
                 <TabsTrigger value="apartment">Apartments</TabsTrigger>
                 <TabsTrigger value="house">Houses</TabsTrigger>
@@ -98,7 +97,7 @@ export default function ListingsPage() {
       </div>
 
       {view === 'map' ? (
-        <div className="relative h-[600px] w-full overflow-hidden rounded-lg shadow-lg bg-card">
+        <div className="relative h-[600px] w-full overflow-hidden rounded-lg shadow-lg bg-card/80 backdrop-blur-sm">
            <Image
             src="https://placehold.co/1200x800.png"
             alt="Map of properties"
@@ -133,7 +132,7 @@ export default function ListingsPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-20 rounded-lg bg-card border border-border">
+            <div className="text-center py-20 rounded-lg bg-card/80 backdrop-blur-sm border border-border">
               <h2 className="text-2xl font-bold">No Listings Found</h2>
               <p className="text-muted-foreground mt-2">Try adjusting your filters or check back later.</p>
             </div>
