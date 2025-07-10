@@ -29,14 +29,16 @@ export default function ProfilePage() {
           <h1 className="text-4xl font-bold">{user.name}</h1>
           <p className="text-muted-foreground">{user.email}</p>
           <div className="mt-2 flex justify-center space-x-4 md:justify-start">
-            <div className="flex items-center text-sm text-muted-foreground">
+            <a href={`mailto:${user.email}`} className="flex items-center text-sm text-muted-foreground hover:text-primary">
               <Mail className="mr-1.5 h-4 w-4" />
               <span>Contact via Email</span>
-            </div>
-            <div className="flex items-center text-sm text-muted-foreground">
-              <Phone className="mr-1.5 h-4 w-4" />
-              <span>Show Phone</span>
-            </div>
+            </a>
+            {user.phone && (
+              <a href={`tel:${user.phone}`} className="flex items-center text-sm text-muted-foreground hover:text-primary">
+                <Phone className="mr-1.5 h-4 w-4" />
+                <span>{user.phone}</span>
+              </a>
+            )}
           </div>
         </div>
       </div>

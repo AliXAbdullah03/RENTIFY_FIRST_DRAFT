@@ -3,9 +3,10 @@ import type { Property, Owner } from './types';
 export const owners: Owner[] = [
   {
     id: 'owner-1',
-    name: 'Alice Johnson',
+    name: 'Ali Abdullah',
     avatar: 'https://placehold.co/100x100.png',
-    email: 'alice.j@example.com',
+    email: 'ali.abdullah@gmail.com',
+    phone: '056 3015516',
   },
   {
     id: 'owner-2',

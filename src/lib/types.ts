@@ -5,6 +5,7 @@ export interface Owner {
   name: string;
   avatar: string;
   email: string;
+  phone?: string;
 }
 
 export interface Property {
