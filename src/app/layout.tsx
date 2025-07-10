@@ -21,6 +21,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn('font-sans antialiased', inter.variable)}>
+        <video autoPlay loop muted className="fixed -z-10 w-full h-full object-cover">
+            <source src="/loop-video.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+        </video>
+        <div className="fixed -z-10 w-full h-full bg-black/30" />
         <PropertyProvider>
             <div className="relative z-10 flex min-h-screen w-full flex-col">
                 <AppHeader />
