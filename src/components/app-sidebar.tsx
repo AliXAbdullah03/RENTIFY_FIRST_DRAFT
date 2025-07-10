@@ -17,7 +17,6 @@ import { usePathname } from 'next/navigation';
 const menuItems = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/profile', label: 'My Profile', icon: User },
-  { href: '/create-listing', label: 'Create Listing', icon: PlusCircle },
 ];
 
 const bottomMenuItems = [
