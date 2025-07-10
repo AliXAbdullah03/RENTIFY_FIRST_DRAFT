@@ -28,12 +28,13 @@ export default function ListingsPage() {
   return (
     <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="relative mb-8 h-80 w-full overflow-hidden rounded-lg">
-        <Image
-          src="/main-logo.png"
-          alt="Rentify Logo"
-          fill
-          className="object-cover"
-          priority
+        <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+            src="/loop-video.mp4"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
