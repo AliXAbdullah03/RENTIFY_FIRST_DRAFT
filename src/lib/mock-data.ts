@@ -4,7 +4,7 @@ export const owners: Owner[] = [
   {
     id: 'owner-1',
     name: 'Ali Abdullah',
-    avatar: 'https://placehold.co/100x100.png',
+    avatar: '/profile.jpg',
     email: 'ali.abdullah@gmail.com',
     phone: '056 3015516',
   },
