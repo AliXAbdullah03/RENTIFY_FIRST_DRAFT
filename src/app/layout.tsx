@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
@@ -23,14 +24,13 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <PropertyProvider>
-            {/* NOTE: You can replace this placeholder video with your own by placing a file at /public/background-video.mp4 */}
             <video 
                 autoPlay 
                 loop 
                 muted 
                 playsInline 
                 className="fixed top-0 left-0 w-full h-full object-cover z-[-2]"
-                src="https://cdn.pixabay.com/video/2024/05/27/211512_large.mp4"
+                src="/loop-video.mp4"
             />
             <div className="fixed top-0 left-0 w-full h-full bg-gradient-to-br from-background via-background/80 to-primary/30 animate-gradient-xy bg-[length:400%_400%] z-[-1]"></div>
             
