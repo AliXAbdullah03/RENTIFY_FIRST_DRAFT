@@ -3,8 +3,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { ArrowRight, Car, Home as HomeIcon, Building, Search, MapPin } from 'lucide-react';
+import { ArrowRight, Car, Home as HomeIcon, Building, Search } from 'lucide-react';
 import { PropertyCard } from '@/components/property-card';
 import { usePropertyContext } from '@/context/property-context';
 
@@ -25,35 +24,16 @@ export default function LandingPage() {
         <section className="relative w-full py-20 lg:py-32 text-center bg-primary/10">
             <div className="container mx-auto max-w-4xl space-y-6 px-4">
                 <h1 className="text-4xl font-extrabold tracking-tighter text-foreground sm:text-5xl md:text-6xl">
-                    Find Your Next Rental
+                    The Modern Way to Rent Anything
                 </h1>
                 <p className="max-w-2xl mx-auto text-lg text-muted-foreground md:text-xl">
-                    The UAE's leading marketplace for renting anything, from apartments to cars.
+                    Discover a seamless rental experience. From homes to cars, find exactly what you need with Rentify.
                 </p>
-                <Card className="p-4 shadow-lg">
-                    <div className="flex flex-col md:flex-row items-center gap-2">
-                         <div className="relative w-full">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                            <Input
-                                type="text"
-                                placeholder="What are you looking for?"
-                                className="pl-10 w-full"
-                            />
-                        </div>
-                         <div className="relative w-full">
-                             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                            <Input
-                                type="text"
-                                placeholder="Select Location"
-                                className="pl-10 w-full"
-                            />
-                        </div>
-                        <Button size="lg" className="w-full md:w-auto">
-                            <Search className="mr-2 h-5 w-5" />
-                            Search
-                        </Button>
-                    </div>
-                </Card>
+                 <Button size="lg" asChild>
+                    <Link href="/listings">
+                        Rent IT <ArrowRight className="ml-2 h-5 w-5" />
+                    </Link>
+                </Button>
             </div>
         </section>
 
