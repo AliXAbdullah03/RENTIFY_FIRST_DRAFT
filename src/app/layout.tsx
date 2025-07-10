@@ -32,11 +32,11 @@ export default function RootLayout({
                 className="fixed top-0 left-0 w-full h-full object-cover z-[-2]"
                 src="/loop-video.mp4"
             />
-            <div className="fixed top-0 left-0 w-full h-full bg-gradient-to-br from-background via-background/80 to-primary/30 animate-gradient-xy bg-[length:400%_400%] z-[-1]"></div>
+            <div className="fixed top-0 left-0 w-full h-full bg-gradient-to-br from-background/70 via-background/80 to-primary/30 animate-gradient-xy bg-[length:400%_400%] z-[-1]"></div>
             
             <div className="relative z-10 flex min-h-screen w-full flex-col">
                 <AppHeader />
-                <main className="flex-1 p-4 md:p-8">
+                <main className="flex-1">
                     {children}
                 </main>
             </div>

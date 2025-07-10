@@ -1,133 +1,131 @@
 
-'use client';
-import { useState } from 'react';
 import Link from 'next/link';
-import { List, LayoutGrid, Map, Search, PlusCircle } from 'lucide-react';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { PropertyCard } from '@/components/property-card';
-import type { PropertyType } from '@/lib/types';
-import Image from 'next/image';
-import { usePropertyContext } from '@/context/property-context';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowRight, Car, Home as HomeIcon, Building, Search } from 'lucide-react';
 
-export default function HomePage() {
-  const { properties } = usePropertyContext();
-  const [view, setView] = useState('grid');
-  const [filter, setFilter] = useState<PropertyType | 'all'>('all');
-
-  const filteredProperties = properties.filter(
-    (property) => filter === 'all' || property.type === filter
-  );
-
+export default function LandingPage() {
   return (
-    <div className="container mx-auto">
-       <div className="relative mb-8 h-[40vh] min-h-[300px] w-full overflow-hidden rounded-lg shadow-xl">
-          <Image
-              src="/main-logo.png"
-              alt="Modern building exterior"
-              fill
-              className="z-0 object-cover"
-              data-ai-hint="modern architecture"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-          <div className="relative z-10 flex h-full flex-col items-center justify-center p-4 text-center text-white">
-              <h1 className="text-4xl font-extrabold tracking-tighter drop-shadow-md sm:text-5xl lg:text-6xl">
-                  Your Next Chapter, Found
-              </h1>
-              <p className="mt-4 max-w-2xl text-base text-primary-foreground/80 drop-shadow-sm md:text-xl">
-                  Discover a place you&apos;ll love to live. Unforgettable rentals at your fingertips.
-              </p>
-          </div>
-      </div>
+    <div className="flex flex-col min-h-screen">
+      <main className="flex-1">
+        <section className="relative flex h-[80vh] min-h-[500px] w-full items-center justify-center text-center text-white">
+            <div className="relative z-10 mx-auto max-w-4xl space-y-6 p-4">
+                <h1 className="text-4xl font-extrabold tracking-tighter drop-shadow-md sm:text-5xl md:text-6xl lg:text-7xl">
+                    The Smart Way to Rent Anything
+                </h1>
+                <p className="max-w-2xl mx-auto text-lg text-primary-foreground/80 drop-shadow-sm md:text-xl">
+                    From apartments to cars, Rentify connects you with what you need, when you need it. Discover the freedom of renting.
+                </p>
+                <div className="flex justify-center">
+                    <Button asChild size="lg">
+                        <Link href="/listings">
+                            Rent IT <ArrowRight className="ml-2 h-5 w-5" />
+                        </Link>
+                    </Button>
+                </div>
+            </div>
+        </section>
 
-      <div className="mb-6 rounded-lg border bg-card p-4 shadow-sm">
-        <div className="mb-4 flex flex-col items-center gap-4 md:flex-row">
-            <div className="relative flex-1 md:grow">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                    type="search"
-                    placeholder="Search properties by location, type, or feature..."
-                    className="w-full rounded-lg bg-background pl-8"
+        <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-card/50">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Key Features</div>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Everything You Need to Rent</h2>
+                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Rentify offers a seamless rental experience with a diverse range of options to suit your every need.
+                </p>
+              </div>
+            </div>
+            <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
+              <div className="grid gap-6">
+                <Card className="hover:shadow-lg transition-shadow">
+                    <CardHeader className="flex flex-row items-center gap-4">
+                        <HomeIcon className="h-8 w-8 text-primary"/>
+                        <CardTitle>Homes & Apartments</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        Find your next home, from cozy apartments to spacious houses.
+                    </CardContent>
+                </Card>
+                 <Card className="hover:shadow-lg transition-shadow">
+                    <CardHeader className="flex flex-row items-center gap-4">
+                        <Car className="h-8 w-8 text-primary"/>
+                        <CardTitle>Cars</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        Get on the road with a wide selection of rental cars for any occasion.
+                    </CardContent>
+                </Card>
+                 <Card className="hover:shadow-lg transition-shadow">
+                    <CardHeader className="flex flex-row items-center gap-4">
+                        <Building className="h-8 w-8 text-primary"/>
+                        <CardTitle>Commercial Spaces</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        Find the perfect office, retail, or workspace for your business to thrive.
+                    </CardContent>
+                </Card>
+              </div>
+                <img
+                    src="https://placehold.co/600x600.png"
+                    data-ai-hint="happy people city"
+                    width="600"
+                    height="600"
+                    alt="Feature"
+                    className="mx-auto aspect-square overflow-hidden rounded-xl object-cover"
                 />
             </div>
-             <Button asChild>
-                <Link href="/create-listing">
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Create Listing
-                </Link>
-            </Button>
-        </div>
-        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <Tabs
-            defaultValue="all"
-            onValueChange={(value) => setFilter(value as PropertyType | 'all')}
-            className="w-full md:w-auto"
-            >
-            <TabsList className="h-auto flex-wrap justify-center md:grid md:h-10 md:w-auto md:grid-cols-5">
-                <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="apartment">Apartments</TabsTrigger>
-                <TabsTrigger value="house">Houses</TabsTrigger>
-                <TabsTrigger value="car">Cars</TabsTrigger>
-                <TabsTrigger value="commercial">Commercial</TabsTrigger>
-            </TabsList>
-            </Tabs>
-            <ToggleGroup
-            type="single"
-            value={view}
-            onValueChange={(value) => {
-                if (value) setView(value);
-            }}
-            aria-label="View options"
-            >
-            <ToggleGroupItem value="grid" aria-label="Grid view">
-                <LayoutGrid className="h-4 w-4" />
-            </ToggleGroupItem>
-            <ToggleGroupItem value="list" aria-label="List view">
-                <List className="h-4 w-4" />
-            </ToggleGroupItem>
-            <ToggleGroupItem value="map" aria-label="Map view">
-                <Map className="h-4 w-4" />
-            </ToggleGroupItem>
-            </ToggleGroup>
-        </div>
-      </div>
-
-      {view === 'map' ? (
-        <div className="relative h-[600px] w-full overflow-hidden rounded-lg shadow-lg">
-           <Image
-            src="https://placehold.co/1200x800.png"
-            alt="Map of properties"
-            fill
-            objectFit="cover"
-            data-ai-hint="map city"
-            className="transition-transform duration-300 ease-in-out group-hover:scale-105"
-          />
-          <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-            <div className="text-center text-white">
-              <h2 className="text-3xl font-bold">Map View Coming Soon</h2>
-              <p className="mt-2 text-lg">Interactive map feature is under development.</p>
-            </div>
           </div>
-        </div>
-      ) : (
-        <div
-          className={
-            view === 'grid'
-              ? 'grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-              : 'flex flex-col gap-6'
-          }
-        >
-          {filteredProperties.map((property) => (
-            <PropertyCard
-              key={property.id}
-              property={property}
-              view={view}
-            />
-          ))}
-        </div>
-      )}
+        </section>
+
+        <section className="w-full py-12 md:py-24 lg:py-32">
+            <div className="container px-4 md:px-6">
+                 <div className="flex flex-col items-center justify-center space-y-4 text-center">
+                    <div className="space-y-2">
+                        <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">How It Works</div>
+                        <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Rent in 3 Easy Steps</h2>
+                        <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                        Our streamlined process makes renting faster and easier than ever before.
+                        </p>
+                    </div>
+                </div>
+                 <div className="mx-auto grid max-w-5xl items-start gap-8 py-12 sm:grid-cols-2 md:gap-12 lg:grid-cols-3">
+                    <div className="grid gap-1 text-center">
+                        <div className="flex justify-center items-center mb-4">
+                           <div className="flex items-center justify-center rounded-full bg-primary text-primary-foreground h-16 w-16">
+                                <Search className="h-8 w-8"/>
+                           </div>
+                        </div>
+                        <h3 className="text-lg font-bold">1. Search</h3>
+                        <p className="text-sm text-muted-foreground">Browse our extensive listings with powerful search and filtering tools to find exactly what you're looking for.</p>
+                    </div>
+                    <div className="grid gap-1 text-center">
+                        <div className="flex justify-center items-center mb-4">
+                           <div className="flex items-center justify-center rounded-full bg-primary text-primary-foreground h-16 w-16">
+                                <HomeIcon className="h-8 w-8"/>
+                           </div>
+                        </div>
+                        <h3 className="text-lg font-bold">2. Connect</h3>
+                        <p className="text-sm text-muted-foreground">Connect with property owners directly through our platform to ask questions and arrange viewings.</p>
+                    </div>
+                    <div className="grid gap-1 text-center">
+                        <div className="flex justify-center items-center mb-4">
+                           <div className="flex items-center justify-center rounded-full bg-primary text-primary-foreground h-16 w-16">
+                                <ArrowRight className="h-8 w-8"/>
+                           </div>
+                        </div>
+                        <h3 className="text-lg font-bold">3. Rent</h3>
+                        <p className="text-sm text-muted-foreground">Finalize your rental agreement and get the keys to your new property. It's that simple!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+      </main>
+      <footer className="flex items-center justify-center w-full h-24 border-t">
+            <p className="text-xs text-muted-foreground">&copy; {new Date().getFullYear()} Rentify. All rights reserved.</p>
+      </footer>
     </div>
   );
 }

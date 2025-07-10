@@ -20,12 +20,13 @@ import {
   Menu,
   Settings,
   User,
+  LayoutGrid
 } from 'lucide-react';
 import { Logo } from './logo';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { href: '/', label: 'Home', icon: Home },
+  { href: '/listings', label: 'Listings', icon: LayoutGrid },
   { href: '/profile', label: 'My Profile', icon: User },
   { href: '/settings', label: 'Settings', icon: Settings },
   { href: '/support', label: 'Support', icon: LifeBuoy },
@@ -34,7 +35,7 @@ const navItems = [
 export function AppHeader() {
   const pathname = usePathname();
   return (
-    <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+    <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b border-white/10 bg-black/20 px-4 backdrop-blur-sm md:px-6">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <Link
           href="/"
@@ -49,7 +50,7 @@ export function AppHeader() {
             href={item.href}
             className={cn(
               'rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground',
-              pathname === item.href
+              pathname.startsWith(item.href)
                 ? 'bg-accent text-accent-foreground'
                 : 'text-muted-foreground'
             )}
@@ -80,7 +81,7 @@ export function AppHeader() {
                 href={item.href}
                 className={cn(
                   'rounded-md px-3 py-2 transition-colors hover:text-foreground',
-                   pathname === item.href
+                   pathname.startsWith(item.href)
                     ? 'bg-accent'
                     : 'text-muted-foreground'
                 )}
