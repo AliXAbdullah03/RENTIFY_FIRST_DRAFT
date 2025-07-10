@@ -28,7 +28,7 @@ export default function LandingPage() {
                 muted
                 playsInline
                 className="absolute top-0 left-0 w-full h-full object-cover z-0"
-                src="/loop-video.mp4"
+                src="/Untitled design.mp4"
             />
             <div className="absolute inset-0 bg-black/60 z-0" />
             <div className="relative z-10">
