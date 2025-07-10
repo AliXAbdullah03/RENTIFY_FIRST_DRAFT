@@ -20,28 +20,30 @@ import {
   Settings,
   User,
   LayoutGrid,
-  PlusCircle
+  PlusCircle,
+  Home
 } from 'lucide-react';
 import { Logo } from './logo';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 
 const navItems = [
-  { href: '/listings', label: 'All Ads', icon: LayoutGrid },
+  { href: '/', label: 'Home', icon: Home },
+  { href: '/listings', label: 'Listings', icon: LayoutGrid },
   { href: '/support', label: 'Support', icon: LifeBuoy },
 ];
 
 export function AppHeader() {
   const pathname = usePathname();
   return (
-    <header className="sticky top-0 z-50 flex h-20 items-center gap-4 border-b bg-background px-4 md:px-6">
+    <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur md:px-6">
       <div className="flex items-center gap-6">
         <Link
           href="/"
           className="flex items-center gap-2 font-semibold"
         >
           <Logo className="h-8 w-8 text-primary" />
-          <span className="text-2xl font-bold tracking-tight">Rentify</span>
+          <span className="hidden text-2xl font-bold tracking-tight sm:inline-block">Rentify</span>
         </Link>
         <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
           {navItems.map((item) => (
@@ -50,7 +52,7 @@ export function AppHeader() {
               href={item.href}
               className={cn(
                 'rounded-md px-3 py-2 text-base font-medium transition-colors hover:text-primary',
-                pathname.startsWith(item.href)
+                pathname === item.href
                   ? 'text-primary'
                   : 'text-muted-foreground'
               )}
@@ -61,9 +63,9 @@ export function AppHeader() {
         </nav>
       </div>
 
-      <div className="ml-auto flex items-center gap-4">
-        <div className="hidden md:flex items-center gap-4">
-            <Button variant="outline" asChild>
+      <div className="ml-auto flex items-center gap-2 md:gap-4">
+        <div className="hidden md:flex items-center gap-2">
+            <Button variant="ghost" asChild>
                 <Link href="/login">Login</Link>
             </Button>
             <DropdownMenu>
@@ -73,65 +75,75 @@ export function AppHeader() {
                   <span className="sr-only">Toggle user menu</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                    <Link href="/profile">Profile</Link>
+                    <Link href="/profile"><User className="mr-2 h-4 w-4" />Profile</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                    <Link href="/settings">Settings</Link>
+                    <Link href="/settings"><Settings className="mr-2 h-4 w-4" />Settings</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Logout</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
         </div>
-         <Button asChild className="bg-accent hover:bg-accent/90">
+         <Button asChild>
             <Link href="/create-listing">
                 <PlusCircle className="mr-2 h-5 w-5" />
-                Post Your Ad
+                <span className="hidden sm:inline">Post Ad</span>
             </Link>
         </Button>
-      </div>
-
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="outline" size="icon" className="shrink-0 md:hidden">
-            <Menu className="h-5 w-5" />
-            <span className="sr-only">Toggle navigation menu</span>
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left">
-          <nav className="grid gap-6 text-lg font-medium">
-            <Link
-              href="/"
-              className="flex items-center gap-2 text-lg font-semibold"
-            >
-              <Logo className="h-8 w-8 text-primary" />
-              <span className="text-xl font-bold tracking-tight">Rentify</span>
-            </Link>
-            {navItems.map((item) => (
+      
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="icon" className="shrink-0 md:hidden">
+              <Menu className="h-5 w-5" />
+              <span className="sr-only">Toggle navigation menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left">
+            <nav className="grid gap-6 text-lg font-medium">
               <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  'rounded-md px-3 py-2 transition-colors hover:text-foreground',
-                   pathname.startsWith(item.href)
-                    ? 'bg-accent'
-                    : 'text-muted-foreground'
-                )}
+                href="/"
+                className="flex items-center gap-2 text-lg font-semibold"
               >
-                {item.label}
+                <Logo className="h-8 w-8 text-primary" />
+                <span className="text-xl font-bold tracking-tight">Rentify</span>
               </Link>
-            ))}
-            <Separator />
-            <Link href="/login" className="text-muted-foreground transition-colors hover:text-foreground">Login</Link>
-            <Link href="/profile" className="text-muted-foreground transition-colors hover:text-foreground">Profile</Link>
-            <Link href="/settings" className="text-muted-foreground transition-colors hover:text-foreground">Settings</Link>
-          </nav>
-        </SheetContent>
-      </Sheet>
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    'flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary',
+                    pathname === item.href
+                      ? 'bg-muted text-primary'
+                      : 'text-muted-foreground'
+                  )}
+                >
+                  <item.icon className="h-5 w-5" />
+                  {item.label}
+                </Link>
+              ))}
+              <Separator />
+              <Link href="/login" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+                <CircleUser className="h-5 w-5" />
+                Login
+              </Link>
+              <Link href="/profile" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+                <User className="h-5 w-5" />
+                Profile
+              </Link>
+              <Link href="/settings" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+                <Settings className="h-5 w-5" />
+                Settings
+              </Link>
+            </nav>
+          </SheetContent>
+        </Sheet>
+      </div>
     </header>
   );
 }

@@ -26,8 +26,8 @@ export function PropertyCard({ property, view }: PropertyCardProps) {
     <Link href={`/properties/${property.id}`} className="group block h-full">
       <Card
         className={cn(
-          'flex h-full flex-col transition-all duration-300 ease-in-out hover:shadow-lg border-2 border-transparent hover:border-primary',
-          'overflow-hidden'
+          'flex h-full flex-col transition-all duration-300 ease-in-out bg-card hover:border-primary border-2 border-transparent',
+          'overflow-hidden rounded-lg'
         )}
       >
         <div className={cn('relative w-full shrink-0', isGridView ? 'h-48' : 'h-48')}>
@@ -38,17 +38,17 @@ export function PropertyCard({ property, view }: PropertyCardProps) {
             className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
             data-ai-hint={`${property.type} exterior`}
           />
-           {property.featured && (
-             <Badge className="absolute top-2 right-2 bg-accent text-accent-foreground">Featured</Badge>
-           )}
         </div>
 
         <div className="flex flex-1 flex-col p-4">
           <CardHeader className="p-0">
-            <div className="flex items-start justify-between">
-              <CardTitle className="text-base font-bold leading-tight group-hover:text-primary mb-2">
+            <div className="flex items-start justify-between gap-2">
+              <CardTitle className="text-lg font-bold leading-tight group-hover:text-primary mb-1">
                 {property.title}
               </CardTitle>
+              {property.featured && (
+                <Badge variant="default" className="shrink-0">Featured</Badge>
+              )}
             </div>
              <div className="flex items-center text-sm text-muted-foreground">
               <MapPin className="mr-1.5 h-4 w-4" />
@@ -56,23 +56,32 @@ export function PropertyCard({ property, view }: PropertyCardProps) {
             </div>
           </CardHeader>
           <CardContent className="flex-grow p-0 mt-4">
-             <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground line-clamp-2">
+                {property.description}
+            </p>
+          </CardContent>
+          <CardFooter className="p-0 mt-4 flex items-end justify-between">
+             <div className="text-lg font-bold text-primary">
+              ${property.price}
+              <span className="text-sm font-normal text-muted-foreground">/month</span>
+            </div>
+            <div className="flex items-center gap-4 text-sm text-muted-foreground">
               {(property.type === 'house' || property.type === 'apartment') && (
                 <>
                   <div className="flex items-center gap-1.5">
                     <BedDouble className="h-4 w-4" />
-                    <span>{property.details.beds} Beds</span>
+                    <span>{property.details.beds}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Bath className="h-4 w-4" />
-                    <span>{property.details.baths} Baths</span>
+                    <span>{property.details.baths}</span>
                   </div>
                 </>
               )}
                {property.type === 'commercial' && (
                 <div className="flex items-center gap-1.5">
                   <Building className="h-4 w-4" />
-                  <span>{property.details.sqft} sqft</span>
+                  <span>{property.details.sqft}sqft</span>
                 </div>
                 )}
                {property.type === 'car' && (
@@ -82,13 +91,6 @@ export function PropertyCard({ property, view }: PropertyCardProps) {
                 </div>
                 )}
             </div>
-          </CardContent>
-          <CardFooter className="p-0 mt-4 flex items-end justify-between">
-            <div className="text-lg font-bold text-primary">
-              ${property.price}
-              <span className="text-sm font-normal text-muted-foreground">/month</span>
-            </div>
-             <Badge variant="secondary" className="capitalize">{property.type}</Badge>
           </CardFooter>
         </div>
       </Card>

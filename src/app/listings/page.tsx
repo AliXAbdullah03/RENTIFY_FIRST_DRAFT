@@ -26,20 +26,38 @@ export default function ListingsPage() {
   );
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="mb-6 rounded-lg border bg-card p-4 shadow-sm">
+    <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <div className="relative mb-8 h-80 w-full overflow-hidden rounded-lg">
+        <Image
+          src="https://placehold.co/1600x600.png"
+          alt="Street view with cars and buildings"
+          fill
+          className="object-cover"
+          data-ai-hint="city street cars"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter">Your Next Chapter, Found</h1>
+          <p className="mt-4 max-w-2xl text-lg text-neutral-300">
+            Discover a place you'll love to live. Unforgettable rentals at your fingertips.
+          </p>
+        </div>
+      </div>
+
+      <div className="mb-6 rounded-lg border border-border bg-card p-4 shadow-sm">
         <div className="flex flex-col items-center gap-4 md:flex-row">
-            <div className="relative flex-1 md:grow">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <div className="relative w-full flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
                     type="search"
                     placeholder="Search properties by location, type, or feature..."
-                    className="w-full rounded-lg bg-background pl-8"
+                    className="w-full rounded-lg bg-background pl-10 py-3 text-base"
                 />
             </div>
-             <Button asChild className="bg-accent hover:bg-accent/90">
+             <Button asChild size="lg">
                 <Link href="/create-listing">
-                    <PlusCircle className="mr-2 h-4 w-4" />
+                    <PlusCircle className="mr-2 h-5 w-5" />
                     Create Listing
                 </Link>
             </Button>
@@ -50,7 +68,7 @@ export default function ListingsPage() {
             onValueChange={(value) => setFilter(value as PropertyType | 'all')}
             className="w-full md:w-auto"
             >
-            <TabsList className="h-auto flex-wrap justify-center md:grid md:h-10 md:w-auto md:grid-cols-5">
+            <TabsList className="grid h-auto grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
                 <TabsTrigger value="all">All</TabsTrigger>
                 <TabsTrigger value="apartment">Apartments</TabsTrigger>
                 <TabsTrigger value="house">Houses</TabsTrigger>
@@ -67,32 +85,32 @@ export default function ListingsPage() {
             aria-label="View options"
             >
             <ToggleGroupItem value="grid" aria-label="Grid view">
-                <LayoutGrid className="h-4 w-4" />
+                <LayoutGrid className="h-5 w-5" />
             </ToggleGroupItem>
             <ToggleGroupItem value="list" aria-label="List view">
-                <List className="h-4 w-4" />
+                <List className="h-5 w-5" />
             </ToggleGroupItem>
             <ToggleGroupItem value="map" aria-label="Map view">
-                <Map className="h-4 w-4" />
+                <Map className="h-5 w-5" />
             </ToggleGroupItem>
             </ToggleGroup>
         </div>
       </div>
 
       {view === 'map' ? (
-        <div className="relative h-[600px] w-full overflow-hidden rounded-lg shadow-lg">
+        <div className="relative h-[600px] w-full overflow-hidden rounded-lg shadow-lg bg-card">
            <Image
             src="https://placehold.co/1200x800.png"
             alt="Map of properties"
             fill
-            data-ai-hint="map city"
+            data-ai-hint="map city dark"
             style={{objectFit: 'cover'}}
-            className="transition-transform duration-300 ease-in-out group-hover:scale-105"
+            className="opacity-30"
           />
-          <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+          <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center text-white">
               <h2 className="text-3xl font-bold">Map View Coming Soon</h2>
-              <p className="mt-2 text-lg">Interactive map feature is under development.</p>
+              <p className="mt-2 text-lg text-muted-foreground">Interactive map feature is under development.</p>
             </div>
           </div>
         </div>
@@ -115,7 +133,7 @@ export default function ListingsPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-20">
+            <div className="text-center py-20 rounded-lg bg-card border border-border">
               <h2 className="text-2xl font-bold">No Listings Found</h2>
               <p className="text-muted-foreground mt-2">Try adjusting your filters or check back later.</p>
             </div>
