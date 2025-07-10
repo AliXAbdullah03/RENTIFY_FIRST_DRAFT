@@ -21,7 +21,7 @@ export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <main className="flex-1">
-        <section className="relative w-full py-20 lg:py-32 text-center overflow-hidden">
+        <section className="relative flex h-screen w-full flex-col items-center justify-center text-center overflow-hidden">
             <video
                 autoPlay
                 loop
