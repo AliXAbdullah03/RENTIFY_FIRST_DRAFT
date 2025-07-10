@@ -21,12 +21,21 @@ export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <main className="flex-1">
-        <section className="relative w-full py-20 lg:py-32 text-center bg-primary/10">
+        <section className="relative w-full py-20 lg:py-32 text-center overflow-hidden">
+            <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="absolute top-0 left-0 w-full h-full object-cover -z-10"
+                src="/loop-video.mp4"
+            />
+            <div className="absolute inset-0 bg-black/60 -z-10" />
             <div className="container mx-auto max-w-4xl space-y-6 px-4">
-                <h1 className="text-4xl font-extrabold tracking-tighter text-foreground sm:text-5xl md:text-6xl">
+                <h1 className="text-4xl font-extrabold tracking-tighter text-white sm:text-5xl md:text-6xl">
                     The Modern Way to Rent Anything
                 </h1>
-                <p className="max-w-2xl mx-auto text-lg text-muted-foreground md:text-xl">
+                <p className="max-w-2xl mx-auto text-lg text-neutral-200 md:text-xl">
                     Discover a seamless rental experience. From homes to cars, find exactly what you need with Rentify.
                 </p>
                  <Button size="lg" asChild>

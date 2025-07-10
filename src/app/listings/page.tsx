@@ -29,11 +29,10 @@ export default function ListingsPage() {
     <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="relative mb-8 h-80 w-full overflow-hidden rounded-lg">
         <Image
-          src="https://placehold.co/1600x600.png"
-          alt="Street view with cars and buildings"
+          src="/main-logo.png"
+          alt="Rentify Logo"
           fill
           className="object-cover"
-          data-ai-hint="city street cars"
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
