@@ -1,7 +1,9 @@
+
 'use client';
 import { useState } from 'react';
-import { List, LayoutGrid, Map } from 'lucide-react';
-
+import Link from 'next/link';
+import { List, LayoutGrid, Map, Search, PlusCircle } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
@@ -21,7 +23,7 @@ export default function HomePage() {
 
   return (
     <div className="container mx-auto">
-       <div className="relative mb-12 h-[50vh] min-h-[300px] w-full overflow-hidden rounded-lg">
+       <div className="relative mb-8 h-[40vh] min-h-[300px] w-full overflow-hidden rounded-lg shadow-xl">
           <Image
               src="/main-logo.png"
               alt="Modern building exterior"
@@ -30,8 +32,8 @@ export default function HomePage() {
               data-ai-hint="modern architecture"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-          <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white p-4">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tighter drop-shadow-md">
+          <div className="relative z-10 flex h-full flex-col items-center justify-center p-4 text-center text-white">
+              <h1 className="text-4xl font-extrabold tracking-tighter drop-shadow-md sm:text-5xl lg:text-6xl">
                   Your Next Chapter, Found
               </h1>
               <p className="mt-4 max-w-2xl text-base text-primary-foreground/80 drop-shadow-sm md:text-xl">
@@ -40,38 +42,56 @@ export default function HomePage() {
           </div>
       </div>
 
-      <div className="mb-6 flex flex-col items-center justify-between gap-4 md:flex-row">
-        <Tabs
-          defaultValue="all"
-          onValueChange={(value) => setFilter(value as PropertyType | 'all')}
-          className="w-full md:w-auto"
-        >
-          <TabsList className="h-auto flex-wrap justify-center md:grid md:h-10 md:w-auto md:grid-cols-5">
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="apartment">Apartments</TabsTrigger>
-            <TabsTrigger value="house">Houses</TabsTrigger>
-            <TabsTrigger value="car">Cars</TabsTrigger>
-            <TabsTrigger value="commercial">Commercial</TabsTrigger>
-          </TabsList>
-        </Tabs>
-        <ToggleGroup
-          type="single"
-          value={view}
-          onValueChange={(value) => {
-            if (value) setView(value);
-          }}
-          aria-label="View options"
-        >
-          <ToggleGroupItem value="grid" aria-label="Grid view">
-            <LayoutGrid className="h-4 w-4" />
-          </ToggleGroupItem>
-          <ToggleGroupItem value="list" aria-label="List view">
-            <List className="h-4 w-4" />
-          </ToggleGroupItem>
-          <ToggleGroupItem value="map" aria-label="Map view">
-            <Map className="h-4 w-4" />
-          </ToggleGroupItem>
-        </ToggleGroup>
+      <div className="mb-6 rounded-lg border bg-card p-4 shadow-sm">
+        <div className="mb-4 flex flex-col items-center gap-4 md:flex-row">
+            <div className="relative flex-1 md:grow">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                    type="search"
+                    placeholder="Search properties by location, type, or feature..."
+                    className="w-full rounded-lg bg-background pl-8"
+                />
+            </div>
+             <Button asChild>
+                <Link href="/create-listing">
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Create Listing
+                </Link>
+            </Button>
+        </div>
+        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+            <Tabs
+            defaultValue="all"
+            onValueChange={(value) => setFilter(value as PropertyType | 'all')}
+            className="w-full md:w-auto"
+            >
+            <TabsList className="h-auto flex-wrap justify-center md:grid md:h-10 md:w-auto md:grid-cols-5">
+                <TabsTrigger value="all">All</TabsTrigger>
+                <TabsTrigger value="apartment">Apartments</TabsTrigger>
+                <TabsTrigger value="house">Houses</TabsTrigger>
+                <TabsTrigger value="car">Cars</TabsTrigger>
+                <TabsTrigger value="commercial">Commercial</TabsTrigger>
+            </TabsList>
+            </Tabs>
+            <ToggleGroup
+            type="single"
+            value={view}
+            onValueChange={(value) => {
+                if (value) setView(value);
+            }}
+            aria-label="View options"
+            >
+            <ToggleGroupItem value="grid" aria-label="Grid view">
+                <LayoutGrid className="h-4 w-4" />
+            </ToggleGroupItem>
+            <ToggleGroupItem value="list" aria-label="List view">
+                <List className="h-4 w-4" />
+            </ToggleGroupItem>
+            <ToggleGroupItem value="map" aria-label="Map view">
+                <Map className="h-4 w-4" />
+            </ToggleGroupItem>
+            </ToggleGroup>
+        </div>
       </div>
 
       {view === 'map' ? (
