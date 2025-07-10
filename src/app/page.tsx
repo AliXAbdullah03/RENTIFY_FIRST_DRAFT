@@ -22,15 +22,17 @@ export default function LandingPage() {
     <div className="flex flex-col min-h-screen bg-background">
       <main className="flex-1">
         <div className="relative overflow-hidden">
-            <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="absolute top-0 left-0 w-full h-full object-cover z-0"
-                src="/Untitled design.mp4"
-            />
-            <div className="absolute inset-0 bg-black/60 z-0" />
+            <div className="absolute inset-0 z-0">
+                <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover"
+                    src="/Untitled design.mp4"
+                />
+                <div className="absolute inset-0 bg-black/60" />
+            </div>
             <div className="relative z-10">
                 <section className="relative flex w-full flex-col items-center justify-center text-center py-20 md:py-28">
                     <div className="container mx-auto max-w-4xl space-y-6 px-4">
@@ -51,10 +53,10 @@ export default function LandingPage() {
                   <div className="container px-4 md:px-6">
                     <div className="flex flex-col items-center text-center">
                         <h2 className="text-3xl font-bold tracking-tighter mb-12 sm:text-4xl text-white">Browse by Category</h2>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                         {categories.map((category) => (
                             <Link key={category.name} href={category.href}>
-                            <Card className="text-center p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 bg-card/60 backdrop-blur-sm border-white/10 text-white">
+                            <Card className="text-center p-8 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 bg-card/60 backdrop-blur-sm border-white/10 text-white">
                                 <CardContent className="flex flex-col items-center justify-center gap-4">
                                 <category.icon className="h-12 w-12 text-primary" />
                                 <span className="font-semibold text-lg">{category.name}</span>
