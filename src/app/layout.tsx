@@ -25,7 +25,7 @@ export default function RootLayout({
         <PropertyProvider>
             <div className="flex min-h-screen w-full flex-col">
                 <AppHeader />
-                <main className="flex flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-8">
+                <main className="flex-1 animate-gradient-xy bg-gradient-to-br from-background to-primary/10 bg-[length:400%_400%] p-4 md:p-8">
                     {children}
                 </main>
             </div>

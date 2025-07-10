@@ -27,12 +27,11 @@ export function PropertyCard({ property, view }: PropertyCardProps) {
     <Link href={`/properties/${property.id}`} className="group block">
       <Card
         className={cn(
-          'flex h-full transition-all duration-300 ease-in-out hover:shadow-xl',
-          isGridView ? 'flex-col' : 'flex-row items-center',
+          'flex h-full flex-col transition-all duration-300 ease-in-out hover:shadow-xl',
           'overflow-hidden'
         )}
       >
-        <div className={cn('relative flex-shrink-0', isGridView ? 'w-full h-48' : 'w-1/3 h-48')}>
+        <div className={cn('relative w-full shrink-0', isGridView ? 'h-48' : 'h-48')}>
           <Image
             src={property.images[0]}
             alt={property.title}
@@ -42,7 +41,7 @@ export function PropertyCard({ property, view }: PropertyCardProps) {
           />
         </div>
 
-        <div className={cn('flex flex-1 flex-col', isGridView ? '' : 'w-2/3')}>
+        <div className={cn('flex flex-1 flex-col')}>
           <CardHeader>
             <div className="flex items-start justify-between">
               <CardTitle className="text-lg leading-tight group-hover:text-primary">
