@@ -1,3 +1,4 @@
+
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -31,7 +32,7 @@ export function PropertyCard({ property, view }: PropertyCardProps) {
           'overflow-hidden'
         )}
       >
-        <div className={cn('relative flex-shrink-0', isGridView ? 'w-full h-48' : 'w-1/3 h-full')}>
+        <div className={cn('relative flex-shrink-0', isGridView ? 'w-full h-48' : 'w-1/3 h-48')}>
           <Image
             src={property.images[0]}
             alt={property.title}
