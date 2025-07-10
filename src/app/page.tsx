@@ -34,7 +34,7 @@ export default function LandingPage() {
                 <div className="absolute inset-0 bg-black/60" />
             </div>
             <div className="relative z-10">
-                <section className="relative flex w-full flex-col items-center justify-center text-center py-20 md:py-28">
+                <section className="relative w-full flex-col items-center justify-center text-center py-20 md:py-28">
                     <div className="container mx-auto max-w-4xl space-y-6 px-4">
                         <h1 className="text-4xl font-extrabold tracking-tighter text-white sm:text-5xl md:text-6xl">
                             The Modern Way to Rent Anything
