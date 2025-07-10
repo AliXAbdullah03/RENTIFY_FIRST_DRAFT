@@ -22,7 +22,7 @@ export default function HomePage() {
     <div className="container mx-auto">
        <div className="relative mb-12 h-[50vh] min-h-[300px] w-full overflow-hidden rounded-lg">
           <Image
-              src="https://placehold.co/1600x900.png"
+              src="/main-logo.png"
               alt="Modern building exterior"
               fill
               className="z-0 object-cover"

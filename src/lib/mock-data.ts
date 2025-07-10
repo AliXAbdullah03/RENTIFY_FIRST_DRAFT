@@ -23,7 +23,7 @@ export const properties: Property[] = [
     type: 'apartment',
     price: 2200,
     location: 'New York, NY',
-    images: ['https://placehold.co/600x400.png', 'https://placehold.co/600x400.png'],
+    images: ['/listing-1.png', '/listing-2.png'],
     featured: true,
     ownerId: 'owner-1',
     details: {
@@ -39,7 +39,7 @@ export const properties: Property[] = [
     type: 'house',
     price: 3500,
     location: 'San Francisco, CA',
-    images: ['https://placehold.co/600x400.png', 'https://placehold.co/600x400.png'],
+    images: ['/listing-3.png', '/listing-4.png'],
     featured: false,
     ownerId: 'owner-2',
     details: {
@@ -55,7 +55,7 @@ export const properties: Property[] = [
     type: 'car',
     price: 500,
     location: 'Chicago, IL',
-    images: ['https://placehold.co/600x400.png'],
+    images: ['/listing-5.png'],
     featured: false,
     ownerId: 'owner-1',
     details: {},
@@ -68,7 +68,7 @@ export const properties: Property[] = [
     type: 'commercial',
     price: 5000,
     location: 'Miami, FL',
-    images: ['https://placehold.co/600x400.png'],
+    images: ['/listing-6.png'],
     featured: true,
     ownerId: 'owner-2',
     details: {
@@ -83,7 +83,7 @@ export const properties: Property[] = [
     type: 'apartment',
     price: 1800,
     location: 'Los Angeles, CA',
-    images: ['https://placehold.co/600x400.png'],
+    images: ['/listing-7.png'],
     featured: false,
     ownerId: 'owner-1',
     details: {
