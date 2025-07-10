@@ -1,3 +1,4 @@
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PropertyCard } from '@/components/property-card';
 import { owners, properties as allProperties } from '@/lib/mock-data';
@@ -48,12 +49,6 @@ export default function ProfilePage() {
       <div>
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
             <h2 className="text-3xl font-bold">My Listings ({userProperties.length})</h2>
-            <Button asChild>
-                <Link href="/create-listing">
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Create New Listing
-                </Link>
-            </Button>
         </div>
         {userProperties.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -69,14 +64,8 @@ export default function ProfilePage() {
           <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/30 bg-card py-12 text-center">
             <h3 className="text-xl font-semibold">You have no listings yet</h3>
             <p className="mt-2 mb-4 text-muted-foreground">
-              Get started by creating your first property listing.
+              You can view your listings here once you create them.
             </p>
-            <Button asChild>
-                <Link href="/create-listing">
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Create a Listing
-                </Link>
-            </Button>
           </div>
         )}
       </div>

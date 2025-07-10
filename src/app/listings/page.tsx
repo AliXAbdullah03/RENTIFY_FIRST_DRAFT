@@ -53,12 +53,6 @@ export default function ListingsPage() {
                     className="w-full rounded-lg bg-background/80 pl-10 py-3 text-base"
                 />
             </div>
-             <Button asChild size="lg">
-                <Link href="/create-listing">
-                    <PlusCircle className="mr-2 h-5 w-5" />
-                    Create Listing
-                </Link>
-            </Button>
         </div>
         <div className="mt-4 flex flex-col items-center justify-between gap-4 md:flex-row">
             <Tabs

@@ -89,12 +89,6 @@ export function AppHeader() {
               </DropdownMenuContent>
             </DropdownMenu>
         </div>
-         <Button asChild>
-            <Link href="/create-listing">
-                <PlusCircle className="mr-2 h-5 w-5" />
-                <span className="hidden sm:inline">Post Ad</span>
-            </Link>
-        </Button>
       
         <Sheet>
           <SheetTrigger asChild>
