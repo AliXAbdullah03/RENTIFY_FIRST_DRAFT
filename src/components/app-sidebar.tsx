@@ -1,3 +1,4 @@
+
 'use client';
 import {
   Sidebar,
@@ -40,16 +41,15 @@ export function AppSidebar() {
         <SidebarMenu>
           {menuItems.map((item) => (
             <SidebarMenuItem key={item.href}>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname === item.href}
-                tooltip={{ children: item.label, side: 'right' }}
-              >
-                <Link href={item.href}>
+              <Link href={item.href}>
+                <SidebarMenuButton
+                  isActive={pathname === item.href}
+                  tooltip={{ children: item.label, side: 'right' }}
+                >
                   <item.icon />
                   <span>{item.label}</span>
-                </Link>
-              </SidebarMenuButton>
+                </SidebarMenuButton>
+              </Link>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
@@ -58,16 +58,15 @@ export function AppSidebar() {
          <SidebarMenu>
           {bottomMenuItems.map((item) => (
             <SidebarMenuItem key={item.href}>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname === item.href}
-                tooltip={{ children: item.label, side: 'right' }}
-              >
                 <Link href={item.href}>
-                  <item.icon />
-                  <span>{item.label}</span>
+                  <SidebarMenuButton
+                    isActive={pathname === item.href}
+                    tooltip={{ children: item.label, side: 'right' }}
+                  >
+                    <item.icon />
+                    <span>{item.label}</span>
+                  </SidebarMenuButton>
                 </Link>
-              </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
