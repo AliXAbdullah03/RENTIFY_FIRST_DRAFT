@@ -11,20 +11,24 @@ import { PropertyCard } from '@/components/property-card';
 import type { PropertyType } from '@/lib/types';
 import Image from 'next/image';
 import { usePropertyContext } from '@/context/property-context';
+import { useSearchParams } from 'next/navigation';
 
 export default function ListingsPage() {
   const { properties } = usePropertyContext();
-  const [view, setView] = useState('grid');
-  const [filter, setFilter] = useState<PropertyType | 'all'>('all');
+  const searchParams = useSearchParams();
+  const initialType = searchParams.get('type') || 'all';
 
+  const [view, setView] = useState('grid');
+  const [filter, setFilter] = useState<PropertyType | 'all'>(initialType as PropertyType | 'all');
+  
   const filteredProperties = properties.filter(
     (property) => filter === 'all' || property.type === filter
   );
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto py-8">
       <div className="mb-6 rounded-lg border bg-card p-4 shadow-sm">
-        <div className="mb-4 flex flex-col items-center gap-4 md:flex-row">
+        <div className="flex flex-col items-center gap-4 md:flex-row">
             <div className="relative flex-1 md:grow">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -33,16 +37,16 @@ export default function ListingsPage() {
                     className="w-full rounded-lg bg-background pl-8"
                 />
             </div>
-             <Button asChild>
+             <Button asChild className="bg-accent hover:bg-accent/90">
                 <Link href="/create-listing">
                     <PlusCircle className="mr-2 h-4 w-4" />
                     Create Listing
                 </Link>
             </Button>
         </div>
-        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+        <div className="mt-4 flex flex-col items-center justify-between gap-4 md:flex-row">
             <Tabs
-            defaultValue="all"
+            defaultValue={filter}
             onValueChange={(value) => setFilter(value as PropertyType | 'all')}
             className="w-full md:w-auto"
             >
@@ -81,8 +85,8 @@ export default function ListingsPage() {
             src="https://placehold.co/1200x800.png"
             alt="Map of properties"
             fill
-            objectFit="cover"
             data-ai-hint="map city"
+            style={{objectFit: 'cover'}}
             className="transition-transform duration-300 ease-in-out group-hover:scale-105"
           />
           <div className="absolute inset-0 flex items-center justify-center bg-black/50">
@@ -93,21 +97,30 @@ export default function ListingsPage() {
           </div>
         </div>
       ) : (
-        <div
-          className={
-            view === 'grid'
-              ? 'grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-              : 'flex flex-col gap-6'
-          }
-        >
-          {filteredProperties.map((property) => (
-            <PropertyCard
-              key={property.id}
-              property={property}
-              view={view}
-            />
-          ))}
-        </div>
+        <>
+          {filteredProperties.length > 0 ? (
+            <div
+              className={
+                view === 'grid'
+                  ? 'grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                  : 'flex flex-col gap-6'
+              }
+            >
+              {filteredProperties.map((property) => (
+                <PropertyCard
+                  key={property.id}
+                  property={property}
+                  view={view}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20">
+              <h2 className="text-2xl font-bold">No Listings Found</h2>
+              <p className="text-muted-foreground mt-2">Try adjusting your filters or check back later.</p>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

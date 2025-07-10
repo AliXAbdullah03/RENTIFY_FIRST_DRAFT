@@ -7,7 +7,6 @@ import { BedDouble, Bath, Car, Building, MapPin } from 'lucide-react';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -24,10 +23,10 @@ interface PropertyCardProps {
 export function PropertyCard({ property, view }: PropertyCardProps) {
   const isGridView = view === 'grid';
   return (
-    <Link href={`/properties/${property.id}`} className="group block">
+    <Link href={`/properties/${property.id}`} className="group block h-full">
       <Card
         className={cn(
-          'flex h-full flex-col transition-all duration-300 ease-in-out hover:shadow-xl',
+          'flex h-full flex-col transition-all duration-300 ease-in-out hover:shadow-lg border-2 border-transparent hover:border-primary',
           'overflow-hidden'
         )}
       >
@@ -39,30 +38,25 @@ export function PropertyCard({ property, view }: PropertyCardProps) {
             className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
             data-ai-hint={`${property.type} exterior`}
           />
+           {property.featured && (
+             <Badge className="absolute top-2 right-2 bg-accent text-accent-foreground">Featured</Badge>
+           )}
         </div>
 
-        <div className={cn('flex flex-1 flex-col')}>
-          <CardHeader>
+        <div className="flex flex-1 flex-col p-4">
+          <CardHeader className="p-0">
             <div className="flex items-start justify-between">
-              <CardTitle className="text-lg leading-tight group-hover:text-primary">
+              <CardTitle className="text-base font-bold leading-tight group-hover:text-primary mb-2">
                 {property.title}
               </CardTitle>
-              <Badge variant={property.featured ? 'default' : 'secondary'} className="ml-2 shrink-0">
-                {property.featured ? 'Featured' : 'New'}
-              </Badge>
             </div>
-            <CardDescription className="flex items-center pt-1">
+             <div className="flex items-center text-sm text-muted-foreground">
               <MapPin className="mr-1.5 h-4 w-4" />
               {property.location}
-            </CardDescription>
+            </div>
           </CardHeader>
-          <CardContent className="flex-grow">
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {property.description}
-            </p>
-          </CardContent>
-          <CardFooter className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <CardContent className="flex-grow p-0 mt-4">
+             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               {(property.type === 'house' || property.type === 'apartment') && (
                 <>
                   <div className="flex items-center gap-1.5">
@@ -88,10 +82,13 @@ export function PropertyCard({ property, view }: PropertyCardProps) {
                 </div>
                 )}
             </div>
-            <div className="shrink-0 text-lg font-bold text-foreground">
+          </CardContent>
+          <CardFooter className="p-0 mt-4 flex items-end justify-between">
+            <div className="text-lg font-bold text-primary">
               ${property.price}
-              <span className="text-sm font-normal text-muted-foreground">/mo</span>
+              <span className="text-sm font-normal text-muted-foreground">/month</span>
             </div>
+             <Badge variant="secondary" className="capitalize">{property.type}</Badge>
           </CardFooter>
         </div>
       </Card>
