@@ -23,9 +23,20 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <PropertyProvider>
-            <div className="flex min-h-screen w-full flex-col">
+            {/* NOTE: You can replace this placeholder video with your own by placing a file at /public/background-video.mp4 */}
+            <video 
+                autoPlay 
+                loop 
+                muted 
+                playsInline 
+                className="fixed top-0 left-0 w-full h-full object-cover z-[-2]"
+                src="https://cdn.pixabay.com/video/2024/05/27/211512_large.mp4"
+            />
+            <div className="fixed top-0 left-0 w-full h-full bg-gradient-to-br from-background via-background/80 to-primary/30 animate-gradient-xy bg-[length:400%_400%] z-[-1]"></div>
+            
+            <div className="relative z-10 flex min-h-screen w-full flex-col">
                 <AppHeader />
-                <main className="flex-1 animate-gradient-xy bg-gradient-to-br from-background to-primary/10 bg-[length:400%_400%] p-4 md:p-8">
+                <main className="flex-1 p-4 md:p-8">
                     {children}
                 </main>
             </div>
