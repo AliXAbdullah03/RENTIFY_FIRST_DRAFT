@@ -36,22 +36,22 @@ const navItems = [
 export function AppHeader() {
   const pathname = usePathname();
   return (
-    <header className="sticky top-0 z-50 flex h-20 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur md:px-6">
+    <header className="sticky top-0 z-50 flex h-24 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur md:px-6">
       <div className="flex items-center gap-6">
         <Link
           href="/"
           className="flex items-center gap-2 font-semibold"
         >
-          <Logo className="h-8 w-8 text-primary" />
-          <span className="hidden text-2xl font-bold tracking-tight sm:inline-block">Rentify</span>
+          <Logo className="h-10 w-10 text-primary" />
+          <span className="hidden text-3xl font-bold tracking-tight sm:inline-block">Rentify</span>
         </Link>
-        <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+        <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 lg:gap-6">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                'rounded-md px-3 py-2 text-base font-medium transition-colors hover:text-primary',
+                'rounded-md px-3 py-2 text-lg font-medium transition-colors hover:text-primary',
                 pathname === item.href
                   ? 'text-primary'
                   : 'text-muted-foreground'
@@ -64,14 +64,14 @@ export function AppHeader() {
       </div>
 
       <div className="ml-auto flex items-center gap-2 md:gap-4">
-        <div className="hidden md:flex items-center gap-2">
-            <Button variant="ghost" asChild>
+        <div className="hidden md:flex items-center gap-4">
+            <Button variant="ghost" asChild size="lg">
                 <Link href="/login">Login</Link>
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="secondary" size="icon" className="rounded-full">
-                  <CircleUser className="h-6 w-6" />
+                <Button variant="secondary" size="icon" className="rounded-full h-12 w-12">
+                  <CircleUser className="h-8 w-8" />
                   <span className="sr-only">Toggle user menu</span>
                 </Button>
               </DropdownMenuTrigger>
