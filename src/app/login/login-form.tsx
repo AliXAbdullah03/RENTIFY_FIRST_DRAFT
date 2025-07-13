@@ -7,40 +7,52 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { Building, User, Info, ShieldCheck } from 'lucide-react';
+import { Building, User, Info } from 'lucide-react';
 import Link from 'next/link';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import React from 'react';
-
-type Role = 'Renter' | 'Owner' | 'Admin';
+import { useAuth, UserRole } from '@/context/auth-context';
+import { useRouter } from 'next/navigation';
 
 export function LoginForm() {
   const { toast } = useToast();
+  const { login } = useAuth();
+  const router = useRouter();
 
-  const handleSubmit = (role: Role) => (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (role: Exclude<UserRole, 'admin'>) => (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
-    let loginRole = role;
+    let loginRole: UserRole | null = null;
+    let userName = 'User';
 
-    // Check for admin credentials
     if (email === 'admin@rentify.com' && password === 'adminpassword') {
-      loginRole = 'Admin';
-    } else if (role === 'Renter' && email === 'renter' && password === '123') {
-      loginRole = 'Renter';
-    } else if (role === 'Owner' && email.startsWith('owner')) {
-        loginRole = 'Owner';
+      loginRole = 'admin';
+      userName = 'Admin';
+    } else if (role === 'renter' && email === 'renter' && password === '123') {
+      loginRole = 'renter';
+      userName = 'Renter';
+    } else if (role === 'owner' && email.startsWith('owner')) {
+        loginRole = 'owner';
+        userName = 'Property Owner';
     }
 
-
-    console.log(`Logging in as ${loginRole}`);
-    toast({
-      title: 'Login Successful (Demo)',
-      description: `You have successfully logged in as a ${loginRole}.`,
-    });
-    // In a real app, you would redirect here, e.g., router.push('/')
+    if (loginRole) {
+      login(userName, loginRole);
+      toast({
+        title: 'Login Successful',
+        description: `Welcome! You are now logged in as a ${loginRole}.`,
+      });
+      router.push('/');
+    } else {
+      toast({
+          variant: 'destructive',
+          title: 'Login Failed',
+          description: 'Invalid credentials. Please try again.',
+      });
+    }
   };
 
   return (
@@ -74,14 +86,14 @@ export function LoginForm() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit('Renter')} className="space-y-4">
+              <form onSubmit={handleSubmit('renter')} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="renter-email">Email</Label>
                   <Input name="email" id="renter-email" type="email" placeholder="renter" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="renter-password">Password</Label>
-                  <Input name="password" id="renter-password" type="password" required />
+                  <Input name="password" id="renter-password" type="password" placeholder="123" required />
                 </div>
                 <Button type="submit" className="w-full">
                   Login as Renter
@@ -105,7 +117,7 @@ export function LoginForm() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit('Owner')} className="space-y-4">
+              <form onSubmit={handleSubmit('owner')} className="space-y-4">
                   <div className="space-y-2">
                   <Label htmlFor="owner-email">Email</Label>
                   <Input name="email" id="owner-email" type="email" placeholder="owner@example.com" required />

@@ -18,21 +18,32 @@ import {
   LifeBuoy,
   Menu,
   Settings,
-  User,
   LayoutGrid,
-  PlusCircle,
-  Home
+  Home,
+  LogOut,
+  User as UserIcon,
 } from 'lucide-react';
 import { Logo } from './logo';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
+import { useAuth } from '@/context/auth-context';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-const navItems = [
-  { href: '/', label: 'Home', icon: Home },
+const loggedOutNavItems = [
+  // No items for logged out users in the main nav
+];
+
+const renterNavItems = [
+  { href: '/listings', label: 'Listings', icon: LayoutGrid },
+  { href: '/support', label: 'Support', icon: LifeBuoy },
 ];
 
 export function AppHeader() {
   const pathname = usePathname();
+  const { user, role, logout } = useAuth();
+  
+  const navItems = role === 'renter' ? renterNavItems : loggedOutNavItems;
+
   return (
     <header className="sticky top-0 z-50 flex h-24 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur md:px-6">
       <div className="flex items-center gap-6">
@@ -43,14 +54,57 @@ export function AppHeader() {
           <Logo className="h-10 w-10 text-primary" />
           <span className="hidden text-3xl font-bold tracking-tight sm:inline-block">Rentify</span>
         </Link>
+        <nav className="hidden items-center gap-6 text-lg font-medium md:flex">
+          {navItems.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className={cn(
+                'transition-colors hover:text-foreground/80',
+                pathname === item.href ? 'text-foreground' : 'text-foreground/60'
+              )}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
       </div>
 
       <div className="ml-auto flex items-center gap-2 md:gap-4">
-        <div className="flex items-center gap-4">
-            <Button variant="ghost" asChild size="lg">
-                <Link href="/login">Login</Link>
-            </Button>
-        </div>
+        {user ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary" size="icon" className="rounded-full h-12 w-12">
+                <Avatar className="h-12 w-12">
+                    <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <span className="sr-only">Toggle user menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href="/profile"><UserIcon className="mr-2" />Profile</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/settings"><Settings className="mr-2" />Settings</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/support"><LifeBuoy className="mr-2" />Support</Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={logout}>
+                <LogOut className="mr-2" />
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Button variant="ghost" asChild size="lg">
+            <Link href="/login">Login</Link>
+          </Button>
+        )}
       
         <Sheet>
           <SheetTrigger asChild>
@@ -63,16 +117,41 @@ export function AppHeader() {
             <nav className="grid gap-6 text-lg font-medium">
               <Link
                 href="/"
-                className="flex items-center gap-2 text-lg font-semibold"
+                className="flex items-center gap-2 text-lg font-semibold mb-4"
               >
                 <Logo className="h-8 w-8 text-primary" />
                 <span className="text-xl font-bold tracking-tight">Rentify</span>
               </Link>
               <Separator />
-              <Link href="/login" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
-                <CircleUser className="h-5 w-5" />
-                Login
-              </Link>
+              {user ? (
+                <>
+                  {navItems.map(item => (
+                     <Link key={item.label} href={item.href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+                      <item.icon className="h-5 w-5" />
+                      {item.label}
+                    </Link>
+                  ))}
+                  <Separator />
+                   <Link href="/profile" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+                      <UserIcon className="h-5 w-5" />
+                      Profile
+                    </Link>
+                    <Link href="/settings" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+                      <Settings className="h-5 w-5" />
+                      Settings
+                    </Link>
+                    <div onClick={logout} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary cursor-pointer">
+                      <LogOut className="h-5 w-5" />
+                      Logout
+                    </div>
+
+                </>
+              ) : (
+                <Link href="/login" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+                  <CircleUser className="h-5 w-5" />
+                  Login
+                </Link>
+              )}
             </nav>
           </SheetContent>
         </Sheet>
