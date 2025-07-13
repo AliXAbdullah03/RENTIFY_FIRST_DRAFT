@@ -29,8 +29,6 @@ import { Separator } from '@/components/ui/separator';
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
-  { href: '/listings', label: 'Listings', icon: LayoutGrid },
-  { href: '/support', label: 'Support', icon: LifeBuoy },
 ];
 
 export function AppHeader() {
@@ -45,49 +43,13 @@ export function AppHeader() {
           <Logo className="h-10 w-10 text-primary" />
           <span className="hidden text-3xl font-bold tracking-tight sm:inline-block">Rentify</span>
         </Link>
-        <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 lg:gap-6">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                'rounded-md px-3 py-2 text-lg font-medium transition-colors hover:text-primary',
-                pathname === item.href
-                  ? 'text-primary'
-                  : 'text-muted-foreground'
-              )}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
       </div>
 
       <div className="ml-auto flex items-center gap-2 md:gap-4">
-        <div className="hidden md:flex items-center gap-4">
+        <div className="flex items-center gap-4">
             <Button variant="ghost" asChild size="lg">
                 <Link href="/login">Login</Link>
             </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="secondary" size="icon" className="rounded-full h-12 w-12">
-                  <CircleUser className="h-8 w-8" />
-                  <span className="sr-only">Toggle user menu</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                    <Link href="/profile"><User className="mr-2 h-4 w-4" />Profile</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                    <Link href="/settings"><Settings className="mr-2 h-4 w-4" />Settings</Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Logout</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
         </div>
       
         <Sheet>
@@ -106,33 +68,10 @@ export function AppHeader() {
                 <Logo className="h-8 w-8 text-primary" />
                 <span className="text-xl font-bold tracking-tight">Rentify</span>
               </Link>
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    'flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary',
-                    pathname === item.href
-                      ? 'bg-muted text-primary'
-                      : 'text-muted-foreground'
-                  )}
-                >
-                  <item.icon className="h-5 w-5" />
-                  {item.label}
-                </Link>
-              ))}
               <Separator />
               <Link href="/login" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
                 <CircleUser className="h-5 w-5" />
                 Login
-              </Link>
-              <Link href="/profile" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
-                <User className="h-5 w-5" />
-                Profile
-              </Link>
-              <Link href="/settings" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
-                <Settings className="h-5 w-5" />
-                Settings
               </Link>
             </nav>
           </SheetContent>
