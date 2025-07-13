@@ -38,6 +38,9 @@ export function PropertyCard({ property, view }: PropertyCardProps) {
             className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
             data-ai-hint={`${property.type} exterior`}
           />
+           {property.availableNow && (
+              <Badge variant="secondary" className="absolute top-2 right-2">Available Now</Badge>
+            )}
         </div>
 
         <div className="flex flex-1 flex-col p-4">
@@ -66,7 +69,7 @@ export function PropertyCard({ property, view }: PropertyCardProps) {
               <span className="text-sm font-normal text-muted-foreground">/month</span>
             </div>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              {(property.type === 'house' || property.type === 'apartment') && (
+              {(property.type === 'house' || property.type === 'apartment' || property.type === 'room') && property.details.beds && (
                 <>
                   <div className="flex items-center gap-1.5">
                     <BedDouble className="h-4 w-4" />
@@ -78,7 +81,13 @@ export function PropertyCard({ property, view }: PropertyCardProps) {
                   </div>
                 </>
               )}
-               {property.type === 'commercial' && (
+               {property.type === 'bedspace' && (
+                 <div className="flex items-center gap-1.5">
+                    <BedDouble className="h-4 w-4" />
+                    <span>Bedspace</span>
+                  </div>
+               )}
+               {property.type === 'commercial' && property.details.sqft && (
                 <div className="flex items-center gap-1.5">
                   <Building className="h-4 w-4" />
                   <span>{property.details.sqft}sqft</span>

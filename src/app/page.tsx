@@ -9,8 +9,8 @@ import { usePropertyContext } from '@/context/property-context';
 
 const categories = [
   { name: 'Apartments', icon: HomeIcon, href: '/listings?type=apartment' },
-  { name: 'Houses', icon: Building, href: '/listings?type=house' },
-  { name: 'Cars', icon: Car, href: '/listings?type=car' },
+  { name: 'Rooms', icon: Building, href: '/listings?type=room' },
+  { name: 'Bedspace', icon: Car, href: '/listings?type=bedspace' },
   { name: 'Commercial', icon: Building, href: '/listings?type=commercial' },
 ];
 
@@ -49,24 +49,27 @@ export default function LandingPage() {
                         </Button>
                     </div>
                 </div>
-                <div id="categories" className="w-full pt-12 pb-24 md:pt-24 md:pb-32">
-                    <div className="flex flex-col items-center text-center">
-                        <h2 className="text-3xl font-bold tracking-tighter mb-12 sm:text-4xl text-white">Browse by Category</h2>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                        {categories.map((category) => (
-                            <Link key={category.name} href={category.href}>
-                            <Card className="text-center p-8 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 bg-card/60 backdrop-blur-sm border-white/10 text-white">
-                                <CardContent className="flex flex-col items-center justify-center gap-4">
-                                <category.icon className="h-12 w-12 text-primary" />
-                                <span className="font-semibold text-lg">{category.name}</span>
-                                </CardContent>
-                            </Card>
-                            </Link>
-                        ))}
-                        </div>
+            </div>
+        </section>
+
+        <section id="categories" className="w-full py-12 md:py-24">
+             <div className="container mx-auto px-4 md:px-6">
+                <div className="flex flex-col items-center text-center">
+                    <h2 className="text-3xl font-bold tracking-tighter mb-12 sm:text-4xl">Browse by Category</h2>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                    {categories.map((category) => (
+                        <Link key={category.name} href={category.href}>
+                        <Card className="text-center p-8 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 bg-card/60 backdrop-blur-sm border-white/10 text-card-foreground">
+                            <CardContent className="flex flex-col items-center justify-center gap-4">
+                            <category.icon className="h-12 w-12 text-primary" />
+                            <span className="font-semibold text-lg">{category.name}</span>
+                            </CardContent>
+                        </Card>
+                        </Link>
+                    ))}
                     </div>
                 </div>
-            </div>
+             </div>
         </section>
         
         {featuredProperties.length > 0 && (

@@ -1,4 +1,5 @@
-export type PropertyType = 'apartment' | 'house' | 'car' | 'commercial';
+export type PropertyType = 'apartment' | 'room' | 'bedspace' | 'commercial' | 'house' | 'car';
+export type Furnishing = 'furnished' | 'unfurnished';
 
 export interface Owner {
   id: string;
@@ -24,4 +25,6 @@ export interface Property {
     sqft?: number;
   };
   amenities: string[];
+  availableNow: boolean;
+  furnishing: Furnishing;
 }
