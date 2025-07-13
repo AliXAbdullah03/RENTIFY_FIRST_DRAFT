@@ -1,3 +1,8 @@
+
+'use client';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/auth-context';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -5,8 +10,40 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { LifeBuoy, Send } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function SupportPage() {
+    const { isAuthenticated } = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (isAuthenticated === false) {
+            router.push('/login');
+        }
+    }, [isAuthenticated, router]);
+
+    if (isAuthenticated === null || isAuthenticated === false) {
+        return (
+            <div className="mx-auto max-w-4xl space-y-8">
+                <div>
+                    <Skeleton className="h-9 w-64" />
+                    <Skeleton className="h-5 w-96 mt-2" />
+                </div>
+                <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                    <div className="space-y-4">
+                        <Skeleton className="h-8 w-1/2" />
+                        <Skeleton className="h-12 w-full" />
+                        <Skeleton className="h-12 w-full" />
+                        <Skeleton className="h-12 w-full" />
+                    </div>
+                    <div>
+                        <Skeleton className="h-96 w-full" />
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
   return (
     <div className="mx-auto max-w-4xl space-y-8">
       <div>

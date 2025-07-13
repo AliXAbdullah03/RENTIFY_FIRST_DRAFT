@@ -1,7 +1,10 @@
 
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import {
   Carousel,
   CarouselContent,
@@ -14,10 +17,51 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, MapPin } from 'lucide-react';
+import { useAuth } from '@/context/auth-context';
+import { Skeleton } from '@/components/ui/skeleton';
 
-export default async function PropertyDetailPage({ params }: { params: { id: string } }) {
+export default function PropertyDetailPage({ params }: { params: { id: string } }) {
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isAuthenticated === false) {
+      router.push('/login');
+    }
+  }, [isAuthenticated, router]);
+
   const property = properties.find((p) => p.id === params.id);
 
+  if (isAuthenticated === null || isAuthenticated === false) {
+    return (
+        <div className="container mx-auto max-w-5xl">
+            <div className="space-y-4">
+                <Skeleton className="h-10 w-3/4" />
+                <Skeleton className="h-6 w-1/2" />
+            </div>
+            <Skeleton className="my-8 w-full h-96 rounded-lg" />
+            <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
+                <div className="md:col-span-2 space-y-4">
+                    <Skeleton className="h-8 w-1/3" />
+                    <Skeleton className="h-24 w-full" />
+                    <Skeleton className="h-8 w-1/4 mt-8" />
+                    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+                        <Skeleton className="h-6 w-full" />
+                        <Skeleton className="h-6 w-full" />
+                        <Skeleton className="h-6 w-full" />
+                         <Skeleton className="h-6 w-full" />
+                        <Skeleton className="h-6 w-full" />
+                    </div>
+                </div>
+                <div className="space-y-8">
+                    <Skeleton className="h-32 w-full rounded-lg" />
+                    <Skeleton className="h-40 w-full rounded-lg" />
+                </div>
+            </div>
+        </div>
+    );
+  }
+  
   if (!property) {
     notFound();
   }

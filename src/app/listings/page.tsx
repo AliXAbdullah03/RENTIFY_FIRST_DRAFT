@@ -1,27 +1,28 @@
 
 'use client';
-import { useState } from 'react';
-import Link from 'next/link';
-import { List, LayoutGrid, Map, Search, PlusCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { List, LayoutGrid, Map, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { PropertyCard } from '@/components/property-card';
 import type { PropertyType } from '@/lib/types';
 import Image from 'next/image';
 import { usePropertyContext } from '@/context/property-context';
-import { useSearchParams } from 'next/navigation';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Card } from '@/components/ui/card';
+import { useAuth } from '@/context/auth-context';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const MAX_PRICE = 10000;
 
 export default function ListingsPage() {
   const { properties } = usePropertyContext();
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const initialType = searchParams.get('type') || 'all';
 
@@ -30,6 +31,29 @@ export default function ListingsPage() {
   const [priceRange, setPriceRange] = useState([0, MAX_PRICE]);
   const [availableNow, setAvailableNow] = useState(false);
   const [furnishing, setFurnishing] = useState<'any' | 'furnished' | 'unfurnished'>('any');
+
+  useEffect(() => {
+    if (isAuthenticated === false) {
+      router.push('/login');
+    }
+  }, [isAuthenticated, router]);
+
+  if (isAuthenticated === null || isAuthenticated === false) {
+    return (
+        <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <div className="space-y-8">
+                <Skeleton className="h-80 w-full rounded-lg" />
+                <Skeleton className="h-32 w-full rounded-lg" />
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    <Skeleton className="h-96 w-full rounded-lg" />
+                    <Skeleton className="h-96 w-full rounded-lg" />
+                    <Skeleton className="h-96 w-full rounded-lg" />
+                    <Skeleton className="h-96 w-full rounded-lg" />
+                </div>
+            </div>
+        </div>
+    );
+  }
 
   const filteredProperties = properties.filter((property) => {
     const typeMatch = filter === 'all' || property.type === filter;

@@ -1,3 +1,8 @@
+
+'use client';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/auth-context';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -5,8 +10,34 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { User, Bell, Palette, Lock } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+
 
 export default function SettingsPage() {
+    const { isAuthenticated } = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (isAuthenticated === false) {
+            router.push('/login');
+        }
+    }, [isAuthenticated, router]);
+
+    if (isAuthenticated === null || isAuthenticated === false) {
+        return (
+             <div className="mx-auto max-w-4xl space-y-8">
+                <div>
+                    <Skeleton className="h-9 w-48" />
+                    <Skeleton className="h-5 w-80 mt-2" />
+                </div>
+                <Separator />
+                <Skeleton className="h-64 w-full" />
+                <Skeleton className="h-64 w-full" />
+                <Skeleton className="h-52 w-full" />
+             </div>
+        )
+    }
+
   return (
     <div className="mx-auto max-w-4xl space-y-8">
       <div>

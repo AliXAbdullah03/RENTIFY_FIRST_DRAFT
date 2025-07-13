@@ -1,43 +1,79 @@
 
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/auth-context';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PropertyCard } from '@/components/property-card';
 import { owners, properties as allProperties } from '@/lib/mock-data';
-import { Mail, Phone, PlusCircle } from 'lucide-react';
+import { Mail, Phone } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ProfilePage() {
+  const { user, isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isAuthenticated === false) {
+      router.push('/login');
+    }
+  }, [isAuthenticated, router]);
+
+  if (isAuthenticated === null || isAuthenticated === false || !user) {
+    return (
+        <div className="container mx-auto max-w-6xl space-y-8">
+            <div className="flex flex-col items-center space-y-4 md:flex-row md:space-y-0 md:space-x-8">
+                <Skeleton className="h-32 w-32 rounded-full" />
+                <div className="space-y-2 text-center md:text-left">
+                    <Skeleton className="h-10 w-64" />
+                    <Skeleton className="h-5 w-80" />
+                </div>
+            </div>
+            <Separator className="my-8" />
+             <div>
+                <Skeleton className="h-8 w-48 mb-6" />
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    <Skeleton className="h-96 w-full" />
+                    <Skeleton className="h-96 w-full" />
+                    <Skeleton className="h-96 w-full" />
+                </div>
+            </div>
+        </div>
+    );
+  }
+
   // In a real app, you'd get the logged-in user's ID
   const currentUserId = 'owner-1';
-  const user = owners.find((owner) => owner.id === currentUserId);
+  const ownerDetails = owners.find((owner) => owner.id === currentUserId);
   const userProperties = allProperties.filter(
     (prop) => prop.ownerId === currentUserId
   );
 
-  if (!user) {
-    return <div>User not found.</div>;
+  if (!ownerDetails) {
+    return <div>User details not found.</div>;
   }
 
   return (
     <div className="container mx-auto max-w-6xl">
       <div className="flex flex-col items-center space-y-4 md:flex-row md:space-y-0 md:space-x-8">
         <Avatar className="h-32 w-32 border-4 border-primary">
-          <AvatarImage src={user.avatar} alt={user.name} data-ai-hint="person face"/>
-          <AvatarFallback className="text-4xl">{user.name.charAt(0)}</AvatarFallback>
+          <AvatarImage src={ownerDetails.avatar} alt={ownerDetails.name} data-ai-hint="person face"/>
+          <AvatarFallback className="text-4xl">{ownerDetails.name.charAt(0)}</AvatarFallback>
         </Avatar>
         <div className="text-center md:text-left">
-          <h1 className="text-4xl font-bold">{user.name}</h1>
-          <p className="text-muted-foreground">{user.email}</p>
+          <h1 className="text-4xl font-bold">{ownerDetails.name}</h1>
+          <p className="text-muted-foreground">{ownerDetails.email}</p>
           <div className="mt-2 flex justify-center space-x-4 md:justify-start">
-            <a href={`mailto:${user.email}`} className="flex items-center text-sm text-muted-foreground hover:text-primary">
+            <a href={`mailto:${ownerDetails.email}`} className="flex items-center text-sm text-muted-foreground hover:text-primary">
               <Mail className="mr-1.5 h-4 w-4" />
               <span>Contact via Email</span>
             </a>
-            {user.phone && (
-              <a href={`tel:${user.phone}`} className="flex items-center text-sm text-muted-foreground hover:text-primary">
+            {ownerDetails.phone && (
+              <a href={`tel:${ownerDetails.phone}`} className="flex items-center text-sm text-muted-foreground hover:text-primary">
                 <Phone className="mr-1.5 h-4 w-4" />
-                <span>{user.phone}</span>
+                <span>{ownerDetails.phone}</span>
               </a>
             )}
           </div>
