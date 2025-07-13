@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -27,7 +28,12 @@ export function LoginForm() {
     // Check for admin credentials
     if (email === 'admin@rentify.com' && password === 'adminpassword') {
       loginRole = 'Admin';
+    } else if (role === 'Renter' && email === 'renter' && password === '123') {
+      loginRole = 'Renter';
+    } else if (role === 'Owner' && email.startsWith('owner')) {
+        loginRole = 'Owner';
     }
+
 
     console.log(`Logging in as ${loginRole}`);
     toast({
@@ -43,7 +49,11 @@ export function LoginForm() {
         <Info className="h-4 w-4" />
         <AlertTitle>Demo Login</AlertTitle>
         <AlertDescription>
-          Use any credentials to log in as a Renter or Owner. For Admin access, use email: <strong>admin@rentify.com</strong> and password: <strong>adminpassword</strong>.
+            <ul className="list-disc pl-5 space-y-1">
+                <li><strong>Renter:</strong> email: <strong>renter</strong>, password: <strong>123</strong></li>
+                <li><strong>Owner:</strong> Use any email starting with 'owner' and any password.</li>
+                <li><strong>Admin:</strong> email: <strong>admin@rentify.com</strong>, password: <strong>adminpassword</strong></li>
+            </ul>
         </AlertDescription>
       </Alert>
       <Tabs defaultValue="renter" className="w-full">
@@ -67,7 +77,7 @@ export function LoginForm() {
               <form onSubmit={handleSubmit('Renter')} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="renter-email">Email</Label>
-                  <Input name="email" id="renter-email" type="email" placeholder="renter@example.com" required />
+                  <Input name="email" id="renter-email" type="email" placeholder="renter" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="renter-password">Password</Label>
