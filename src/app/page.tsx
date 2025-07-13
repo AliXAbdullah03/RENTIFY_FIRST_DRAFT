@@ -34,7 +34,7 @@ export default function LandingPage() {
                 <div className="absolute inset-0 bg-black/60" />
             </div>
             <div className="relative z-10 container mx-auto px-4 md:px-6">
-                <div className="w-full py-20 md:py-28">
+                <div className="w-full py-20 md:py-48">
                     <div className="flex flex-col items-center justify-center text-center space-y-6">
                         <h1 className="text-4xl font-extrabold tracking-tighter text-white sm:text-5xl md:text-6xl">
                             The Modern Way to Rent Anything
