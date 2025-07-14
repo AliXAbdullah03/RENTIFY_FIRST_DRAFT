@@ -52,10 +52,21 @@ export default function LandingPage() {
             </div>
         </section>
 
-        <section id="categories" className="w-full py-12 md:py-24">
-             <div className="container mx-auto px-4 md:px-6">
+        <section id="categories" className="relative w-full py-12 md:py-24 overflow-hidden">
+             <div className="absolute inset-0 z-0">
+                <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover"
+                    src="/Untitled design.mp4"
+                />
+                <div className="absolute inset-0 bg-black/70" />
+            </div>
+             <div className="relative z-10 container mx-auto px-4 md:px-6">
                 <div className="flex flex-col items-center text-center">
-                    <h2 className="text-3xl font-bold tracking-tighter mb-12 sm:text-4xl">Browse by Category</h2>
+                    <h2 className="text-3xl font-bold tracking-tighter mb-12 sm:text-4xl text-white">Browse by Category</h2>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                     {categories.map((category) => (
                         <Link key={category.name} href={category.href}>
