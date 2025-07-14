@@ -31,7 +31,7 @@ export function LoginForm() {
     if (email === 'admin@rentify.com' && password === 'adminpassword') {
       loginRole = 'admin';
       userName = 'Admin';
-    } else if (role === 'renter' && email === 'renter' && password === '123') {
+    } else if (role === 'renter' && email.startsWith('renter')) {
       loginRole = 'renter';
       userName = 'Renter';
     } else if (role === 'owner' && email.startsWith('owner')) {
@@ -62,7 +62,7 @@ export function LoginForm() {
         <AlertTitle>Demo Login</AlertTitle>
         <AlertDescription>
             <ul className="list-disc pl-5 space-y-1">
-                <li><strong>Renter:</strong> email: <strong>renter</strong>, password: <strong>123</strong></li>
+                <li><strong>Renter:</strong> Use any email starting with 'renter' and any password.</li>
                 <li><strong>Owner:</strong> Use any email starting with 'owner' and any password.</li>
                 <li><strong>Admin:</strong> email: <strong>admin@rentify.com</strong>, password: <strong>adminpassword</strong></li>
             </ul>
@@ -89,11 +89,11 @@ export function LoginForm() {
               <form onSubmit={handleSubmit('renter')} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="renter-email">Email</Label>
-                  <Input name="email" id="renter-email" type="email" placeholder="renter" required />
+                  <Input name="email" id="renter-email" type="email" placeholder="renter@example.com" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="renter-password">Password</Label>
-                  <Input name="password" id="renter-password" type="password" placeholder="123" required />
+                  <Input name="password" id="renter-password" type="password" required />
                 </div>
                 <Button type="submit" className="w-full">
                   Login as Renter
