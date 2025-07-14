@@ -33,54 +33,46 @@ export default function LandingPage() {
                 />
                 <div className="absolute inset-0 bg-black/60" />
             </div>
-            <div className="relative z-10 container mx-auto px-4 md:px-6">
-                <div className="w-full py-20 md:py-48">
-                    <div className="flex flex-col items-center justify-center text-center space-y-6">
-                        <h1 className="text-4xl font-extrabold tracking-tighter text-white sm:text-5xl md:text-6xl">
-                            The Modern Way to Rent Anything
-                        </h1>
-                        <p className="max-w-2xl mx-auto text-lg text-neutral-200 md:text-xl">
-                            Discover a seamless rental experience. From homes to cars, find exactly what you need with Rentify.
-                        </p>
-                            <Button size="lg" asChild>
-                            <Link href="/listings">
-                                Rent IT <ArrowRight className="ml-2 h-5 w-5" />
-                            </Link>
-                        </Button>
+            
+            <div className="relative z-10">
+                <div className="container mx-auto px-4 md:px-6">
+                    <div className="w-full py-20 md:py-48">
+                        <div className="flex flex-col items-center justify-center text-center space-y-6">
+                            <h1 className="text-4xl font-extrabold tracking-tighter text-white sm:text-5xl md:text-6xl">
+                                The Modern Way to Rent Anything
+                            </h1>
+                            <p className="max-w-2xl mx-auto text-lg text-neutral-200 md:text-xl">
+                                Discover a seamless rental experience. From homes to cars, find exactly what you need with Rentify.
+                            </p>
+                                <Button size="lg" asChild>
+                                <Link href="/listings">
+                                    Rent IT <ArrowRight className="ml-2 h-5 w-5" />
+                                </Link>
+                            </Button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
 
-        <section id="categories" className="relative w-full py-12 md:py-24 overflow-hidden">
-             <div className="absolute inset-0 z-0">
-                <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-full object-cover"
-                    src="/Untitled design.mp4"
-                />
-                <div className="absolute inset-0 bg-black/70" />
-            </div>
-             <div className="relative z-10 container mx-auto px-4 md:px-6">
-                <div className="flex flex-col items-center text-center">
-                    <h2 className="text-3xl font-bold tracking-tighter mb-12 sm:text-4xl text-white">Browse by Category</h2>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                    {categories.map((category) => (
-                        <Link key={category.name} href={category.href}>
-                        <Card className="text-center p-8 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 bg-card/60 backdrop-blur-sm border-white/10 text-card-foreground">
-                            <CardContent className="flex flex-col items-center justify-center gap-4">
-                            <category.icon className="h-12 w-12 text-primary" />
-                            <span className="font-semibold text-lg">{category.name}</span>
-                            </CardContent>
-                        </Card>
-                        </Link>
-                    ))}
+                <div id="categories" className="w-full pb-12 md:pb-24">
+                    <div className="container mx-auto px-4 md:px-6">
+                        <div className="flex flex-col items-center text-center">
+                            <h2 className="text-3xl font-bold tracking-tighter mb-12 sm:text-4xl text-white">Browse by Category</h2>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                            {categories.map((category) => (
+                                <Link key={category.name} href={category.href}>
+                                <Card className="text-center p-8 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 bg-card/60 backdrop-blur-sm border-white/10 text-card-foreground">
+                                    <CardContent className="flex flex-col items-center justify-center gap-4">
+                                    <category.icon className="h-12 w-12 text-primary" />
+                                    <span className="font-semibold text-lg">{category.name}</span>
+                                    </CardContent>
+                                </Card>
+                                </Link>
+                            ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
-             </div>
+            </div>
         </section>
         
         {featuredProperties.length > 0 && (
