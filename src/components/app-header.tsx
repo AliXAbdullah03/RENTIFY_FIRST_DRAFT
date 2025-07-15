@@ -19,7 +19,7 @@ import {
   Menu,
   Settings,
   LayoutGrid,
-  Home,
+  PlusCircle,
   LogOut,
   User as UserIcon,
 } from 'lucide-react';
@@ -27,9 +27,9 @@ import { Logo } from './logo';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/context/auth-context';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
-const loggedOutNavItems = [
+const loggedOutNavItems: any[] = [
   // No items for logged out users in the main nav
 ];
 
@@ -38,11 +38,17 @@ const renterNavItems = [
   { href: '/support', label: 'Support', icon: LifeBuoy },
 ];
 
+const ownerNavItems = [
+    { href: '/listings', label: 'My Listings', icon: LayoutGrid },
+    { href: '/create-listing', label: 'Create Listing', icon: PlusCircle },
+    { href: '/support', label: 'Support', icon: LifeBuoy },
+]
+
 export function AppHeader() {
   const pathname = usePathname();
   const { user, role, logout } = useAuth();
   
-  const navItems = role === 'renter' ? renterNavItems : loggedOutNavItems;
+  const navItems = role === 'renter' ? renterNavItems : (role === 'owner' ? ownerNavItems : loggedOutNavItems);
 
   return (
     <header className="sticky top-0 z-50 flex h-24 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur md:px-6">
