@@ -79,7 +79,7 @@ export function PropertyCard({ property, view, role, onDelete = () => {} }: Prop
           <CardHeader className="p-0">
             <div className="flex items-start justify-between gap-2">
               <CardTitle className="text-lg font-bold leading-tight group-hover:text-primary mb-1">
-                {property.title}
+                <Link href={`/properties/${property.id}`} className="hover:underline">{property.title}</Link>
               </CardTitle>
               {property.featured && !isOwnerView && (
                 <Badge variant="default" className="shrink-0">Featured</Badge>

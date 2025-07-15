@@ -98,24 +98,24 @@ export function AppHeader() {
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href="/profile"><UserIcon className="mr-2" />Profile</Link>
+                <Link href="/profile"><UserIcon className="mr-2 h-4 w-4" />Profile</Link>
               </DropdownMenuItem>
                <DropdownMenuItem asChild>
                 <Link href="/inbox" className="relative">
-                    <MessageSquare className="mr-2" />
+                    <MessageSquare className="mr-2 h-4 w-4" />
                     Inbox
                     <Badge variant="destructive" className="absolute top-1 right-2 h-5 w-5 justify-center p-0">3</Badge>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/settings"><Settings className="mr-2" />Settings</Link>
+                <Link href="/settings"><Settings className="mr-2 h-4 w-4" />Settings</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/support"><LifeBuoy className="mr-2" />Support</Link>
+                <Link href="/support"><LifeBuoy className="mr-2 h-4 w-4" />Support</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={logout}>
-                <LogOut className="mr-2" />
+                <LogOut className="mr-2 h-4 w-4" />
                 Logout
               </DropdownMenuItem>
             </DropdownMenuContent>

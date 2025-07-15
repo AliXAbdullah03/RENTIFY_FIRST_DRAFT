@@ -10,9 +10,11 @@ import { owners, properties as allProperties } from '@/lib/mock-data';
 import { Mail, Phone } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
+import { usePropertyContext } from '@/context/property-context';
 
 export default function ProfilePage() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, role } = useAuth();
+  const { properties } = usePropertyContext();
   const router = useRouter();
 
   useEffect(() => {
@@ -23,7 +25,7 @@ export default function ProfilePage() {
 
   if (isAuthenticated === null || isAuthenticated === false || !user) {
     return (
-        <div className="container mx-auto max-w-6xl space-y-8">
+        <div className="container mx-auto max-w-6xl py-8 space-y-8">
             <div className="flex flex-col items-center space-y-4 md:flex-row md:space-y-0 md:space-x-8">
                 <Skeleton className="h-32 w-32 rounded-full" />
                 <div className="space-y-2 text-center md:text-left">
@@ -47,7 +49,7 @@ export default function ProfilePage() {
   // In a real app, you'd get the logged-in user's ID
   const currentUserId = 'owner-1';
   const ownerDetails = owners.find((owner) => owner.id === currentUserId);
-  const userProperties = allProperties.filter(
+  const userProperties = properties.filter(
     (prop) => prop.ownerId === currentUserId
   );
 
@@ -56,7 +58,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="container mx-auto max-w-6xl">
+    <div className="container mx-auto max-w-6xl py-8">
       <div className="flex flex-col items-center space-y-4 md:flex-row md:space-y-0 md:space-x-8">
         <Avatar className="h-32 w-32 border-4 border-primary">
           <AvatarImage src={ownerDetails.avatar} alt={ownerDetails.name} data-ai-hint="person face"/>
@@ -82,29 +84,32 @@ export default function ProfilePage() {
       
       <Separator className="my-8" />
 
-      <div>
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-            <h2 className="text-3xl font-bold">My Listings ({userProperties.length})</h2>
+      {role === 'owner' && (
+        <div>
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+                <h2 className="text-3xl font-bold">My Listings ({userProperties.length})</h2>
+            </div>
+            {userProperties.length > 0 ? (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {userProperties.map((property) => (
+                <PropertyCard
+                    key={property.id}
+                    property={property}
+                    view="grid"
+                    role={role}
+                />
+                ))}
+            </div>
+            ) : (
+            <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/30 bg-card py-12 text-center">
+                <h3 className="text-xl font-semibold">You have no listings yet</h3>
+                <p className="mt-2 mb-4 text-muted-foreground">
+                You can view your listings here once you create them.
+                </p>
+            </div>
+            )}
         </div>
-        {userProperties.length > 0 ? (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {userProperties.map((property) => (
-              <PropertyCard
-                key={property.id}
-                property={property}
-                view="grid"
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/30 bg-card py-12 text-center">
-            <h3 className="text-xl font-semibold">You have no listings yet</h3>
-            <p className="mt-2 mb-4 text-muted-foreground">
-              You can view your listings here once you create them.
-            </p>
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 }

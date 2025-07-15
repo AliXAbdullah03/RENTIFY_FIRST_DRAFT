@@ -32,19 +32,6 @@ export default function RootLayout({
       <body className={cn('font-sans antialiased', inter.variable)}>
         <AuthProvider>
           <PropertyProvider>
-              {isListingsPage && (
-                <div className="fixed inset-0 -z-10">
-                  <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-full object-cover"
-                    src="/loop-video.mp4"
-                  />
-                  <div className="absolute inset-0 bg-black/70" />
-                </div>
-              )}
               <div className="relative z-10 flex min-h-screen w-full flex-col">
                   <AppHeader />
                   <main className="flex-1 py-8">
