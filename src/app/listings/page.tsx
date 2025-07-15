@@ -2,7 +2,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { List, LayoutGrid, Map, Search } from 'lucide-react';
+import { List, LayoutGrid, Map, Search, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
@@ -16,6 +16,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useAuth } from '@/context/auth-context';
 import { Skeleton } from '@/components/ui/skeleton';
+import { SmartSearchDialog } from '@/components/smart-search-dialog';
+import { Button } from '@/components/ui/button';
 
 const MAX_PRICE = 10000;
 
@@ -31,6 +33,7 @@ export default function ListingsPage() {
   const [priceRange, setPriceRange] = useState([0, MAX_PRICE]);
   const [availableNow, setAvailableNow] = useState(false);
   const [furnishing, setFurnishing] = useState<'any' | 'furnished' | 'unfurnished'>('any');
+  const [smartSearchResults, setSmartSearchResults] = useState<string[] | null>(null);
 
   useEffect(() => {
     if (isAuthenticated === false) {
@@ -55,7 +58,23 @@ export default function ListingsPage() {
     );
   }
 
+  const handleSmartSearch = (propertyIds: string[]) => {
+    setSmartSearchResults(propertyIds);
+    // Reset other filters when smart search is used
+    setFilter('all');
+    setPriceRange([0, MAX_PRICE]);
+    setAvailableNow(false);
+    setFurnishing('any');
+  };
+  
+  const clearSmartSearch = () => {
+      setSmartSearchResults(null);
+  }
+
   const filteredProperties = properties.filter((property) => {
+    if (smartSearchResults) {
+        return smartSearchResults.includes(property.id);
+    }
     const typeMatch = filter === 'all' || property.type === filter;
     const priceMatch = property.price >= priceRange[0] && property.price <= priceRange[1];
     const availabilityMatch = !availableNow || property.availableNow;
@@ -105,21 +124,25 @@ export default function ListingsPage() {
                     value={priceRange}
                     onValueChange={setPriceRange}
                     className="w-full"
+                    disabled={!!smartSearchResults}
                 />
             </div>
-            <div className="flex items-center space-x-2 pt-5">
-                <Checkbox id="available-now" checked={availableNow} onCheckedChange={(checked) => setAvailableNow(!!checked)} />
+             <div className="flex items-center space-x-2 pt-5">
+                <Checkbox id="available-now" checked={availableNow} onCheckedChange={(checked) => setAvailableNow(!!checked)} disabled={!!smartSearchResults} />
                 <Label htmlFor="available-now">Available Now</Label>
             </div>
         </div>
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
             <div className="lg:col-span-2">
                 <Tabs
                 defaultValue={filter}
                 onValueChange={(value) => setFilter(value as PropertyType | 'all')}
                 className="w-full md:w-auto"
                 >
-                    <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 bg-background/80">
+                    <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 bg-background/80"
+                        aria-disabled={!!smartSearchResults}
+                        style={{ pointerEvents: smartSearchResults ? 'none' : 'auto' }}
+                    >
                         <TabsTrigger value="all">All</TabsTrigger>
                         <TabsTrigger value="apartment">Apartments</TabsTrigger>
                         <TabsTrigger value="room">Rooms</TabsTrigger>
@@ -130,7 +153,7 @@ export default function ListingsPage() {
             </div>
              <div className="flex items-center space-x-4">
                  <Label>Furnishing</Label>
-                <RadioGroup value={furnishing} onValueChange={(value) => setFurnishing(value as any)} className="flex space-x-2">
+                <RadioGroup value={furnishing} onValueChange={(value) => setFurnishing(value as any)} className="flex space-x-2" disabled={!!smartSearchResults}>
                     <div className="flex items-center space-x-1">
                         <RadioGroupItem value="any" id="any"/>
                         <Label htmlFor="any">Any</Label>
@@ -145,7 +168,8 @@ export default function ListingsPage() {
                     </div>
                 </RadioGroup>
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-end col-span-2 gap-2">
+                <SmartSearchDialog onSearch={handleSmartSearch} />
                 <ToggleGroup
                 type="single"
                 value={view}
@@ -167,6 +191,17 @@ export default function ListingsPage() {
             </div>
         </div>
       </div>
+      
+      {smartSearchResults && (
+        <div className="mb-6 flex items-center justify-between rounded-lg border border-primary/50 bg-primary/10 p-3">
+            <div className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-primary" />
+                <p className="font-medium">Showing {smartSearchResults.length} smart search results</p>
+            </div>
+            <Button variant="ghost" size="sm" onClick={clearSmartSearch}>Clear Search</Button>
+        </div>
+      )}
+
 
       {view === 'map' ? (
         <div className="relative h-[600px] w-full overflow-hidden rounded-lg shadow-lg bg-card/80 backdrop-blur-sm">
@@ -206,7 +241,7 @@ export default function ListingsPage() {
           ) : (
             <div className="text-center py-20 rounded-lg bg-card/80 backdrop-blur-sm border border-border">
               <h2 className="text-2xl font-bold">No Listings Found</h2>
-              <p className="text-muted-foreground mt-2">Try adjusting your filters or check back later.</p>
+              <p className="text-muted-foreground mt-2">{smartSearchResults ? "Your smart search didn't return any results. Try a different query." : "Try adjusting your filters or check back later."}</p>
             </div>
           )}
         </>
