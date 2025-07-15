@@ -256,33 +256,29 @@ export default function ListingsPage() {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <Select onValueChange={handleRegionChange} value={selectedRegion} disabled={!!smartSearchResults}>
+                            <Select onValueChange={(value) => handleRegionChange(value || '')} value={selectedRegion} disabled={!!smartSearchResults}>
                                 <SelectTrigger><SelectValue placeholder={translations.selectRegion} /></SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="">{translations.selectRegion}</SelectItem>
                                     {Object.entries(locationData).map(([regionCode, regionDetails]) => (
                                         <SelectItem key={regionCode} value={regionCode}>{regionDetails.region_name}</SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
-                             <Select onValueChange={handleProvinceChange} value={selectedProvince} disabled={!selectedRegion || !!smartSearchResults}>
+                             <Select onValueChange={(value) => handleProvinceChange(value || '')} value={selectedProvince} disabled={!selectedRegion || !!smartSearchResults}>
                                 <SelectTrigger><SelectValue placeholder={translations.selectProvince} /></SelectTrigger>
                                 <SelectContent>
-                                     <SelectItem value="">{translations.selectProvince}</SelectItem>
                                     {provinces.map(province => (<SelectItem key={province} value={province}>{province}</SelectItem>))}
                                 </SelectContent>
                             </Select>
-                             <Select onValueChange={handleCityChange} value={selectedCity} disabled={!selectedProvince || !!smartSearchResults}>
+                             <Select onValueChange={(value) => handleCityChange(value || '')} value={selectedCity} disabled={!selectedProvince || !!smartSearchResults}>
                                 <SelectTrigger><SelectValue placeholder={translations.selectCity} /></SelectTrigger>
                                 <SelectContent>
-                                     <SelectItem value="">{translations.selectCity}</SelectItem>
                                      {cities.map(city => (<SelectItem key={city} value={city}>{city}</SelectItem>))}
                                 </SelectContent>
                             </Select>
-                            <Select onValueChange={(value) => setSelectedBarangay(value)} value={selectedBarangay} disabled={!selectedCity || !!smartSearchResults}>
+                            <Select onValueChange={(value) => setSelectedBarangay(value || '')} value={selectedBarangay} disabled={!selectedCity || !!smartSearchResults}>
                                 <SelectTrigger><SelectValue placeholder={translations.selectBarangay} /></SelectTrigger>
                                 <SelectContent>
-                                     <SelectItem value="">{translations.selectBarangay}</SelectItem>
                                     {barangays.map(barangay => (<SelectItem key={barangay} value={barangay}>{barangay}</SelectItem>))}
                                 </SelectContent>
                             </Select>
