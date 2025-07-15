@@ -124,7 +124,7 @@ const t = {
         pickADate: "Pumili ng petsa",
         furnishingStatus: "Katayuan ng Furnishing",
         furnished: "Furnished",
-        unfurnished: "Unfurnished",
+unfurnished: "Unfurnished",
         partially: "Bahagyang Furnished",
         description: "Deskripsyon",
         descriptionPlaceholder: "Sabihin sa amin ang kaunti tungkol sa iyong ari-arian. Ano ang nagpapa-espesyal dito?",
@@ -229,15 +229,19 @@ export default function CreateListingPage() {
         return;
     }
 
-    const fullLocation = [data.streetAddress, data.barangay, data.city, data.province].filter(Boolean).join(', ');
-
     const newProperty = {
       id: `prop-${Date.now()}`,
       title: data.title,
       description: data.description,
       type: data.propertyType,
       price: data.monthlyRent,
-      location: fullLocation,
+      location: {
+        region: (locationData as LocationData)[selectedRegion as keyof LocationData].region_name,
+        province: data.province,
+        city: data.city,
+        barangay: data.barangay,
+        street: data.streetAddress,
+      },
       images: photoDataUris.length > 0 ? photoDataUris : ['https://placehold.co/600x400.png'],
       featured: false,
       ownerId: 'owner-1', // Hardcoded for now
@@ -404,7 +408,7 @@ export default function CreateListingPage() {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>{translations.province}</FormLabel>
-                            <Select onValueChange={handleProvinceChange} value={field.value} disabled={!selectedRegion}>
+                            <Select onValueChange={handleProvinceChange} value={field.value ?? ''} disabled={!selectedRegion}>
                                 <FormControl>
                                     <SelectTrigger><SelectValue placeholder={translations.selectProvince} /></SelectTrigger>
                                 </FormControl>
@@ -424,7 +428,7 @@ export default function CreateListingPage() {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>{translations.city}</FormLabel>
-                            <Select onValueChange={handleCityChange} value={field.value} disabled={!selectedProvince}>
+                            <Select onValueChange={handleCityChange} value={field.value ?? ''} disabled={!selectedProvince}>
                                 <FormControl>
                                     <SelectTrigger><SelectValue placeholder={translations.selectCity} /></SelectTrigger>
                                 </FormControl>
@@ -444,7 +448,7 @@ export default function CreateListingPage() {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>{translations.barangay}</FormLabel>
-                            <Select onValueChange={field.onChange} value={field.value} disabled={!selectedCity}>
+                            <Select onValueChange={field.onChange} value={field.value ?? ''} disabled={!selectedCity}>
                                 <FormControl>
                                     <SelectTrigger><SelectValue placeholder={translations.selectBarangay} /></SelectTrigger>
                                 </FormControl>

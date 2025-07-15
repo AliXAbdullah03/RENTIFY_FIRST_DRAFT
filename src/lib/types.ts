@@ -16,7 +16,13 @@ export interface Property {
   description: string;
   type: PropertyType;
   price: number;
-  location: string;
+  location: {
+    region: string;
+    province: string;
+    city: string;
+    barangay: string;
+    street?: string;
+  };
   images: string[];
   featured: boolean;
   ownerId: string;
@@ -59,7 +65,3 @@ export interface Conversation {
     renter: Renter;
     messages: Message[];
 }
-
-    
-
-    

@@ -19,14 +19,22 @@ import { SmartSearchDialog } from '@/components/smart-search-dialog';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import locationData from '@/lib/ph-locations.json';
+import { Card, CardContent } from '@/components/ui/card';
 
 const t = {
     en: {
         loading: "Loading...",
         heroTitle: "Your Next Chapter, Found",
         heroSubtitle: "Discover a place you'll love to live. Unforgettable rentals at your fingertips.",
-        filterByCity: "Filter by City...",
-        allCities: "All Cities",
+        filters: "Filters",
+        region: "Region",
+        selectRegion: "Select a region",
+        province: "Province",
+        selectProvince: "Select a province",
+        city: "City / Municipality",
+        selectCity: "Select a city/municipality",
+        barangay: "Barangay",
+        selectBarangay: "Select a barangay",
         priceRange: "Price Range",
         availableNow: "Available Now",
         all: "All",
@@ -56,8 +64,15 @@ const t = {
         loading: "Naglo-load...",
         heroTitle: "Ang Iyong Susunod na Kabanata, Natagpuan",
         heroSubtitle: "Tuklasin ang isang lugar na magugustuhan mong tirahan. Mga di malilimutang paupahan sa iyong mga kamay.",
-        filterByCity: "Salain ayon sa Lungsod...",
-        allCities: "Lahat ng Lungsod",
+        filters: "Mga Filter",
+        region: "Rehiyon",
+        selectRegion: "Pumili ng rehiyon",
+        province: "Probinsya",
+        selectProvince: "Pumili ng probinsya",
+        city: "Lungsod / Munisipalidad",
+        selectCity: "Pumili ng lungsod/munisipalidad",
+        barangay: "Barangay",
+        selectBarangay: "Pumili ng barangay",
         priceRange: "Saklaw ng Presyo",
         availableNow: "Available Na Ngayon",
         all: "Lahat",
@@ -86,18 +101,7 @@ const t = {
 };
 
 const MAX_PRICE = 100000;
-
-const allCities = Object.values(locationData as any).reduce((acc: string[], region: any) => {
-    Object.values(region.province_list).forEach((province: any) => {
-        Object.keys(province.municipality_list).forEach((city) => {
-            if (!acc.includes(city)) {
-                acc.push(city);
-            }
-        });
-    });
-    return acc;
-}, []).sort();
-
+type LocationData = typeof locationData;
 
 export default function ListingsPage() {
   const { properties, deleteProperty } = usePropertyContext();
@@ -108,11 +112,16 @@ export default function ListingsPage() {
 
   const [view, setView] = useState('grid');
   const [filter, setFilter] = useState<PropertyType | 'all'>(initialType as PropertyType | 'all');
-  const [cityFilter, setCityFilter] = useState<'all' | string>('all');
   const [priceRange, setPriceRange] = useState([0, MAX_PRICE]);
   const [availableNow, setAvailableNow] = useState(false);
-  const [furnishing, setFurnishing] = useState<'any' | 'furnished' | 'unfurnished'>('any');
+  const [furnishing, setFurnishing] = useState<'any' | 'furnished' | 'unfurnished' | 'partially'>('any');
   const [smartSearchResults, setSmartSearchResults] = useState<string[] | null>(null);
+
+  // Location filter states
+  const [selectedRegion, setSelectedRegion] = useState<keyof LocationData | ''>('');
+  const [selectedProvince, setSelectedProvince] = useState('');
+  const [selectedCity, setSelectedCity] = useState('');
+  const [selectedBarangay, setSelectedBarangay] = useState('');
 
   const translations = t[language];
 
@@ -121,6 +130,29 @@ export default function ListingsPage() {
       router.push('/login');
     }
   }, [isAuthenticated, router]);
+
+   const handleRegionChange = (value: string) => {
+    setSelectedRegion(value as keyof LocationData);
+    setSelectedProvince('');
+    setSelectedCity('');
+    setSelectedBarangay('');
+  };
+
+  const handleProvinceChange = (value: string) => {
+    setSelectedProvince(value);
+    setSelectedCity('');
+    setSelectedBarangay('');
+  };
+
+   const handleCityChange = (value: string) => {
+    setSelectedCity(value);
+    setSelectedBarangay('');
+  };
+
+  const provinces = selectedRegion ? Object.keys((locationData as LocationData)[selectedRegion].province_list) : [];
+  const cities = selectedRegion && selectedProvince ? Object.keys((locationData as LocationData)[selectedRegion].province_list[selectedProvince].municipality_list) : [];
+  const barangays = selectedRegion && selectedProvince && selectedCity ? (locationData as LocationData)[selectedRegion].province_list[selectedProvince].municipality_list[selectedCity].barangay_list : [];
+
 
   if (isAuthenticated === null || isAuthenticated === false) {
     return (
@@ -143,10 +175,13 @@ export default function ListingsPage() {
     setSmartSearchResults(propertyIds);
     // Reset other filters when smart search is used
     setFilter('all');
-    setCityFilter('all');
     setPriceRange([0, MAX_PRICE]);
     setAvailableNow(false);
     setFurnishing('any');
+    setSelectedRegion('');
+    setSelectedProvince('');
+    setSelectedCity('');
+    setSelectedBarangay('');
   };
   
   const clearSmartSearch = () => {
@@ -167,12 +202,18 @@ export default function ListingsPage() {
         return smartSearchResults.includes(property.id);
     }
     const typeMatch = filter === 'all' || property.type === filter;
-    const cityMatch = cityFilter === 'all' || property.location.toLowerCase().includes(cityFilter.toLowerCase());
     const priceMatch = property.price >= priceRange[0] && property.price <= priceRange[1];
     const availabilityMatch = !availableNow || property.availableNow;
     const furnishingMatch = furnishing === 'any' || property.furnishing === furnishing;
     
-    return typeMatch && priceMatch && availabilityMatch && furnishingMatch && cityMatch;
+    // Location match
+    const regionName = selectedRegion ? (locationData as any)[selectedRegion].region_name : '';
+    const regionMatch = !selectedRegion || property.location.region === regionName;
+    const provinceMatch = !selectedProvince || property.location.province === selectedProvince;
+    const cityMatch = !selectedCity || property.location.city === selectedCity;
+    const barangayMatch = !selectedBarangay || property.location.barangay === selectedBarangay;
+
+    return typeMatch && priceMatch && availabilityMatch && furnishingMatch && regionMatch && provinceMatch && cityMatch && barangayMatch;
   });
 
   return (
@@ -195,23 +236,59 @@ export default function ListingsPage() {
                     </div>
                 </div>
 
-                <div className="mb-6 rounded-lg border border-border bg-card/80 backdrop-blur-sm p-4 shadow-sm">
-                    <div className="flex flex-col gap-4">
-                        <div className="relative w-full">
-                            <Select onValueChange={(value) => setCityFilter(value)} defaultValue="all" disabled={!!smartSearchResults}>
-                                <SelectTrigger className="w-full rounded-lg bg-background/80 pl-10 py-3 text-base">
-                                    <SelectValue placeholder={translations.filterByCity} />
-                                </SelectTrigger>
+                <Card className="mb-6 bg-card/80 backdrop-blur-sm">
+                    <CardContent className="p-4 space-y-4">
+                        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                            <h3 className="text-xl font-semibold">{translations.filters}</h3>
+                            <div className="flex flex-col md:flex-row items-center gap-2">
+                                <SmartSearchDialog onSearch={handleSmartSearch} />
+                                <ToggleGroup
+                                type="single"
+                                value={view}
+                                onValueChange={(value) => { if (value) setView(value); }}
+                                aria-label="View options"
+                                >
+                                    <ToggleGroupItem value="grid" aria-label={translations.gridView}><LayoutGrid className="h-5 w-5" /></ToggleGroupItem>
+                                    <ToggleGroupItem value="list" aria-label={translations.listView}><List className="h-5 w-5" /></ToggleGroupItem>
+                                    <ToggleGroupItem value="map" aria-label={translations.mapView}><Map className="h-5 w-5" /></ToggleGroupItem>
+                                </ToggleGroup>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <Select onValueChange={handleRegionChange} value={selectedRegion} disabled={!!smartSearchResults}>
+                                <SelectTrigger><SelectValue placeholder={translations.selectRegion} /></SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="all">{translations.allCities}</SelectItem>
-                                    {allCities.map(city => (
-                                        <SelectItem key={city} value={city}>{city}</SelectItem>
+                                    <SelectItem value="">{translations.selectRegion}</SelectItem>
+                                    {Object.entries(locationData).map(([regionCode, regionDetails]) => (
+                                        <SelectItem key={regionCode} value={regionCode}>{regionDetails.region_name}</SelectItem>
                                     ))}
+                                </SelectContent>
+                            </Select>
+                             <Select onValueChange={handleProvinceChange} value={selectedProvince} disabled={!selectedRegion || !!smartSearchResults}>
+                                <SelectTrigger><SelectValue placeholder={translations.selectProvince} /></SelectTrigger>
+                                <SelectContent>
+                                     <SelectItem value="">{translations.selectProvince}</SelectItem>
+                                    {provinces.map(province => (<SelectItem key={province} value={province}>{province}</SelectItem>))}
+                                </SelectContent>
+                            </Select>
+                             <Select onValueChange={handleCityChange} value={selectedCity} disabled={!selectedProvince || !!smartSearchResults}>
+                                <SelectTrigger><SelectValue placeholder={translations.selectCity} /></SelectTrigger>
+                                <SelectContent>
+                                     <SelectItem value="">{translations.selectCity}</SelectItem>
+                                     {cities.map(city => (<SelectItem key={city} value={city}>{city}</SelectItem>))}
+                                </SelectContent>
+                            </Select>
+                            <Select onValueChange={(value) => setSelectedBarangay(value)} value={selectedBarangay} disabled={!selectedCity || !!smartSearchResults}>
+                                <SelectTrigger><SelectValue placeholder={translations.selectBarangay} /></SelectTrigger>
+                                <SelectContent>
+                                     <SelectItem value="">{translations.selectBarangay}</SelectItem>
+                                    {barangays.map(barangay => (<SelectItem key={barangay} value={barangay}>{barangay}</SelectItem>))}
                                 </SelectContent>
                             </Select>
                         </div>
 
-                        <div className="flex flex-col md:flex-row gap-4">
+                         <div className="flex flex-col md:flex-row gap-4">
                             <div className="flex-1 space-y-2">
                                 <Label htmlFor="price-range" className="flex justify-between text-sm">
                                     <span>{translations.priceRange}</span>
@@ -269,30 +346,8 @@ export default function ListingsPage() {
                                 </RadioGroup>
                             </div>
                         </div>
-
-                        <div className="flex flex-col md:flex-row justify-end items-center gap-2">
-                            <SmartSearchDialog onSearch={handleSmartSearch} />
-                            <ToggleGroup
-                            type="single"
-                            value={view}
-                            onValueChange={(value) => {
-                                if (value) setView(value);
-                            }}
-                            aria-label="View options"
-                            >
-                                <ToggleGroupItem value="grid" aria-label={translations.gridView}>
-                                    <LayoutGrid className="h-5 w-5" />
-                                </ToggleGroupItem>
-                                <ToggleGroupItem value="list" aria-label={translations.listView}>
-                                    <List className="h-5 w-5" />
-                                </ToggleGroupItem>
-                                <ToggleGroupItem value="map" aria-label={translations.mapView}>
-                                    <Map className="h-5 w-5" />
-                                </ToggleGroupItem>
-                            </ToggleGroup>
-                        </div>
-                    </div>
-                </div>
+                    </CardContent>
+                </Card>
             </>
         )}
 
@@ -371,5 +426,3 @@ export default function ListingsPage() {
     </div>
   );
 }
-
-    

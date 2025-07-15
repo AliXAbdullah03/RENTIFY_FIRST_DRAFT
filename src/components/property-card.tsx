@@ -102,6 +102,8 @@ export function PropertyCard({ property, view, role, onDelete = () => {} }: Prop
     });
   }
 
+  const shortLocation = [property.location.city, property.location.province].filter(Boolean).join(', ');
+
   return (
     <CardWrapper {...wrapperProps}>
       <Card
@@ -148,7 +150,7 @@ export function PropertyCard({ property, view, role, onDelete = () => {} }: Prop
             </div>
              <div className="flex items-center text-sm text-muted-foreground">
               <MapPin className="mr-1.5 h-4 w-4" />
-              {property.location}
+              {shortLocation}
             </div>
           </CardHeader>
           <CardContent className="flex-grow p-0 mt-4">

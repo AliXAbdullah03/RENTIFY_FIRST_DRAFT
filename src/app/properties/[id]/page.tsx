@@ -108,6 +108,8 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
     });
   }
 
+  const fullLocation = [property.location.street, property.location.barangay, property.location.city, property.location.province, property.location.region].filter(Boolean).join(', ');
+
   return (
     <div className="container mx-auto max-w-5xl">
       <div className="space-y-4">
@@ -115,7 +117,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-muted-foreground">
             <div className="flex items-center">
                 <MapPin className="mr-1.5 h-5 w-5" />
-                <span>{property.location}</span>
+                <span>{fullLocation}</span>
             </div>
             <Badge variant="secondary" className="capitalize">{property.type}</Badge>
             {property.featured && 
