@@ -66,6 +66,10 @@ export default function CreateListingPage() {
   const form = useForm<ListingFormValues>({
     resolver: zodResolver(listingFormSchema),
     defaultValues: {
+      title: '',
+      description: '',
+      streetAddress: '',
+      rules: '',
       advance: 0,
       deposit: 0,
       furnishing: 'unfurnished',
@@ -106,7 +110,7 @@ export default function CreateListingPage() {
         return;
     }
 
-    const fullLocation = [data.streetAddress, data.barangay, data.city].filter(Boolean).join(', ');
+    const fullLocation = [data.streetAddress, data.barangay, data.city, data.province].filter(Boolean).join(', ');
 
     const newProperty = {
       id: `prop-${Date.now()}`,
@@ -161,7 +165,7 @@ export default function CreateListingPage() {
 
   const provinces = selectedRegion ? Object.keys((locationData as LocationData)[selectedRegion].province_list) : [];
   const cities = selectedRegion && selectedProvince ? Object.keys((locationData as LocationData)[selectedRegion].province_list[selectedProvince].municipality_list) : [];
-  const barangays = selectedRegion && selectedCity ? (locationData as LocationData)[selectedRegion].province_list[selectedProvince].municipality_list[selectedCity].barangay_list : [];
+  const barangays = selectedRegion && selectedProvince && selectedCity ? (locationData as LocationData)[selectedRegion].province_list[selectedProvince].municipality_list[selectedCity].barangay_list : [];
 
 
   if (!isAuthenticated || role !== 'owner') {
@@ -547,5 +551,3 @@ export default function CreateListingPage() {
     </div>
   );
 }
-
-    
