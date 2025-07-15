@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { CalendarIcon, Home, Building, BedDouble, Warehouse, PlusCircle } from 'lucide-react';
+import { CalendarIcon, Home, Building, BedDouble, Warehouse, PlusCircle, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -46,6 +46,7 @@ export default function CreateListingPage() {
   const { addProperty } = usePropertyContext();
   const router = useRouter();
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated === false || (isAuthenticated && role !== 'owner')) {
@@ -61,7 +62,34 @@ export default function CreateListingPage() {
     },
   });
 
-  function onSubmit(data: ListingFormValues) {
+  const fileToDataUri = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  async function onSubmit(data: ListingFormValues) {
+    setIsSubmitting(true);
+
+    const photoFiles = data.photos as FileList;
+    let photoDataUris: string[] = [];
+
+    try {
+        photoDataUris = await Promise.all(Array.from(photoFiles).map(fileToDataUri));
+    } catch (error) {
+        console.error("Error converting images to Data URIs", error);
+        toast({
+            variant: 'destructive',
+            title: 'Image Upload Failed',
+            description: 'There was an error processing your images. Please try again.',
+        });
+        setIsSubmitting(false);
+        return;
+    }
+
     const newProperty = {
       id: `prop-${Date.now()}`,
       title: data.title,
@@ -69,7 +97,7 @@ export default function CreateListingPage() {
       type: data.propertyType,
       price: data.monthlyRent,
       location: data.location,
-      images: ['https://placehold.co/600x400.png'], // Placeholder for uploaded images
+      images: photoDataUris.length > 0 ? photoDataUris : ['https://placehold.co/600x400.png'],
       featured: false,
       ownerId: 'owner-1', // Hardcoded for now
       details: {}, // Can be expanded later
@@ -84,6 +112,8 @@ export default function CreateListingPage() {
       title: 'Listing Created!',
       description: 'Your new property has been successfully listed.',
     });
+    
+    setIsSubmitting(false);
     router.push('/listings');
   }
 
@@ -323,7 +353,7 @@ export default function CreateListingPage() {
                         <FormItem>
                         <FormLabel>Upload Photos</FormLabel>
                         <FormControl>
-                            <Input type="file" multiple {...form.register('photos')} />
+                            <Input type="file" multiple accept="image/*" {...form.register('photos')} />
                         </FormControl>
                          <FormDescription>
                             Upload high-quality images to attract more interest. The first image will be the cover photo.
@@ -336,8 +366,8 @@ export default function CreateListingPage() {
           </Card>
           
           <div className="flex justify-end">
-            <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? 'Submitting...' : 'Create Listing'}
+            <Button type="submit" size="lg" disabled={isSubmitting}>
+                {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...</> : 'Create Listing'}
             </Button>
           </div>
         </form>
@@ -345,3 +375,5 @@ export default function CreateListingPage() {
     </div>
   );
 }
+
+    
