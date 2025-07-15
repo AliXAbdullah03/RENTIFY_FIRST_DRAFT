@@ -103,7 +103,7 @@ export function LoginForm() {
             <CardFooter className="flex flex-col items-center space-y-2 text-sm">
               <p>Don't have an account?</p>
               <Button variant="link" className="p-0" asChild>
-                  <Link href="#">Sign up as a Renter</Link>
+                  <Link href="/signup">Sign up as a Renter</Link>
               </Button>
             </CardFooter>
           </Card>
@@ -134,7 +134,7 @@ export function LoginForm() {
             <CardFooter className="flex flex-col items-center space-y-2 text-sm">
               <p>Looking to list your property?</p>
               <Button variant="link" className="p-0" asChild>
-                  <Link href="#">Sign up as an Owner</Link>
+                  <Link href="/signup">Sign up as an Owner</Link>
               </Button>
             </CardFooter>
           </Card>

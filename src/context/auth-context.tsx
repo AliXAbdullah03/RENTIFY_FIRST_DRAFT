@@ -14,6 +14,7 @@ interface AuthContextType {
   user: User | null;
   role: UserRole | null;
   login: (name: string, role: UserRole) => void;
+  signup: (name: string, role: UserRole) => void;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -49,6 +50,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('rentify-user', JSON.stringify(userToStore));
     localStorage.setItem('rentify-role', role);
   };
+  
+  const signup = (name: string, role: UserRole) => {
+    // For this prototype, signup and login perform the same action.
+    // In a real app, this would involve creating a new user in a database.
+    login(name, role);
+  }
 
   const logout = () => {
     setUser(null);
@@ -61,7 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isAuthenticated = !!user;
 
   return (
-    <AuthContext.Provider value={{ user, role, login, logout, isAuthenticated }}>
+    <AuthContext.Provider value={{ user, role, login, signup, logout, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );
