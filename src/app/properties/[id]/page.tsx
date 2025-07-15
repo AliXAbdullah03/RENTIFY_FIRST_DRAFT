@@ -124,7 +124,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                 <div className="mb-4 text-center">
                     <p className="text-4xl font-bold">${property.price}<span className="text-base font-normal text-muted-foreground">/month</span></p>
                 </div>
-                <Button className="w-full" size="lg">Request to book</Button>
+                <Button className="w-full" size="lg">Request a Viewing</Button>
                 <p className="mt-2 text-center text-xs text-muted-foreground">You won't be charged yet</p>
             </div>
              {owner && (
@@ -142,7 +142,9 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                   <p className="text-sm text-muted-foreground">{owner.email}</p>
                 </div>
               </div>
-              <Button variant="secondary" className="mt-4 w-full">Contact Host</Button>
+              <a href={`mailto:${owner.email}`} className="w-full">
+                <Button variant="secondary" className="mt-4 w-full">Contact Host</Button>
+              </a>
             </div>
           )}
         </div>
