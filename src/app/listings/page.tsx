@@ -178,8 +178,8 @@ export default function ListingsPage() {
                 </div>
 
                 <div className="mb-6 rounded-lg border border-border bg-card/80 backdrop-blur-sm p-4 shadow-sm">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
-                        <div className="relative w-full lg:col-span-2">
+                    <div className="flex flex-col gap-4">
+                        <div className="relative w-full">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                             <Input
                                 type="search"
@@ -187,35 +187,37 @@ export default function ListingsPage() {
                                 className="w-full rounded-lg bg-background/80 pl-10 py-3 text-base"
                             />
                         </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="price-range" className="flex justify-between text-sm">
-                                <span>{translations.priceRange}</span>
-                                <span>${priceRange[0]} - ${priceRange[1]}{priceRange[1] === MAX_PRICE ? '+' : ''}</span>
-                            </Label>
-                            <Slider
-                                id="price-range"
-                                min={0}
-                                max={MAX_PRICE}
-                                step={100}
-                                value={priceRange}
-                                onValueChange={setPriceRange}
-                                className="w-full"
-                                disabled={!!smartSearchResults}
-                            />
+
+                        <div className="flex flex-col md:flex-row gap-4">
+                            <div className="flex-1 space-y-2">
+                                <Label htmlFor="price-range" className="flex justify-between text-sm">
+                                    <span>{translations.priceRange}</span>
+                                    <span>${priceRange[0]} - ${priceRange[1]}{priceRange[1] === MAX_PRICE ? '+' : ''}</span>
+                                </Label>
+                                <Slider
+                                    id="price-range"
+                                    min={0}
+                                    max={MAX_PRICE}
+                                    step={100}
+                                    value={priceRange}
+                                    onValueChange={setPriceRange}
+                                    className="w-full"
+                                    disabled={!!smartSearchResults}
+                                />
+                            </div>
+                            <div className="flex items-center space-x-2 pt-5 md:pt-6">
+                                <Checkbox id="available-now" checked={availableNow} onCheckedChange={(checked) => setAvailableNow(!!checked)} disabled={!!smartSearchResults} />
+                                <Label htmlFor="available-now">{translations.availableNow}</Label>
+                            </div>
                         </div>
-                        <div className="flex items-center space-x-2 pt-5">
-                            <Checkbox id="available-now" checked={availableNow} onCheckedChange={(checked) => setAvailableNow(!!checked)} disabled={!!smartSearchResults} />
-                            <Label htmlFor="available-now">{translations.availableNow}</Label>
-                        </div>
-                    </div>
-                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
-                        <div className="lg:col-span-2">
+
+                        <div className="flex flex-col xl:flex-row gap-4">
                             <Tabs
-                            defaultValue={filter}
-                            onValueChange={(value) => setFilter(value as PropertyType | 'all')}
-                            className="w-full md:w-auto"
-                            >
-                                <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 bg-background/80"
+                                defaultValue={filter}
+                                onValueChange={(value) => setFilter(value as PropertyType | 'all')}
+                                className="w-full"
+                                >
+                                <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 bg-background/80 h-auto flex-wrap"
                                     aria-disabled={!!smartSearchResults}
                                     style={{ pointerEvents: smartSearchResults ? 'none' : 'auto' }}
                                 >
@@ -226,25 +228,26 @@ export default function ListingsPage() {
                                     <TabsTrigger value="commercial">{translations.commercial}</TabsTrigger>
                                 </TabsList>
                             </Tabs>
+                            <div className="flex items-center space-x-4 shrink-0">
+                                <Label>{translations.furnishing}</Label>
+                                <RadioGroup value={furnishing} onValueChange={(value) => setFurnishing(value as any)} className="flex space-x-2" disabled={!!smartSearchResults}>
+                                    <div className="flex items-center space-x-1">
+                                        <RadioGroupItem value="any" id="any"/>
+                                        <Label htmlFor="any">{translations.any}</Label>
+                                    </div>
+                                    <div className="flex items-center space-x-1">
+                                        <RadioGroupItem value="furnished" id="furnished"/>
+                                        <Label htmlFor="furnished">{translations.furnished}</Label>
+                                    </div>
+                                    <div className="flex items-center space-x-1">
+                                        <RadioGroupItem value="unfurnished" id="unfurnished"/>
+                                        <Label htmlFor="unfurnished">{translations.unfurnished}</Label>
+                                    </div>
+                                </RadioGroup>
+                            </div>
                         </div>
-                        <div className="flex items-center space-x-4">
-                            <Label>{translations.furnishing}</Label>
-                            <RadioGroup value={furnishing} onValueChange={(value) => setFurnishing(value as any)} className="flex space-x-2" disabled={!!smartSearchResults}>
-                                <div className="flex items-center space-x-1">
-                                    <RadioGroupItem value="any" id="any"/>
-                                    <Label htmlFor="any">{translations.any}</Label>
-                                </div>
-                                <div className="flex items-center space-x-1">
-                                    <RadioGroupItem value="furnished" id="furnished"/>
-                                    <Label htmlFor="furnished">{translations.furnished}</Label>
-                                </div>
-                                <div className="flex items-center space-x-1">
-                                    <RadioGroupItem value="unfurnished" id="unfurnished"/>
-                                    <Label htmlFor="unfurnished">{translations.unfurnished}</Label>
-                                </div>
-                            </RadioGroup>
-                        </div>
-                        <div className="flex justify-end col-span-2 gap-2">
+
+                        <div className="flex flex-col md:flex-row justify-end items-center gap-2">
                             <SmartSearchDialog onSearch={handleSmartSearch} />
                             <ToggleGroup
                             type="single"
@@ -345,5 +348,3 @@ export default function ListingsPage() {
     </div>
   );
 }
-
-    
