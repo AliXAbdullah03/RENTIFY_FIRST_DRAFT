@@ -95,7 +95,7 @@ export function PropertyCard({ property, view, role, onDelete = () => {} }: Prop
           <CardHeader className="p-0">
             <div className="flex items-start justify-between gap-2">
               <CardTitle className="text-lg font-bold leading-tight group-hover:text-primary mb-1">
-                <Link href={`/properties/${property.id}`} className="hover:underline">{property.title}</Link>
+                {isOwnerView ? <Link href={`/properties/${property.id}`} className="hover:underline">{property.title}</Link> : property.title}
               </CardTitle>
             </div>
              <div className="flex items-center text-sm text-muted-foreground">
