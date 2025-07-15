@@ -16,7 +16,7 @@ import { properties, owners } from '@/lib/mock-data';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, MapPin, AlertTriangle } from 'lucide-react';
+import { CheckCircle, MapPin, AlertTriangle, Star } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
@@ -87,7 +87,11 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                 <span>{property.location}</span>
             </div>
             <Badge variant="secondary" className="capitalize">{property.type}</Badge>
-            {property.featured && <Badge>Featured</Badge>}
+            {property.featured && 
+                <Badge variant="default" className="flex items-center gap-1">
+                    <Star className="h-3 w-3" /> Featured
+                </Badge>
+            }
         </div>
       </div>
 

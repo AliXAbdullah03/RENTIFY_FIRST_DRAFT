@@ -2,7 +2,7 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { BedDouble, Bath, Car, Building, MapPin, Eye, MessageSquare, Edit, Power, Trash2 } from 'lucide-react';
+import { BedDouble, Bath, Car, Building, MapPin, Eye, MessageSquare, Edit, Power, Star } from 'lucide-react';
 
 import {
   Card,
@@ -20,6 +20,7 @@ import { Switch } from './ui/switch';
 import { Separator } from './ui/separator';
 import { DeleteListingDialog } from './delete-listing-dialog';
 import { useToast } from '@/hooks/use-toast';
+import { Label } from './ui/label';
 
 interface PropertyCardProps {
   property: Property;
@@ -49,6 +50,16 @@ export function PropertyCard({ property, view, role, onDelete = () => {} }: Prop
     });
   };
 
+  const handleFeatureToggle = (isFeatured: boolean) => {
+    // In a real app, this would trigger a payment flow if isFeatured is true.
+    // Here, we just show a toast.
+    toast({
+        title: isFeatured ? 'Listing Featured!' : 'Feature Removed',
+        description: isFeatured ? 'This listing will now be shown to more renters.' : 'This listing is no longer featured.',
+    });
+    // Here you would also update the property state globally.
+  }
+
   return (
     <CardWrapper {...wrapperProps}>
       <Card
@@ -68,9 +79,14 @@ export function PropertyCard({ property, view, role, onDelete = () => {} }: Prop
            {property.availableNow && (
               <Badge variant="secondary" className="absolute top-2 right-2">Available Now</Badge>
             )}
-            {isOwnerView && (
-                 <Badge variant={property.paused ? "destructive" : "default"} className="absolute top-2 left-2">
-                    {property.paused ? 'Paused' : 'Active'}
+            {property.featured && (
+                <Badge variant="default" className="absolute top-2 left-2 flex items-center gap-1">
+                    <Star className="h-3 w-3" /> Featured
+                </Badge>
+            )}
+            {isOwnerView && property.paused && (
+                 <Badge variant={"destructive"} className="absolute top-2 left-2">
+                    Paused
                  </Badge>
             )}
         </div>
@@ -81,9 +97,6 @@ export function PropertyCard({ property, view, role, onDelete = () => {} }: Prop
               <CardTitle className="text-lg font-bold leading-tight group-hover:text-primary mb-1">
                 <Link href={`/properties/${property.id}`} className="hover:underline">{property.title}</Link>
               </CardTitle>
-              {property.featured && !isOwnerView && (
-                <Badge variant="default" className="shrink-0">Featured</Badge>
-              )}
             </div>
              <div className="flex items-center text-sm text-muted-foreground">
               <MapPin className="mr-1.5 h-4 w-4" />
@@ -148,14 +161,20 @@ export function PropertyCard({ property, view, role, onDelete = () => {} }: Prop
                             <span>{property.analytics?.inquiries ?? Math.floor(Math.random() * 50)} inquiries</span>
                         </div>
                     </div>
-                     <div className="flex justify-center gap-2">
-                        <Button variant="outline" size="sm" onClick={handleEdit}>
-                           <Edit className="mr-2 h-4 w-4" /> Edit
-                        </Button>
-                        <Button variant="outline" size="sm" onClick={handlePause}>
-                           <Power className="mr-2 h-4 w-4" /> Pause
-                        </Button>
-                        <DeleteListingDialog onDelete={onDelete} listingTitle={property.title} />
+                     <div className="flex items-center justify-between gap-2">
+                         <div className="flex items-center space-x-2">
+                            <Switch id={`feature-${property.id}`} defaultChecked={property.featured} onCheckedChange={handleFeatureToggle} />
+                            <Label htmlFor={`feature-${property.id}`}>Feature</Label>
+                        </div>
+                        <div className="flex gap-1">
+                            <Button variant="outline" size="icon" onClick={handleEdit}>
+                               <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button variant="outline" size="icon" onClick={handlePause}>
+                               <Power className="h-4 w-4" />
+                            </Button>
+                            <DeleteListingDialog onDelete={onDelete} listingTitle={property.title} />
+                        </div>
                     </div>
                 </div>
             </>
