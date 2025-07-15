@@ -14,10 +14,64 @@ import React from 'react';
 import { useAuth, UserRole } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
 
+const t = {
+    en: {
+        demoLogin: "Demo Login",
+        demoRenter: "<strong>Renter:</strong> Use any email starting with 'renter' and any password.",
+        demoOwner: "<strong>Owner:</strong> Use any email starting with 'owner' and any password.",
+        demoAdmin: "<strong>Admin:</strong> email: <strong>admin@rentify.com</strong>, password: <strong>adminpassword</strong>",
+        renter: "Renter",
+        owner: "Owner",
+        renterLogin: "Renter Login",
+        ownerLogin: "Owner Login",
+        accessSavedProperties: "Access your saved properties and manage your rentals.",
+        manageListings: "Manage your listings and view renter applications.",
+        email: "Email",
+        password: "Password",
+        loginAsRenter: "Login as Renter",
+        loginAsOwner: "Login as Owner",
+        noAccount: "Don't have an account?",
+        signUpAsRenter: "Sign up as a Renter",
+        listProperty: "Looking to list your property?",
+        signUpAsOwner: "Sign up as an Owner",
+        loginSuccessTitle: "Login Successful",
+        loginSuccessDesc: (role: string) => `Welcome! You are now logged in as a ${role}.`,
+        loginFailedTitle: "Login Failed",
+        loginFailedDesc: "Invalid credentials. Please try again.",
+    },
+    tl: {
+        demoLogin: "Demo sa Pag-login",
+        demoRenter: "<strong>Renter:</strong> Gumamit ng anumang email na nagsisimula sa 'renter' at anumang password.",
+        demoOwner: "<strong>Owner:</strong> Gumamit ng anumang email na nagsisimula sa 'owner' at anumang password.",
+        demoAdmin: "<strong>Admin:</strong> email: <strong>admin@rentify.com</strong>, password: <strong>adminpassword</strong>",
+        renter: "Renter",
+        owner: "May-ari",
+        renterLogin: "Login ng Renter",
+        ownerLogin: "Login ng May-ari",
+        accessSavedProperties: "I-access ang iyong mga naka-save na ari-arian at pamahalaan ang iyong mga upa.",
+        manageListings: "Pamahalaan ang iyong mga listing at tingnan ang mga aplikasyon ng umuupa.",
+        email: "Email",
+        password: "Password",
+        loginAsRenter: "Mag-login bilang Renter",
+        loginAsOwner: "Mag-login bilang May-ari",
+        noAccount: "Wala ka pang account?",
+        signUpAsRenter: "Mag-sign up bilang Renter",
+        listProperty: "Naghahanap ka bang mag-lista ng iyong ari-arian?",
+        signUpAsOwner: "Mag-sign up bilang May-ari",
+        loginSuccessTitle: "Matagumpay ang Pag-login",
+        loginSuccessDesc: (role: string) => `Maligayang pagdating! Naka-log in ka na ngayon bilang isang ${role}.`,
+        loginFailedTitle: "Nabigo ang Pag-login",
+        loginFailedDesc: "Di-wasto ang mga kredensyal. Pakisubukang muli.",
+    }
+}
+
+
 export function LoginForm() {
   const { toast } = useToast();
-  const { login } = useAuth();
+  const { login, language } = useAuth();
   const router = useRouter();
+
+  const translations = t[language];
 
   const handleSubmit = (role: Exclude<UserRole, 'admin'>) => (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -42,15 +96,15 @@ export function LoginForm() {
     if (loginRole) {
       login(userName, loginRole);
       toast({
-        title: 'Login Successful',
-        description: `Welcome! You are now logged in as a ${loginRole}.`,
+        title: translations.loginSuccessTitle,
+        description: translations.loginSuccessDesc(loginRole),
       });
       router.push('/');
     } else {
       toast({
           variant: 'destructive',
-          title: 'Login Failed',
-          description: 'Invalid credentials. Please try again.',
+          title: translations.loginFailedTitle,
+          description: translations.loginFailedDesc,
       });
     }
   };
@@ -59,51 +113,51 @@ export function LoginForm() {
     <>
       <Alert className="mb-4">
         <Info className="h-4 w-4" />
-        <AlertTitle>Demo Login</AlertTitle>
+        <AlertTitle>{translations.demoLogin}</AlertTitle>
         <AlertDescription>
             <ul className="list-disc pl-5 space-y-1">
-                <li><strong>Renter:</strong> Use any email starting with 'renter' and any password.</li>
-                <li><strong>Owner:</strong> Use any email starting with 'owner' and any password.</li>
-                <li><strong>Admin:</strong> email: <strong>admin@rentify.com</strong>, password: <strong>adminpassword</strong></li>
+                <li dangerouslySetInnerHTML={{ __html: translations.demoRenter }} />
+                <li dangerouslySetInnerHTML={{ __html: translations.demoOwner }} />
+                <li dangerouslySetInnerHTML={{ __html: translations.demoAdmin }} />
             </ul>
         </AlertDescription>
       </Alert>
       <Tabs defaultValue="renter" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="renter">
-            <User className="mr-2 h-4 w-4" /> Renter
+            <User className="mr-2 h-4 w-4" /> {translations.renter}
           </TabsTrigger>
           <TabsTrigger value="owner">
-            <Building className="mr-2 h-4 w-4" /> Owner
+            <Building className="mr-2 h-4 w-4" /> {translations.owner}
           </TabsTrigger>
         </TabsList>
         <TabsContent value="renter">
           <Card>
             <CardHeader>
-              <CardTitle>Renter Login</CardTitle>
+              <CardTitle>{translations.renterLogin}</CardTitle>
               <CardDescription>
-                Access your saved properties and manage your rentals.
+                {translations.accessSavedProperties}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit('renter')} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="renter-email">Email</Label>
+                  <Label htmlFor="renter-email">{translations.email}</Label>
                   <Input name="email" id="renter-email" type="email" placeholder="renter@example.com" required />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="renter-password">Password</Label>
+                  <Label htmlFor="renter-password">{translations.password}</Label>
                   <Input name="password" id="renter-password" type="password" required />
                 </div>
                 <Button type="submit" className="w-full">
-                  Login as Renter
+                  {translations.loginAsRenter}
                 </Button>
               </form>
             </CardContent>
             <CardFooter className="flex flex-col items-center space-y-2 text-sm">
-              <p>Don't have an account?</p>
+              <p>{translations.noAccount}</p>
               <Button variant="link" className="p-0" asChild>
-                  <Link href="/signup">Sign up as a Renter</Link>
+                  <Link href="/signup">{translations.signUpAsRenter}</Link>
               </Button>
             </CardFooter>
           </Card>
@@ -111,30 +165,30 @@ export function LoginForm() {
         <TabsContent value="owner">
           <Card>
             <CardHeader>
-              <CardTitle>Owner Login</CardTitle>
+              <CardTitle>{translations.ownerLogin}</CardTitle>
               <CardDescription>
-                Manage your listings and view renter applications.
+                {translations.manageListings}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit('owner')} className="space-y-4">
                   <div className="space-y-2">
-                  <Label htmlFor="owner-email">Email</Label>
+                  <Label htmlFor="owner-email">{translations.email}</Label>
                   <Input name="email" id="owner-email" type="email" placeholder="owner@example.com" required />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="owner-password">Password</Label>
+                  <Label htmlFor="owner-password">{translations.password}</Label>
                   <Input name="password" id="owner-password" type="password" required />
                 </div>
                 <Button type="submit" className="w-full">
-                  Login as Owner
+                  {translations.loginAsOwner}
                 </Button>
               </form>
             </CardContent>
             <CardFooter className="flex flex-col items-center space-y-2 text-sm">
-              <p>Looking to list your property?</p>
+              <p>{translations.listProperty}</p>
               <Button variant="link" className="p-0" asChild>
-                  <Link href="/signup">Sign up as an Owner</Link>
+                  <Link href="/signup">{translations.signUpAsOwner}</Link>
               </Button>
             </CardFooter>
           </Card>

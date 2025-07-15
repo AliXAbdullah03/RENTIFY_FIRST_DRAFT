@@ -34,28 +34,61 @@ import { useAuth } from '@/context/auth-context';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from './ui/badge';
 import React from 'react';
+import type { Language } from '@/context/auth-context';
 
-const loggedOutNavItems: any[] = [
-  // No items for logged out users in the main nav
-];
-
-const renterNavItems = [
-  { href: '/listings', label: 'Listings', icon: LayoutGrid },
-  { href: '/inbox', label: 'Inbox', icon: MessageSquare, notificationCount: 3 },
-  { href: '/support', label: 'Support', icon: LifeBuoy },
-];
-
-const ownerNavItems = [
-    { href: '/listings', label: 'My Listings', icon: LayoutGrid },
-    { href: '/create-listing', label: 'Create Listing', icon: PlusCircle },
-    { href: '/inbox', label: 'Inbox', icon: MessageSquare, notificationCount: 1 },
-    { href: '/support', label: 'Support', icon: LifeBuoy },
-]
+const t = {
+    en: {
+        listings: "Listings",
+        myListings: "My Listings",
+        createListing: "Create Listing",
+        inbox: "Inbox",
+        support: "Support",
+        myAccount: "My Account",
+        profile: "Profile",
+        settings: "Settings",
+        logout: "Logout",
+        login: "Login",
+        selectLanguage: "Select Language",
+        english: "English",
+        tagalog: "Tagalog / Taglish",
+    },
+    tl: {
+        listings: "Mga Listing",
+        myListings: "Aking Mga Listing",
+        createListing: "Gumawa ng Listing",
+        inbox: "Inbox",
+        support: "Suporta",
+        myAccount: "Aking Account",
+        profile: "Profile",
+        settings: "Mga Setting",
+        logout: "Mag-logout",
+        login: "Mag-login",
+        selectLanguage: "Pumili ng Wika",
+        english: "Ingles",
+        tagalog: "Tagalog / Taglish",
+    }
+}
 
 export function AppHeader() {
   const pathname = usePathname();
-  const { user, role, logout } = useAuth();
-  const [language, setLanguage] = React.useState("en");
+  const { user, role, logout, language, setLanguage } = useAuth();
+  
+  const translations = t[language];
+
+  const loggedOutNavItems: any[] = [];
+
+  const renterNavItems = [
+    { href: '/listings', label: translations.listings, icon: LayoutGrid },
+    { href: '/inbox', label: translations.inbox, icon: MessageSquare, notificationCount: 3 },
+    { href: '/support', label: translations.support, icon: LifeBuoy },
+  ];
+
+  const ownerNavItems = [
+      { href: '/listings', label: translations.myListings, icon: LayoutGrid },
+      { href: '/create-listing', label: translations.createListing, icon: PlusCircle },
+      { href: '/inbox', label: translations.inbox, icon: MessageSquare, notificationCount: 1 },
+      { href: '/support', label: translations.support, icon: LifeBuoy },
+  ]
   
   const navItems = role === 'renter' ? renterNavItems : (role === 'owner' ? ownerNavItems : loggedOutNavItems);
 
@@ -97,10 +130,10 @@ export function AppHeader() {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Select Language</DropdownMenuLabel>
-                <DropdownMenuRadioGroup value={language} onValueChange={setLanguage}>
-                    <DropdownMenuRadioItem value="en">English</DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="tl">Tagalog / Taglish</DropdownMenuRadioItem>
+                <DropdownMenuLabel>{translations.selectLanguage}</DropdownMenuLabel>
+                <DropdownMenuRadioGroup value={language} onValueChange={(value) => setLanguage(value as Language)}>
+                    <DropdownMenuRadioItem value="en">{translations.english}</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="tl">{translations.tagalog}</DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
             </DropdownMenuContent>
         </DropdownMenu>
@@ -116,34 +149,34 @@ export function AppHeader() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel>{translations.myAccount}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href="/profile"><UserIcon className="mr-2 h-4 w-4" />Profile</Link>
+                <Link href="/profile"><UserIcon className="mr-2 h-4 w-4" />{translations.profile}</Link>
               </DropdownMenuItem>
                <DropdownMenuItem asChild>
                 <Link href="/inbox" className="relative">
                     <MessageSquare className="mr-2 h-4 w-4" />
-                    Inbox
+                    {translations.inbox}
                     <Badge variant="destructive" className="absolute top-1 right-2 h-5 w-5 justify-center p-0">3</Badge>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/settings"><Settings className="mr-2 h-4 w-4" />Settings</Link>
+                <Link href="/settings"><Settings className="mr-2 h-4 w-4" />{translations.settings}</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/support"><LifeBuoy className="mr-2 h-4 w-4" />Support</Link>
+                <Link href="/support"><LifeBuoy className="mr-2 h-4 w-4" />{translations.support}</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={logout}>
                 <LogOut className="mr-2 h-4 w-4" />
-                Logout
+                {translations.logout}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
           <Button variant="ghost" asChild size="lg">
-            <Link href="/login">Login</Link>
+            <Link href="/login">{translations.login}</Link>
           </Button>
         )}
       
@@ -178,22 +211,22 @@ export function AppHeader() {
                   <Separator />
                    <Link href="/profile" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
                       <UserIcon className="h-5 w-5" />
-                      Profile
+                      {translations.profile}
                     </Link>
                     <Link href="/settings" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
                       <Settings className="h-5 w-5" />
-                      Settings
+                      {translations.settings}
                     </Link>
                     <div onClick={logout} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary cursor-pointer">
                       <LogOut className="h-5 w-5" />
-                      Logout
+                      {translations.logout}
                     </div>
 
                 </>
               ) : (
                 <Link href="/login" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
                   <CircleUser className="h-5 w-5" />
-                  Login
+                  {translations.login}
                 </Link>
               )}
             </nav>
