@@ -18,25 +18,30 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { CalendarIcon, Home, Building, BedDouble, Warehouse, PlusCircle, Loader2 } from 'lucide-react';
+import { CalendarIcon, Home, Building, BedDouble, Warehouse, PlusCircle, Loader2, Bed } from 'lucide-react';
 import { format } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
 import locationData from '@/lib/ph-locations.json';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 const listingFormSchema = z.object({
   title: z.string().min(5, { message: 'Title must be at least 5 characters long.' }),
-  propertyType: z.enum(['apartment', 'room', 'bedspace', 'commercial'], {
+  propertyType: z.enum(['apartment', 'room', 'bedspace', 'commercial', 'house'], {
     required_error: 'You need to select a property type.',
   }),
   region: z.string({ required_error: 'Please select a region.'}),
   province: z.string({ required_error: 'Please select a province.'}),
   city: z.string({ required_error: 'Please select a city/municipality.'}),
   barangay: z.string({ required_error: 'Please select a barangay.'}),
+  streetAddress: z.string().optional(),
   monthlyRent: z.coerce.number().positive({ message: 'Monthly rent must be a positive number.' }),
   advance: z.coerce.number().min(0, { message: 'Advance payment cannot be negative.' }),
   deposit: z.coerce.number().min(0, { message: 'Deposit cannot be negative.' }),
   availableFrom: z.date({
     required_error: 'An availability date is required.',
+  }),
+  furnishing: z.enum(['furnished', 'unfurnished', 'partially'], {
+    required_error: 'You need to select a furnishing status.',
   }),
   rules: z.string().optional(),
   description: z.string().min(20, { message: 'Description must be at least 20 characters.' }),
@@ -63,6 +68,7 @@ export default function CreateListingPage() {
     defaultValues: {
       advance: 0,
       deposit: 0,
+      furnishing: 'unfurnished',
     },
   });
 
@@ -100,7 +106,7 @@ export default function CreateListingPage() {
         return;
     }
 
-    const fullLocation = `${data.barangay}, ${data.city}, ${Object.values((locationData as LocationData)[data.region as keyof LocationData].province_list)[0]}`;
+    const fullLocation = [data.streetAddress, data.barangay, data.city].filter(Boolean).join(', ');
 
     const newProperty = {
       id: `prop-${Date.now()}`,
@@ -108,14 +114,14 @@ export default function CreateListingPage() {
       description: data.description,
       type: data.propertyType,
       price: data.monthlyRent,
-      location: `${data.barangay}, ${data.city}`,
+      location: fullLocation,
       images: photoDataUris.length > 0 ? photoDataUris : ['https://placehold.co/600x400.png'],
       featured: false,
       ownerId: 'owner-1', // Hardcoded for now
       details: {}, // Can be expanded later
       amenities: ['WiFi', 'Kitchen'], // Default amenities
       availableNow: new Date() >= data.availableFrom,
-      furnishing: 'unfurnished', // Default
+      furnishing: data.furnishing,
     };
     
     addProperty(newProperty as any);
@@ -155,7 +161,7 @@ export default function CreateListingPage() {
 
   const provinces = selectedRegion ? Object.keys((locationData as LocationData)[selectedRegion].province_list) : [];
   const cities = selectedRegion && selectedProvince ? Object.keys((locationData as LocationData)[selectedRegion].province_list[selectedProvince].municipality_list) : [];
-  const barangays = selectedRegion && selectedProvince && selectedCity ? (locationData as LocationData)[selectedRegion].province_list[selectedProvince].municipality_list[selectedCity].barangay_list : [];
+  const barangays = selectedRegion && selectedCity ? (locationData as LocationData)[selectedRegion].province_list[selectedProvince].municipality_list[selectedCity].barangay_list : [];
 
 
   if (!isAuthenticated || role !== 'owner') {
@@ -229,9 +235,10 @@ export default function CreateListingPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="apartment"><Home className="mr-2 h-4 w-4" /> Apartment</SelectItem>
+                          <SelectItem value="apartment"><Building className="mr-2 h-4 w-4" /> Apartment</SelectItem>
+                          <SelectItem value="house"><Home className="mr-2 h-4 w-4" /> House</SelectItem>
                           <SelectItem value="room"><BedDouble className="mr-2 h-4 w-4" /> Room</SelectItem>
-                          <SelectItem value="bedspace"><Building className="mr-2 h-4 w-4" /> Bedspace</SelectItem>
+                          <SelectItem value="bedspace"><Bed className="mr-2 h-4 w-4" /> Bedspace</SelectItem>
                           <SelectItem value="commercial"><Warehouse className="mr-2 h-4 w-4" /> Commercial</SelectItem>
                         </SelectContent>
                       </Select>
@@ -328,6 +335,19 @@ export default function CreateListingPage() {
                         </FormItem>
                     )}
                 />
+                <FormField
+                    control={form.control}
+                    name="streetAddress"
+                    render={({ field }) => (
+                        <FormItem className="md:col-span-2">
+                        <FormLabel>Street, Building, or Landmark (Optional)</FormLabel>
+                        <FormControl>
+                            <Input placeholder="e.g., 123 Rizal St, The Grand Towers" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                />
             </CardContent>
            </Card>
 
@@ -385,47 +405,85 @@ export default function CreateListingPage() {
                 <CardDescription>Provide more information for potential renters.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-                <FormField
-                    control={form.control}
-                    name="availableFrom"
-                    render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                        <FormLabel>Available From</FormLabel>
-                        <Popover>
-                        <PopoverTrigger asChild>
-                            <FormControl>
-                            <Button
-                                variant={"outline"}
-                                className={cn(
-                                "w-[240px] pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
-                                )}
-                            >
-                                {field.value ? (
-                                format(field.value, "PPP")
-                                ) : (
-                                <span>Pick a date</span>
-                                )}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                            </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            disabled={(date) =>
-                                date < new Date(new Date().setHours(0,0,0,0))
-                            }
-                            initialFocus
-                            />
-                        </PopoverContent>
-                        </Popover>
-                        <FormMessage />
-                    </FormItem>
-                    )}
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                        control={form.control}
+                        name="availableFrom"
+                        render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                            <FormLabel>Available From</FormLabel>
+                            <Popover>
+                            <PopoverTrigger asChild>
+                                <FormControl>
+                                <Button
+                                    variant={"outline"}
+                                    className={cn(
+                                    "w-[240px] pl-3 text-left font-normal",
+                                    !field.value && "text-muted-foreground"
+                                    )}
+                                >
+                                    {field.value ? (
+                                    format(field.value, "PPP")
+                                    ) : (
+                                    <span>Pick a date</span>
+                                    )}
+                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
+                                </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={field.onChange}
+                                disabled={(date) =>
+                                    date < new Date(new Date().setHours(0,0,0,0))
+                                }
+                                initialFocus
+                                />
+                            </PopoverContent>
+                            </Popover>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                     <FormField
+                        control={form.control}
+                        name="furnishing"
+                        render={({ field }) => (
+                            <FormItem className="space-y-3">
+                                <FormLabel>Furnishing Status</FormLabel>
+                                <FormControl>
+                                    <RadioGroup
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                    className="flex space-x-4"
+                                    >
+                                    <FormItem className="flex items-center space-x-2 space-y-0">
+                                        <FormControl>
+                                        <RadioGroupItem value="furnished" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">Furnished</FormLabel>
+                                    </FormItem>
+                                    <FormItem className="flex items-center space-x-2 space-y-0">
+                                        <FormControl>
+                                        <RadioGroupItem value="unfurnished" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">Unfurnished</FormLabel>
+                                    </FormItem>
+                                     <FormItem className="flex items-center space-x-2 space-y-0">
+                                        <FormControl>
+                                        <RadioGroupItem value="partially" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">Partially</FormLabel>
+                                    </FormItem>
+                                    </RadioGroup>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+                </div>
                  <FormField
                     control={form.control}
                     name="description"
@@ -489,3 +547,5 @@ export default function CreateListingPage() {
     </div>
   );
 }
+
+    

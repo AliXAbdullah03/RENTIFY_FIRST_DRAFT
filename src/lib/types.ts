@@ -1,6 +1,6 @@
 
 export type PropertyType = 'apartment' | 'room' | 'bedspace' | 'commercial' | 'house' | 'car';
-export type Furnishing = 'furnished' | 'unfurnished';
+export type Furnishing = 'furnished' | 'unfurnished' | 'partially';
 
 export interface Owner {
   id: string;
@@ -59,5 +59,7 @@ export interface Conversation {
     renter: Renter;
     messages: Message[];
 }
+
+    
 
     
