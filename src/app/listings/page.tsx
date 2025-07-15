@@ -2,8 +2,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { List, LayoutGrid, Map, Search, Sparkles } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import { List, LayoutGrid, Map, Sparkles } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { PropertyCard } from '@/components/property-card';
@@ -18,13 +17,16 @@ import { useAuth } from '@/context/auth-context';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SmartSearchDialog } from '@/components/smart-search-dialog';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import locationData from '@/lib/ph-locations.json';
 
 const t = {
     en: {
         loading: "Loading...",
         heroTitle: "Your Next Chapter, Found",
         heroSubtitle: "Discover a place you'll love to live. Unforgettable rentals at your fingertips.",
-        searchPlaceholder: "Search by location (Region, City, Barangay)...",
+        filterByCity: "Filter by City...",
+        allCities: "All Cities",
         priceRange: "Price Range",
         availableNow: "Available Now",
         all: "All",
@@ -54,7 +56,8 @@ const t = {
         loading: "Naglo-load...",
         heroTitle: "Ang Iyong Susunod na Kabanata, Natagpuan",
         heroSubtitle: "Tuklasin ang isang lugar na magugustuhan mong tirahan. Mga di malilimutang paupahan sa iyong mga kamay.",
-        searchPlaceholder: "Maghanap ayon sa lokasyon (Rehiyon, Lungsod, Barangay)...",
+        filterByCity: "Salain ayon sa Lungsod...",
+        allCities: "Lahat ng Lungsod",
         priceRange: "Saklaw ng Presyo",
         availableNow: "Available Na Ngayon",
         all: "Lahat",
@@ -84,6 +87,18 @@ const t = {
 
 const MAX_PRICE = 100000;
 
+const allCities = Object.values(locationData as any).reduce((acc: string[], region: any) => {
+    Object.values(region.province_list).forEach((province: any) => {
+        Object.keys(province.municipality_list).forEach((city) => {
+            if (!acc.includes(city)) {
+                acc.push(city);
+            }
+        });
+    });
+    return acc;
+}, []).sort();
+
+
 export default function ListingsPage() {
   const { properties, deleteProperty } = usePropertyContext();
   const { isAuthenticated, role, language } = useAuth();
@@ -93,6 +108,7 @@ export default function ListingsPage() {
 
   const [view, setView] = useState('grid');
   const [filter, setFilter] = useState<PropertyType | 'all'>(initialType as PropertyType | 'all');
+  const [cityFilter, setCityFilter] = useState<'all' | string>('all');
   const [priceRange, setPriceRange] = useState([0, MAX_PRICE]);
   const [availableNow, setAvailableNow] = useState(false);
   const [furnishing, setFurnishing] = useState<'any' | 'furnished' | 'unfurnished'>('any');
@@ -127,6 +143,7 @@ export default function ListingsPage() {
     setSmartSearchResults(propertyIds);
     // Reset other filters when smart search is used
     setFilter('all');
+    setCityFilter('all');
     setPriceRange([0, MAX_PRICE]);
     setAvailableNow(false);
     setFurnishing('any');
@@ -150,11 +167,12 @@ export default function ListingsPage() {
         return smartSearchResults.includes(property.id);
     }
     const typeMatch = filter === 'all' || property.type === filter;
+    const cityMatch = cityFilter === 'all' || property.location.toLowerCase().includes(cityFilter.toLowerCase());
     const priceMatch = property.price >= priceRange[0] && property.price <= priceRange[1];
     const availabilityMatch = !availableNow || property.availableNow;
     const furnishingMatch = furnishing === 'any' || property.furnishing === furnishing;
     
-    return typeMatch && priceMatch && availabilityMatch && furnishingMatch;
+    return typeMatch && priceMatch && availabilityMatch && furnishingMatch && cityMatch;
   });
 
   return (
@@ -180,12 +198,17 @@ export default function ListingsPage() {
                 <div className="mb-6 rounded-lg border border-border bg-card/80 backdrop-blur-sm p-4 shadow-sm">
                     <div className="flex flex-col gap-4">
                         <div className="relative w-full">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                            <Input
-                                type="search"
-                                placeholder={translations.searchPlaceholder}
-                                className="w-full rounded-lg bg-background/80 pl-10 py-3 text-base"
-                            />
+                            <Select onValueChange={(value) => setCityFilter(value)} defaultValue="all" disabled={!!smartSearchResults}>
+                                <SelectTrigger className="w-full rounded-lg bg-background/80 pl-10 py-3 text-base">
+                                    <SelectValue placeholder={translations.filterByCity} />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">{translations.allCities}</SelectItem>
+                                    {allCities.map(city => (
+                                        <SelectItem key={city} value={city}>{city}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
 
                         <div className="flex flex-col md:flex-row gap-4">
@@ -348,3 +371,5 @@ export default function ListingsPage() {
     </div>
   );
 }
+
+    
