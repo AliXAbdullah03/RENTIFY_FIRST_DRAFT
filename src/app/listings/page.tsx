@@ -23,7 +23,7 @@ const MAX_PRICE = 10000;
 
 export default function ListingsPage() {
   const { properties } = usePropertyContext();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, role } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialType = searchParams.get('type') || 'all';
@@ -71,7 +71,16 @@ export default function ListingsPage() {
       setSmartSearchResults(null);
   }
 
-  const filteredProperties = properties.filter((property) => {
+  // Hardcoded owner ID for demo purposes
+  const currentOwnerId = 'owner-1';
+
+  const displayedProperties = role === 'owner'
+    ? properties.filter(p => p.ownerId === currentOwnerId)
+    : properties;
+
+  const filteredProperties = displayedProperties.filter((property) => {
+    if (role === 'owner') return true; // Owners see all their properties without filters
+
     if (smartSearchResults) {
         return smartSearchResults.includes(property.id);
     }
@@ -85,114 +94,133 @@ export default function ListingsPage() {
 
   return (
     <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-transparent">
-      <div className="relative mb-8 h-80 w-full overflow-hidden rounded-lg bg-card/50 backdrop-blur-sm border border-white/10">
-        <Image
-            src="/main-logo.png"
-            alt="Rentify Main Logo"
-            fill
-            className="object-contain p-8"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/40 to-transparent" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter">Your Next Chapter, Found</h1>
-          <p className="mt-4 max-w-2xl text-lg text-neutral-200">
-            Discover a place you'll love to live. Unforgettable rentals at your fingertips.
-          </p>
-        </div>
-      </div>
+        {role === 'renter' && (
+            <>
+                <div className="relative mb-8 h-80 w-full overflow-hidden rounded-lg bg-card/50 backdrop-blur-sm border border-white/10">
+                    <Image
+                        src="/main-logo.png"
+                        alt="Rentify Main Logo"
+                        fill
+                        className="object-contain p-8"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/40 to-transparent" />
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
+                    <h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter">Your Next Chapter, Found</h1>
+                    <p className="mt-4 max-w-2xl text-lg text-neutral-200">
+                        Discover a place you'll love to live. Unforgettable rentals at your fingertips.
+                    </p>
+                    </div>
+                </div>
 
-      <div className="mb-6 rounded-lg border border-border bg-card/80 backdrop-blur-sm p-4 shadow-sm">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
-            <div className="relative w-full lg:col-span-2">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input
-                    type="search"
-                    placeholder="Search by location (Region, City, Barangay)..."
-                    className="w-full rounded-lg bg-background/80 pl-10 py-3 text-base"
-                />
-            </div>
-            <div className="space-y-2">
-                <Label htmlFor="price-range" className="flex justify-between text-sm">
-                    <span>Price Range</span>
-                    <span>${priceRange[0]} - ${priceRange[1]}{priceRange[1] === MAX_PRICE ? '+' : ''}</span>
-                </Label>
-                <Slider
-                    id="price-range"
-                    min={0}
-                    max={MAX_PRICE}
-                    step={100}
-                    value={priceRange}
-                    onValueChange={setPriceRange}
-                    className="w-full"
-                    disabled={!!smartSearchResults}
-                />
-            </div>
-             <div className="flex items-center space-x-2 pt-5">
-                <Checkbox id="available-now" checked={availableNow} onCheckedChange={(checked) => setAvailableNow(!!checked)} disabled={!!smartSearchResults} />
-                <Label htmlFor="available-now">Available Now</Label>
-            </div>
-        </div>
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
-            <div className="lg:col-span-2">
-                <Tabs
-                defaultValue={filter}
-                onValueChange={(value) => setFilter(value as PropertyType | 'all')}
-                className="w-full md:w-auto"
-                >
-                    <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 bg-background/80"
-                        aria-disabled={!!smartSearchResults}
-                        style={{ pointerEvents: smartSearchResults ? 'none' : 'auto' }}
-                    >
-                        <TabsTrigger value="all">All</TabsTrigger>
-                        <TabsTrigger value="apartment">Apartments</TabsTrigger>
-                        <TabsTrigger value="room">Rooms</TabsTrigger>
-                        <TabsTrigger value="bedspace">Bedspace</TabsTrigger>
-                        <TabsTrigger value="commercial">Commercial</TabsTrigger>
-                    </TabsList>
-                </Tabs>
-            </div>
-             <div className="flex items-center space-x-4">
-                 <Label>Furnishing</Label>
-                <RadioGroup value={furnishing} onValueChange={(value) => setFurnishing(value as any)} className="flex space-x-2" disabled={!!smartSearchResults}>
-                    <div className="flex items-center space-x-1">
-                        <RadioGroupItem value="any" id="any"/>
-                        <Label htmlFor="any">Any</Label>
+                <div className="mb-6 rounded-lg border border-border bg-card/80 backdrop-blur-sm p-4 shadow-sm">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
+                        <div className="relative w-full lg:col-span-2">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                            <Input
+                                type="search"
+                                placeholder="Search by location (Region, City, Barangay)..."
+                                className="w-full rounded-lg bg-background/80 pl-10 py-3 text-base"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="price-range" className="flex justify-between text-sm">
+                                <span>Price Range</span>
+                                <span>${priceRange[0]} - ${priceRange[1]}{priceRange[1] === MAX_PRICE ? '+' : ''}</span>
+                            </Label>
+                            <Slider
+                                id="price-range"
+                                min={0}
+                                max={MAX_PRICE}
+                                step={100}
+                                value={priceRange}
+                                onValueChange={setPriceRange}
+                                className="w-full"
+                                disabled={!!smartSearchResults}
+                            />
+                        </div>
+                        <div className="flex items-center space-x-2 pt-5">
+                            <Checkbox id="available-now" checked={availableNow} onCheckedChange={(checked) => setAvailableNow(!!checked)} disabled={!!smartSearchResults} />
+                            <Label htmlFor="available-now">Available Now</Label>
+                        </div>
                     </div>
-                    <div className="flex items-center space-x-1">
-                        <RadioGroupItem value="furnished" id="furnished"/>
-                        <Label htmlFor="furnished">Furnished</Label>
+                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
+                        <div className="lg:col-span-2">
+                            <Tabs
+                            defaultValue={filter}
+                            onValueChange={(value) => setFilter(value as PropertyType | 'all')}
+                            className="w-full md:w-auto"
+                            >
+                                <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 bg-background/80"
+                                    aria-disabled={!!smartSearchResults}
+                                    style={{ pointerEvents: smartSearchResults ? 'none' : 'auto' }}
+                                >
+                                    <TabsTrigger value="all">All</TabsTrigger>
+                                    <TabsTrigger value="apartment">Apartments</TabsTrigger>
+                                    <TabsTrigger value="room">Rooms</TabsTrigger>
+                                    <TabsTrigger value="bedspace">Bedspace</TabsTrigger>
+                                    <TabsTrigger value="commercial">Commercial</TabsTrigger>
+                                </TabsList>
+                            </Tabs>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                            <Label>Furnishing</Label>
+                            <RadioGroup value={furnishing} onValueChange={(value) => setFurnishing(value as any)} className="flex space-x-2" disabled={!!smartSearchResults}>
+                                <div className="flex items-center space-x-1">
+                                    <RadioGroupItem value="any" id="any"/>
+                                    <Label htmlFor="any">Any</Label>
+                                </div>
+                                <div className="flex items-center space-x-1">
+                                    <RadioGroupItem value="furnished" id="furnished"/>
+                                    <Label htmlFor="furnished">Furnished</Label>
+                                </div>
+                                <div className="flex items-center space-x-1">
+                                    <RadioGroupItem value="unfurnished" id="unfurnished"/>
+                                    <Label htmlFor="unfurnished">Unfurnished</Label>
+                                </div>
+                            </RadioGroup>
+                        </div>
+                        <div className="flex justify-end col-span-2 gap-2">
+                            <SmartSearchDialog onSearch={handleSmartSearch} />
+                            <ToggleGroup
+                            type="single"
+                            value={view}
+                            onValueChange={(value) => {
+                                if (value) setView(value);
+                            }}
+                            aria-label="View options"
+                            >
+                                <ToggleGroupItem value="grid" aria-label="Grid view">
+                                    <LayoutGrid className="h-5 w-5" />
+                                </ToggleGroupItem>
+                                <ToggleGroupItem value="list" aria-label="List view">
+                                    <List className="h-5 w-5" />
+                                </ToggleGroupItem>
+                                <ToggleGroupItem value="map" aria-label="Map view">
+                                    <Map className="h-5 w-5" />
+                                </ToggleGroupItem>
+                            </ToggleGroup>
+                        </div>
                     </div>
-                     <div className="flex items-center space-x-1">
-                        <RadioGroupItem value="unfurnished" id="unfurnished"/>
-                        <Label htmlFor="unfurnished">Unfurnished</Label>
-                    </div>
-                </RadioGroup>
-            </div>
-            <div className="flex justify-end col-span-2 gap-2">
-                <SmartSearchDialog onSearch={handleSmartSearch} />
+                </div>
+            </>
+        )}
+
+        {role === 'owner' && (
+            <div className="mb-6 flex items-center justify-between">
+                <h1 className="text-3xl font-bold tracking-tight">My Listings</h1>
                 <ToggleGroup
-                type="single"
-                value={view}
-                onValueChange={(value) => {
-                    if (value) setView(value);
-                }}
-                aria-label="View options"
+                    type="single"
+                    value={view}
+                    onValueChange={(value) => { if (value) setView(value); }}
+                    aria-label="View options"
                 >
-                    <ToggleGroupItem value="grid" aria-label="Grid view">
-                        <LayoutGrid className="h-5 w-5" />
-                    </ToggleGroupItem>
-                    <ToggleGroupItem value="list" aria-label="List view">
-                        <List className="h-5 w-5" />
-                    </ToggleGroupItem>
-                    <ToggleGroupItem value="map" aria-label="Map view">
-                        <Map className="h-5 w-5" />
-                    </ToggleGroupItem>
+                    <ToggleGroupItem value="grid" aria-label="Grid view"><LayoutGrid className="h-5 w-5" /></ToggleGroupItem>
+                    <ToggleGroupItem value="list" aria-label="List view"><List className="h-5 w-5" /></ToggleGroupItem>
                 </ToggleGroup>
             </div>
-        </div>
-      </div>
+        )}
       
-      {smartSearchResults && (
+      {smartSearchResults && role === 'renter' && (
         <div className="mb-6 flex items-center justify-between rounded-lg border border-primary/50 bg-primary/10 p-3">
             <div className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-primary" />
@@ -203,7 +231,7 @@ export default function ListingsPage() {
       )}
 
 
-      {view === 'map' ? (
+      {view === 'map' && role === 'renter' ? (
         <div className="relative h-[600px] w-full overflow-hidden rounded-lg shadow-lg bg-card/80 backdrop-blur-sm">
            <Image
             src="https://placehold.co/1200x800.png"
@@ -242,6 +270,7 @@ export default function ListingsPage() {
             <div className="text-center py-20 rounded-lg bg-card/80 backdrop-blur-sm border border-border">
               <h2 className="text-2xl font-bold">No Listings Found</h2>
               <p className="text-muted-foreground mt-2">{smartSearchResults ? "Your smart search didn't return any results. Try a different query." : "Try adjusting your filters or check back later."}</p>
+               {role === 'owner' && <p className="text-muted-foreground mt-2">You haven't created any listings yet.</p>}
             </div>
           )}
         </>
