@@ -22,12 +22,14 @@ import {
   PlusCircle,
   LogOut,
   User as UserIcon,
+  MessageSquare,
 } from 'lucide-react';
 import { Logo } from './logo';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/context/auth-context';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from './ui/badge';
 
 const loggedOutNavItems: any[] = [
   // No items for logged out users in the main nav
@@ -35,12 +37,14 @@ const loggedOutNavItems: any[] = [
 
 const renterNavItems = [
   { href: '/listings', label: 'Listings', icon: LayoutGrid },
+  { href: '/inbox', label: 'Inbox', icon: MessageSquare, notificationCount: 3 },
   { href: '/support', label: 'Support', icon: LifeBuoy },
 ];
 
 const ownerNavItems = [
     { href: '/listings', label: 'My Listings', icon: LayoutGrid },
     { href: '/create-listing', label: 'Create Listing', icon: PlusCircle },
+    { href: '/inbox', label: 'Inbox', icon: MessageSquare, notificationCount: 1 },
     { href: '/support', label: 'Support', icon: LifeBuoy },
 ]
 
@@ -66,11 +70,14 @@ export function AppHeader() {
               key={item.label}
               href={item.href}
               className={cn(
-                'transition-colors hover:text-foreground/80',
+                'transition-colors hover:text-foreground/80 relative',
                 pathname === item.href ? 'text-foreground' : 'text-foreground/60'
               )}
             >
               {item.label}
+              {item.notificationCount && item.notificationCount > 0 && (
+                 <Badge variant="destructive" className="absolute -top-2 -right-4 h-5 w-5 justify-center p-0">{item.notificationCount}</Badge>
+              )}
             </Link>
           ))}
         </nav>
@@ -92,6 +99,13 @@ export function AppHeader() {
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link href="/profile"><UserIcon className="mr-2" />Profile</Link>
+              </DropdownMenuItem>
+               <DropdownMenuItem asChild>
+                <Link href="/inbox" className="relative">
+                    <MessageSquare className="mr-2" />
+                    Inbox
+                    <Badge variant="destructive" className="absolute top-1 right-2 h-5 w-5 justify-center p-0">3</Badge>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="/settings"><Settings className="mr-2" />Settings</Link>
@@ -132,9 +146,12 @@ export function AppHeader() {
               {user ? (
                 <>
                   {navItems.map(item => (
-                     <Link key={item.label} href={item.href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+                     <Link key={item.label} href={item.href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary relative">
                       <item.icon className="h-5 w-5" />
                       {item.label}
+                      {item.notificationCount && item.notificationCount > 0 && (
+                          <Badge variant="destructive" className="absolute left-6 top-1 h-5 w-5 justify-center p-0">{item.notificationCount}</Badge>
+                      )}
                     </Link>
                   ))}
                   <Separator />

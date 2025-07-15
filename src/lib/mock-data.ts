@@ -1,4 +1,5 @@
-import type { Property, Owner } from './types';
+
+import type { Property, Owner, Conversation, Renter } from './types';
 
 export const owners: Owner[] = [
   {
@@ -15,6 +16,19 @@ export const owners: Owner[] = [
     email: 'bob.w@example.com',
   },
 ];
+
+export const renters: Renter[] = [
+    {
+        id: 'renter-1',
+        name: 'Charlie Davis',
+        avatar: 'https://placehold.co/100x100.png',
+    },
+     {
+        id: 'renter-2',
+        name: 'Diana Prince',
+        avatar: 'https://placehold.co/100x100.png',
+    }
+]
 
 export const properties: Property[] = [
   {
@@ -104,3 +118,51 @@ export const properties: Property[] = [
     furnishing: 'unfurnished',
   },
 ];
+
+
+export const conversations: Conversation[] = [
+    {
+        id: 'convo-1',
+        property: {
+            id: 'prop-1',
+            title: 'Modern Downtown Apartment',
+            image: '/listing-1.jpg',
+        },
+        owner: owners[0],
+        renter: renters[0],
+        messages: [
+            { id: 'msg-1-1', senderId: 'renter-1', text: 'Hi, is this apartment still available?', timestamp: '2024-05-20T10:00:00Z' },
+            { id: 'msg-1-2', senderId: 'owner-1', text: 'Hello! Yes, it is. Are you interested in a viewing?', timestamp: '2024-05-20T10:05:00Z' },
+            { id: 'msg-1-3', senderId: 'renter-1', text: 'Great! How about tomorrow afternoon?', timestamp: '2024-05-20T10:06:00Z' },
+        ]
+    },
+    {
+        id: 'convo-2',
+        property: {
+            id: 'prop-4',
+            title: 'Spacious Commercial Space',
+            image: '/listing-3.jpg',
+        },
+        owner: owners[1],
+        renter: renters[1],
+        messages: [
+            { id: 'msg-2-1', senderId: 'renter-2', text: 'Good morning, I have a few questions about the commercial space.', timestamp: '2024-05-19T09:00:00Z' },
+            { id: 'msg-2-2', senderId: 'owner-2', text: 'Sure, I\'d be happy to answer them.', timestamp: '2024-05-19T09:10:00Z' },
+        ]
+    },
+     {
+        id: 'convo-3',
+        property: {
+            id: 'prop-3',
+            title: 'Affordable Bedspace for Rent',
+            image: '/listing-2.jpg',
+        },
+        owner: owners[0],
+        renter: renters[1],
+        messages: [
+            { id: 'msg-3-1', senderId: 'renter-1', text: 'Can you tell me more about the rules for the bedspace?', timestamp: '2024-05-21T11:00:00Z' },
+            { id: 'msg-3-2', senderId: 'owner-1', text: 'Of course. The main rules are no smoking and keeping the shared space clean.', timestamp: '2024-05-21T11:05:00Z' },
+            { id: 'msg-3-3', senderId: 'renter-1', text: 'Sounds good, thank you!', timestamp: '2024-05-21T11:06:00Z' },
+        ]
+    },
+]
