@@ -82,7 +82,7 @@ const t = {
     }
 };
 
-const MAX_PRICE = 10000;
+const MAX_PRICE = 100000;
 
 export default function ListingsPage() {
   const { properties, deleteProperty } = usePropertyContext();
@@ -192,7 +192,7 @@ export default function ListingsPage() {
                             <div className="flex-1 space-y-2">
                                 <Label htmlFor="price-range" className="flex justify-between text-sm">
                                     <span>{translations.priceRange}</span>
-                                    <span>${priceRange[0]} - ${priceRange[1]}{priceRange[1] === MAX_PRICE ? '+' : ''}</span>
+                                    <span>₱{priceRange[0]} - ₱{priceRange[1]}{priceRange[1] === MAX_PRICE ? '+' : ''}</span>
                                 </Label>
                                 <Slider
                                     id="price-range"

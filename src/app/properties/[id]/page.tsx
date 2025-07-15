@@ -166,7 +166,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
         <div className="space-y-8">
             <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
                 <div className="mb-4 text-center">
-                    <p className="text-4xl font-bold">${property.price}<span className="text-base font-normal text-muted-foreground">{translations.perMonth}</span></p>
+                    <p className="text-4xl font-bold">₱{property.price.toLocaleString()}<span className="text-base font-normal text-muted-foreground">{translations.perMonth}</span></p>
                 </div>
                 <Button className="w-full" size="lg">{translations.requestViewing}</Button>
                 <p className="mt-2 text-center text-xs text-muted-foreground">{translations.noCharge}</p>
@@ -200,5 +200,3 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
     </div>
   );
 }
-
-    

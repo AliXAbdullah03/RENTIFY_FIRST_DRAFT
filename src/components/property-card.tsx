@@ -158,7 +158,7 @@ export function PropertyCard({ property, view, role, onDelete = () => {} }: Prop
           </CardContent>
           <CardFooter className="p-0 mt-4 flex items-end justify-between">
              <div className="text-lg font-bold text-primary">
-              ${property.price}
+              ₱{property.price.toLocaleString()}
               <span className="text-sm font-normal text-muted-foreground">{translations.perMonth}</span>
             </div>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -231,5 +231,3 @@ export function PropertyCard({ property, view, role, onDelete = () => {} }: Prop
     </CardWrapper>
   );
 }
-
-    

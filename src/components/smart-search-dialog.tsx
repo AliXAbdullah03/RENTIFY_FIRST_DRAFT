@@ -24,7 +24,7 @@ const t = {
         smartRentalSearch: "Smart Rental Search",
         dialogDescription: "Describe your ideal rental in your own words. Our AI will find the best matches for you.",
         inquiry: "Inquiry",
-        inquiryPlaceholder: "e.g., 'A furnished apartment with 2 bedrooms, good for a small family, under $2500.'",
+        inquiryPlaceholder: "e.g., 'A furnished apartment with 2 bedrooms, good for a small family, under ₱50,000.'",
         queryEmpty: "Query is empty",
         queryEmptyDesc: "Please describe what you are looking for.",
         smartSearchComplete: "Smart Search Complete!",
@@ -38,7 +38,7 @@ const t = {
         smartRentalSearch: "Matalinong Paghahanap ng Upa",
         dialogDescription: "Ilarawan ang iyong ideal na paupahan sa iyong sariling mga salita. Hahanapin ng aming AI ang pinakamahusay na mga tugma para sa iyo.",
         inquiry: "Pagtatanong",
-        inquiryPlaceholder: "hal., 'Isang furnished na apartment na may 2 silid-tulugan, maganda para sa isang maliit na pamilya, na mas mababa sa $2500.'",
+        inquiryPlaceholder: "hal., 'Isang furnished na apartment na may 2 silid-tulugan, maganda para sa isang maliit na pamilya, na mas mababa sa ₱50,000.'",
         queryEmpty: "Walang laman ang query",
         queryEmptyDesc: "Mangyaring ilarawan kung ano ang iyong hinahanap.",
         smartSearchComplete: "Kumpleto na ang Smart Search!",
@@ -136,5 +136,3 @@ export function SmartSearchDialog({ onSearch }: SmartSearchDialogProps) {
     </Dialog>
   );
 }
-
-    
