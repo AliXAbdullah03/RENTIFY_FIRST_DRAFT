@@ -22,7 +22,7 @@ import { Button } from '@/components/ui/button';
 const MAX_PRICE = 10000;
 
 export default function ListingsPage() {
-  const { properties } = usePropertyContext();
+  const { properties, deleteProperty } = usePropertyContext();
   const { isAuthenticated, role } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -263,6 +263,8 @@ export default function ListingsPage() {
                   key={property.id}
                   property={property}
                   view={view}
+                  role={role}
+                  onDelete={() => deleteProperty(property.id)}
                 />
               ))}
             </div>

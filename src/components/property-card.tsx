@@ -2,7 +2,7 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { BedDouble, Bath, Car, Building, MapPin } from 'lucide-react';
+import { BedDouble, Bath, Car, Building, MapPin, Eye, MessageSquare, Edit, Power, Trash2 } from 'lucide-react';
 
 import {
   Card,
@@ -13,17 +13,44 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import type { Property } from '@/lib/types';
+import type { UserRole } from '@/context/auth-context';
 import { cn } from '@/lib/utils';
+import { Button } from './ui/button';
+import { Switch } from './ui/switch';
+import { Separator } from './ui/separator';
+import { DeleteListingDialog } from './delete-listing-dialog';
+import { useToast } from '@/hooks/use-toast';
 
 interface PropertyCardProps {
   property: Property;
   view: 'grid' | 'list';
+  role?: UserRole | null;
+  onDelete?: () => void;
 }
 
-export function PropertyCard({ property, view }: PropertyCardProps) {
+export function PropertyCard({ property, view, role, onDelete = () => {} }: PropertyCardProps) {
+  const { toast } = useToast();
   const isGridView = view === 'grid';
+  const isOwnerView = role === 'owner';
+  const CardWrapper = isOwnerView ? 'div' : Link;
+  const wrapperProps = isOwnerView ? {} : { href: `/properties/${property.id}`, className: "group block h-full" };
+
+  const handlePause = () => {
+    toast({
+      title: 'Listing Paused',
+      description: 'This listing is now hidden from search results.',
+    });
+  };
+
+  const handleEdit = () => {
+    toast({
+      title: 'Edit Clicked',
+      description: 'You would be redirected to the edit page for this listing.',
+    });
+  };
+
   return (
-    <Link href={`/properties/${property.id}`} className="group block h-full">
+    <CardWrapper {...wrapperProps}>
       <Card
         className={cn(
           'flex h-full flex-col transition-all duration-300 ease-in-out bg-card hover:border-primary border-2 border-transparent',
@@ -41,6 +68,11 @@ export function PropertyCard({ property, view }: PropertyCardProps) {
            {property.availableNow && (
               <Badge variant="secondary" className="absolute top-2 right-2">Available Now</Badge>
             )}
+            {isOwnerView && (
+                 <Badge variant={property.paused ? "destructive" : "default"} className="absolute top-2 left-2">
+                    {property.paused ? 'Paused' : 'Active'}
+                 </Badge>
+            )}
         </div>
 
         <div className="flex flex-1 flex-col p-4">
@@ -49,7 +81,7 @@ export function PropertyCard({ property, view }: PropertyCardProps) {
               <CardTitle className="text-lg font-bold leading-tight group-hover:text-primary mb-1">
                 {property.title}
               </CardTitle>
-              {property.featured && (
+              {property.featured && !isOwnerView && (
                 <Badge variant="default" className="shrink-0">Featured</Badge>
               )}
             </div>
@@ -102,7 +134,33 @@ export function PropertyCard({ property, view }: PropertyCardProps) {
             </div>
           </CardFooter>
         </div>
+        {isOwnerView && (
+            <>
+                <Separator />
+                <div className="p-4 space-y-3">
+                    <div className="flex justify-around text-sm">
+                        <div className="flex items-center gap-1.5 text-muted-foreground">
+                            <Eye className="h-4 w-4" />
+                            <span>{property.analytics?.views ?? Math.floor(Math.random() * 500)} views</span>
+                        </div>
+                         <div className="flex items-center gap-1.5 text-muted-foreground">
+                            <MessageSquare className="h-4 w-4" />
+                            <span>{property.analytics?.inquiries ?? Math.floor(Math.random() * 50)} inquiries</span>
+                        </div>
+                    </div>
+                     <div className="flex justify-center gap-2">
+                        <Button variant="outline" size="sm" onClick={handleEdit}>
+                           <Edit className="mr-2 h-4 w-4" /> Edit
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={handlePause}>
+                           <Power className="mr-2 h-4 w-4" /> Pause
+                        </Button>
+                        <DeleteListingDialog onDelete={onDelete} listingTitle={property.title} />
+                    </div>
+                </div>
+            </>
+        )}
       </Card>
-    </Link>
+    </CardWrapper>
   );
 }

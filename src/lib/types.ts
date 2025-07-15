@@ -27,4 +27,9 @@ export interface Property {
   amenities: string[];
   availableNow: boolean;
   furnishing: Furnishing;
+  paused?: boolean;
+  analytics?: {
+    views: number;
+    inquiries: number;
+  }
 }

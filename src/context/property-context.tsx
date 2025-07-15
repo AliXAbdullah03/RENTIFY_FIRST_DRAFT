@@ -7,6 +7,7 @@ import { properties as initialProperties } from '@/lib/mock-data';
 interface PropertyContextType {
   properties: Property[];
   addProperty: (property: Property) => void;
+  deleteProperty: (propertyId: string) => void;
 }
 
 const PropertyContext = createContext<PropertyContextType | undefined>(undefined);
@@ -18,8 +19,12 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
     setProperties((prevProperties) => [property, ...prevProperties]);
   };
 
+  const deleteProperty = (propertyId: string) => {
+    setProperties((prevProperties) => prevProperties.filter((p) => p.id !== propertyId));
+  };
+
   return (
-    <PropertyContext.Provider value={{ properties, addProperty }}>
+    <PropertyContext.Provider value={{ properties, addProperty, deleteProperty }}>
       {children}
     </PropertyContext.Provider>
   );
