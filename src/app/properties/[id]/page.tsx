@@ -21,10 +21,41 @@ import { useAuth } from '@/context/auth-context';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 
+const t = {
+    en: {
+        featured: "Featured",
+        aboutThis: "About this",
+        amenities: "Amenities",
+        perMonth: "/month",
+        requestViewing: "Request a Viewing",
+        noCharge: "You won't be charged yet",
+        hostedBy: "Hosted by",
+        contactHost: "Contact Host",
+        reportListing: "Report Listing",
+        listingReported: "Listing Reported",
+        listingReportedDesc: "Thank you for your feedback. We will review this listing shortly.",
+    },
+    tl: {
+        featured: "Tampok",
+        aboutThis: "Tungkol sa",
+        amenities: "Mga Amenity",
+        perMonth: "/buwan",
+        requestViewing: "Humiling ng Viewing",
+        noCharge: "Hindi ka pa sisingilin",
+        hostedBy: "Host ni",
+        contactHost: "Makipag-ugnayan sa Host",
+        reportListing: "I-report ang Listing",
+        listingReported: "Nai-report na ang Listing",
+        listingReportedDesc: "Salamat sa iyong feedback. Susuriin namin ang listing na ito sa lalong madaling panahon.",
+    }
+}
+
+
 export default function PropertyDetailPage({ params }: { params: { id: string } }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, language } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
+  const translations = t[language];
 
   useEffect(() => {
     if (isAuthenticated === false) {
@@ -72,8 +103,8 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
 
   const handleReport = () => {
     toast({
-        title: "Listing Reported",
-        description: "Thank you for your feedback. We will review this listing shortly.",
+        title: translations.listingReported,
+        description: translations.listingReportedDesc,
     });
   }
 
@@ -89,7 +120,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
             <Badge variant="secondary" className="capitalize">{property.type}</Badge>
             {property.featured && 
                 <Badge variant="default" className="flex items-center gap-1">
-                    <Star className="h-3 w-3" /> Featured
+                    <Star className="h-3 w-3" /> {translations.featured}
                 </Badge>
             }
         </div>
@@ -117,12 +148,12 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
 
       <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
         <div className="md:col-span-2">
-            <h2 className="mb-4 text-2xl font-bold">About this {property.type}</h2>
+            <h2 className="mb-4 text-2xl font-bold">{translations.aboutThis} {property.type}</h2>
             <p className="text-muted-foreground leading-relaxed">
                 {property.description}
             </p>
 
-            <h3 className="mt-8 mb-4 text-xl font-bold">Amenities</h3>
+            <h3 className="mt-8 mb-4 text-xl font-bold">{translations.amenities}</h3>
             <ul className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
                 {property.amenities.map(amenity => (
                     <li key={amenity} className="flex items-center">
@@ -135,14 +166,14 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
         <div className="space-y-8">
             <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
                 <div className="mb-4 text-center">
-                    <p className="text-4xl font-bold">${property.price}<span className="text-base font-normal text-muted-foreground">/month</span></p>
+                    <p className="text-4xl font-bold">${property.price}<span className="text-base font-normal text-muted-foreground">{translations.perMonth}</span></p>
                 </div>
-                <Button className="w-full" size="lg">Request a Viewing</Button>
-                <p className="mt-2 text-center text-xs text-muted-foreground">You won't be charged yet</p>
+                <Button className="w-full" size="lg">{translations.requestViewing}</Button>
+                <p className="mt-2 text-center text-xs text-muted-foreground">{translations.noCharge}</p>
             </div>
              {owner && (
             <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
-              <h3 className="mb-4 text-lg font-semibold">Hosted by</h3>
+              <h3 className="mb-4 text-lg font-semibold">{translations.hostedBy}</h3>
               <div className="flex items-center gap-4">
                 <Link href="/profile">
                   <Avatar className="h-16 w-16">
@@ -156,11 +187,11 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                 </div>
               </div>
               <a href={`mailto:${owner.email}`} className="w-full">
-                <Button variant="secondary" className="mt-4 w-full">Contact Host</Button>
+                <Button variant="secondary" className="mt-4 w-full">{translations.contactHost}</Button>
               </a>
                <Button variant="destructive" className="mt-2 w-full" onClick={handleReport}>
                 <AlertTriangle className="mr-2 h-4 w-4" />
-                Report Listing
+                {translations.reportListing}
                </Button>
             </div>
           )}
@@ -169,3 +200,5 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
     </div>
   );
 }
+
+    

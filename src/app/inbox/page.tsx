@@ -17,9 +17,27 @@ import { cn } from '@/lib/utils';
 import { Send, Search, ArrowLeft, MoreVertical } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
+const t = {
+    en: {
+        loading: "Loading...",
+        inbox: "Inbox",
+        searchMessages: "Search messages...",
+        regarding: "Regarding:",
+        typeMessage: "Type your message...",
+        selectConversation: "Select a conversation to start messaging",
+    },
+    tl: {
+        loading: "Naglo-load...",
+        inbox: "Inbox",
+        searchMessages: "Maghanap ng mga mensahe...",
+        regarding: "Tungkol sa:",
+        typeMessage: "I-type ang iyong mensahe...",
+        selectConversation: "Pumili ng isang pag-uusap upang simulan ang pagmemensahe",
+    }
+}
 
 export default function InboxPage() {
-  const { user, role, isAuthenticated } = useAuth();
+  const { user, role, isAuthenticated, language } = useAuth();
   const router = useRouter();
   const isMobile = useIsMobile();
   
@@ -27,6 +45,8 @@ export default function InboxPage() {
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
+
+  const translations = t[language];
 
   useEffect(() => {
     if (isAuthenticated === false) {
@@ -89,10 +109,10 @@ export default function InboxPage() {
   const conversationListView = (
       <div className={cn("border-r flex-col", isMobile && !selectedConversation ? "flex w-full" : "hidden md:flex md:w-1/3 xl:w-1/4")}>
         <div className="p-4 border-b">
-          <h2 className="text-2xl font-bold">Inbox</h2>
+          <h2 className="text-2xl font-bold">{translations.inbox}</h2>
            <div className="relative mt-2">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-              <Input placeholder="Search messages..." className="pl-10"/>
+              <Input placeholder={translations.searchMessages} className="pl-10"/>
            </div>
         </div>
         <ScrollArea className="flex-grow">
@@ -133,7 +153,7 @@ export default function InboxPage() {
                   </Avatar>
                   <div>
                     <p className="font-bold">{role === 'owner' ? selectedConversation.renter.name : selectedConversation.owner.name}</p>
-                    <p className="text-sm text-muted-foreground">Regarding: {selectedConversation.property.title}</p>
+                    <p className="text-sm text-muted-foreground">{translations.regarding} {selectedConversation.property.title}</p>
                   </div>
                 </div>
                  <div className="flex items-center gap-2">
@@ -160,7 +180,7 @@ export default function InboxPage() {
               <div className="p-4 border-t bg-card">
                  <form className="flex gap-2" onSubmit={handleSendMessage}>
                     <Input 
-                        placeholder="Type your message..." 
+                        placeholder={translations.typeMessage} 
                         className="flex-grow"
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
@@ -171,7 +191,7 @@ export default function InboxPage() {
             </>
           ) : (
             <div className="flex-grow flex items-center justify-center text-muted-foreground">
-              <p>Select a conversation to start messaging</p>
+              <p>{translations.selectConversation}</p>
             </div>
           )}
         </div>
@@ -188,3 +208,4 @@ export default function InboxPage() {
   );
 }
 
+    

@@ -12,10 +12,67 @@ import { Switch } from '@/components/ui/switch';
 import { User, Bell, Palette, Lock } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
+const t = {
+    en: {
+        loading: "Loading...",
+        settings: "Settings",
+        manageSettings: "Manage your account settings and preferences.",
+        profileInfo: "Profile Information",
+        updateDetails: "Update your personal details here.",
+        fullName: "Full Name",
+        emailAddress: "Email Address",
+        saveChanges: "Save Changes",
+        changePassword: "Change Password",
+        passwordSecurity: "For your security, we recommend using a strong password.",
+        currentPassword: "Current Password",
+        newPassword: "New Password",
+        confirmNewPassword: "Confirm New Password",
+        updatePassword: "Update Password",
+        notifications: "Notifications",
+        manageNotifications: "Manage how you receive notifications from us.",
+        emailNotifications: "Email Notifications",
+        emailNotificationsDesc: "Receive updates about your listings and messages.",
+        pushNotifications: "Push Notifications",
+        pushNotificationsDesc: "Get real-time alerts on your devices.",
+        appearance: "Appearance",
+        customizeAppearance: "Customize the look and feel of the app.",
+        darkMode: "Dark Mode",
+        darkModeDesc: "Toggle between light and dark themes.",
+        themeSwitchingSoon: "Theme switching will be implemented in a future update."
+    },
+    tl: {
+        loading: "Naglo-load...",
+        settings: "Mga Setting",
+        manageSettings: "Pamahalaan ang mga setting at preference ng iyong account.",
+        profileInfo: "Impormasyon ng Profile",
+        updateDetails: "I-update ang iyong mga personal na detalye dito.",
+        fullName: "Buong Pangalan",
+        emailAddress: "Email Address",
+        saveChanges: "I-save ang mga Pagbabago",
+        changePassword: "Palitan ang Password",
+        passwordSecurity: "Para sa iyong seguridad, inirerekomenda namin ang paggamit ng isang malakas na password.",
+        currentPassword: "Kasalukuyang Password",
+        newPassword: "Bagong Password",
+        confirmNewPassword: "Kumpirmahin ang Bagong Password",
+        updatePassword: "I-update ang Password",
+        notifications: "Mga Abiso",
+        manageNotifications: "Pamahalaan kung paano ka makakatanggap ng mga abiso mula sa amin.",
+        emailNotifications: "Mga Abiso sa Email",
+        emailNotificationsDesc: "Makatanggap ng mga update tungkol sa iyong mga listing at mensahe.",
+        pushNotifications: "Mga Push Notification",
+        pushNotificationsDesc: "Makatanggap ng mga real-time na alerto sa iyong mga device.",
+        appearance: "Hitsura",
+        customizeAppearance: "I-customize ang itsura at pakiramdam ng app.",
+        darkMode: "Dark Mode",
+        darkModeDesc: "Magpalit sa pagitan ng light at dark na tema.",
+        themeSwitchingSoon: "Ang pagpapalit ng tema ay ipapatupad sa isang update sa hinaharap."
+    }
+}
 
 export default function SettingsPage() {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, language } = useAuth();
     const router = useRouter();
+    const translations = t[language];
 
     useEffect(() => {
         if (isAuthenticated === false) {
@@ -41,9 +98,9 @@ export default function SettingsPage() {
   return (
     <div className="mx-auto max-w-4xl space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+        <h1 className="text-3xl font-bold tracking-tight">{translations.settings}</h1>
         <p className="text-muted-foreground">
-          Manage your account settings and preferences.
+          {translations.manageSettings}
         </p>
       </div>
       <Separator />
@@ -52,24 +109,24 @@ export default function SettingsPage() {
         <CardHeader>
           <CardTitle className="flex items-center">
             <User className="mr-2 h-5 w-5" />
-            Profile Information
+            {translations.profileInfo}
           </CardTitle>
-          <CardDescription>Update your personal details here.</CardDescription>
+          <CardDescription>{translations.updateDetails}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="name">{translations.fullName}</Label>
               <Input id="name" defaultValue="Ali Abdullah" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="email">{translations.emailAddress}</Label>
               <Input id="email" type="email" defaultValue="ali.abdullah@gmail.com" disabled />
             </div>
           </div>
         </CardContent>
         <CardFooter>
-          <Button>Save Changes</Button>
+          <Button>{translations.saveChanges}</Button>
         </CardFooter>
       </Card>
 
@@ -77,28 +134,28 @@ export default function SettingsPage() {
         <CardHeader>
           <CardTitle className="flex items-center">
             <Lock className="mr-2 h-5 w-5" />
-            Change Password
+            {translations.changePassword}
           </CardTitle>
-          <CardDescription>For your security, we recommend using a strong password.</CardDescription>
+          <CardDescription>{translations.passwordSecurity}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="current-password">Current Password</Label>
+            <Label htmlFor="current-password">{translations.currentPassword}</Label>
             <Input id="current-password" type="password" />
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="new-password">New Password</Label>
+              <Label htmlFor="new-password">{translations.newPassword}</Label>
               <Input id="new-password" type="password" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirm-password">Confirm New Password</Label>
+              <Label htmlFor="confirm-password">{translations.confirmNewPassword}</Label>
               <Input id="confirm-password" type="password" />
             </div>
           </div>
         </CardContent>
         <CardFooter>
-          <Button>Update Password</Button>
+          <Button>{translations.updatePassword}</Button>
         </CardFooter>
       </Card>
 
@@ -106,22 +163,22 @@ export default function SettingsPage() {
         <CardHeader>
           <CardTitle className="flex items-center">
             <Bell className="mr-2 h-5 w-5" />
-            Notifications
+            {translations.notifications}
           </CardTitle>
-          <CardDescription>Manage how you receive notifications from us.</CardDescription>
+          <CardDescription>{translations.manageNotifications}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between rounded-lg border p-4">
             <div>
-                <Label htmlFor="email-notifications" className="font-medium">Email Notifications</Label>
-                <p className="text-sm text-muted-foreground">Receive updates about your listings and messages.</p>
+                <Label htmlFor="email-notifications" className="font-medium">{translations.emailNotifications}</Label>
+                <p className="text-sm text-muted-foreground">{translations.emailNotificationsDesc}</p>
             </div>
             <Switch id="email-notifications" defaultChecked />
           </div>
            <div className="flex items-center justify-between rounded-lg border p-4">
             <div>
-                <Label htmlFor="push-notifications" className="font-medium">Push Notifications</Label>
-                <p className="text-sm text-muted-foreground">Get real-time alerts on your devices.</p>
+                <Label htmlFor="push-notifications" className="font-medium">{translations.pushNotifications}</Label>
+                <p className="text-sm text-muted-foreground">{translations.pushNotificationsDesc}</p>
             </div>
             <Switch id="push-notifications" />
           </div>
@@ -132,24 +189,26 @@ export default function SettingsPage() {
         <CardHeader>
           <CardTitle className="flex items-center">
             <Palette className="mr-2 h-5 w-5" />
-            Appearance
+            {translations.appearance}
           </CardTitle>
-          <CardDescription>Customize the look and feel of the app.</CardDescription>
+          <CardDescription>{translations.customizeAppearance}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between rounded-lg border p-4">
              <div>
-                <Label htmlFor="dark-mode" className="font-medium">Dark Mode</Label>
-                <p className="text-sm text-muted-foreground">Toggle between light and dark themes.</p>
+                <Label htmlFor="dark-mode" className="font-medium">{translations.darkMode}</Label>
+                <p className="text-sm text-muted-foreground">{translations.darkModeDesc}</p>
             </div>
             <Switch id="dark-mode" defaultChecked disabled/>
             
           </div>
         </CardContent>
          <CardFooter>
-            <p className="text-xs text-muted-foreground">Theme switching will be implemented in a future update.</p>
+            <p className="text-xs text-muted-foreground">{translations.themeSwitchingSoon}</p>
         </CardFooter>
       </Card>
     </div>
   );
 }
+
+    

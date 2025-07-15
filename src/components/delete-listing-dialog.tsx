@@ -14,6 +14,26 @@ import {
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/context/auth-context';
+
+const t = {
+    en: {
+        areYouSure: "Are you absolutely sure?",
+        cannotBeUndone: "This action cannot be undone. This will permanently delete your listing and remove its data from our servers.",
+        cancel: "Cancel",
+        continue: "Continue",
+        listingDeleted: "Listing Deleted",
+        listingDeletedDesc: (title: string) => `The listing "${title}" has been permanently deleted.`,
+    },
+    tl: {
+        areYouSure: "Sigurado ka ba?",
+        cannotBeUndone: "Ang aksyon na ito ay hindi na mababawi. Permanenteng tatanggalin nito ang iyong listing at aalisin ang data nito mula sa aming mga server.",
+        cancel: "Kanselahin",
+        continue: "Magpatuloy",
+        listingDeleted: "Listing Tinanggal",
+        listingDeletedDesc: (title: string) => `Ang listing na "${title}" ay permanenteng natanggal na.`,
+    }
+}
 
 interface DeleteListingDialogProps {
   onDelete: () => void;
@@ -22,12 +42,14 @@ interface DeleteListingDialogProps {
 
 export function DeleteListingDialog({ onDelete, listingTitle }: DeleteListingDialogProps) {
   const { toast } = useToast();
+  const { language } = useAuth();
+  const translations = t[language];
 
   const handleDelete = () => {
     onDelete();
     toast({
-      title: 'Listing Deleted',
-      description: `The listing "${listingTitle}" has been permanently deleted.`,
+      title: translations.listingDeleted,
+      description: translations.listingDeletedDesc(listingTitle),
     });
   };
 
@@ -40,22 +62,23 @@ export function DeleteListingDialog({ onDelete, listingTitle }: DeleteListingDia
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>{translations.areYouSure}</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your listing
-            and remove its data from our servers.
+            {translations.cannotBeUndone}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{translations.cancel}</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             className={buttonVariants({ variant: 'destructive' })}
           >
-            Continue
+            {translations.continue}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   );
 }
+
+    

@@ -24,6 +24,123 @@ import { Skeleton } from '@/components/ui/skeleton';
 import locationData from '@/lib/ph-locations.json';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
+const t = {
+    en: {
+        loading: "Loading...",
+        createNewListing: "Create a New Listing",
+        fillDetails: "Fill out the details below to put your property on the market.",
+        propertyDetails: "Property Details",
+        startWithBasics: "Start with the basics. You can add more details later.",
+        listingTitle: "Listing Title",
+        titlePlaceholder: "e.g., Cozy 1-Bedroom Apartment in Makati",
+        titleDescription: "A catchy title helps attract renters.",
+        propertyType: "Property Type",
+        selectPropertyType: "Select a property type",
+        apartment: "Apartment",
+        house: "House",
+        room: "Room",
+        bedspace: "Bedspace",
+        commercial: "Commercial",
+        location: "Location",
+        locationDescription: "Specify the location of your property using the dropdowns below.",
+        region: "Region",
+        selectRegion: "Select a region",
+        province: "Province",
+        selectProvince: "Select a province",
+        city: "City / Municipality",
+        selectCity: "Select a city/municipality",
+        barangay: "Barangay",
+        selectBarangay: "Select a barangay",
+        streetAddress: "Street, Building, or Landmark (Optional)",
+        streetPlaceholder: "e.g., 123 Rizal St, The Grand Towers",
+        rentalCosts: "Rental Costs",
+        rentalCostsDescription: "Define the pricing structure for your property.",
+        monthlyRent: "Monthly Rent (PHP)",
+        rentPlaceholder: "25000",
+        advancePayment: "Advance Payment (Months)",
+        advancePlaceholder: "1",
+        securityDeposit: "Security Deposit (Months)",
+        depositPlaceholder: "2",
+        availabilityAndDescription: "Availability and Description",
+        availabilityDescription: "Provide more information for potential renters.",
+        availableFrom: "Available From",
+        pickADate: "Pick a date",
+        furnishingStatus: "Furnishing Status",
+        furnished: "Furnished",
+        unfurnished: "Unfurnished",
+        partially: "Partially",
+        description: "Description",
+        descriptionPlaceholder: "Tell us a little bit about your property. What makes it special?",
+        houseRules: "House Rules (Optional)",
+        rulesPlaceholder: "e.g., No pets allowed, no smoking indoors, etc.",
+        uploadPhotos: "Upload Photos",
+        photosDescription: "Upload high-quality images to attract more interest. The first image will be the cover photo.",
+        imageUploadFailed: "Image Upload Failed",
+        imageUploadError: "There was an error processing your images. Please try again.",
+        listingCreated: "Listing Created!",
+        listingCreatedSuccess: "Your new property has been successfully listed.",
+        submitting: "Submitting...",
+        createListingBtn: "Create Listing"
+    },
+    tl: {
+        loading: "Naglo-load...",
+        createNewListing: "Gumawa ng Bagong Listing",
+        fillDetails: "Punan ang mga detalye sa ibaba para ilagay ang iyong ari-arian sa market.",
+        propertyDetails: "Mga Detalye ng Ari-arian",
+        startWithBasics: "Magsimula sa mga pangunahing kaalaman. Maaari kang magdagdag ng higit pang mga detalye sa ibang pagkakataon.",
+        listingTitle: "Pamagat ng Listing",
+        titlePlaceholder: "hal., Maaliwalas na 1-Bedroom Apartment sa Makati",
+        titleDescription: "Nakatutulong ang isang kaakit-akit na pamagat para maka-attract ng mga umuupa.",
+        propertyType: "Uri ng Ari-arian",
+        selectPropertyType: "Pumili ng uri ng ari-arian",
+        apartment: "Apartment",
+        house: "Bahay",
+        room: "Kwarto",
+        bedspace: "Bedspace",
+        commercial: "Commercial",
+        location: "Lokasyon",
+        locationDescription: "Tukuyin ang lokasyon ng iyong ari-arian gamit ang mga dropdown sa ibaba.",
+        region: "Rehiyon",
+        selectRegion: "Pumili ng rehiyon",
+        province: "Probinsya",
+        selectProvince: "Pumili ng probinsya",
+        city: "Lungsod / Munisipalidad",
+        selectCity: "Pumili ng lungsod/munisipalidad",
+        barangay: "Barangay",
+        selectBarangay: "Pumili ng barangay",
+        streetAddress: "Kalye, Gusali, o Landmark (Opsyonal)",
+        streetPlaceholder: "hal., 123 Rizal St, The Grand Towers",
+        rentalCosts: "Mga Gastos sa Pag-upa",
+        rentalCostsDescription: "Tukuyin ang istraktura ng pagpepresyo para sa iyong ari-arian.",
+        monthlyRent: "Buwanang Upa (PHP)",
+        rentPlaceholder: "25000",
+        advancePayment: "Paunang Bayad (Buwan)",
+        advancePlaceholder: "1",
+        securityDeposit: "Security Deposit (Buwan)",
+        depositPlaceholder: "2",
+        availabilityAndDescription: "Availability at Deskripsyon",
+        availabilityDescription: "Magbigay ng karagdagang impormasyon para sa mga potensyal na umuupa.",
+        availableFrom: "Available Mula",
+        pickADate: "Pumili ng petsa",
+        furnishingStatus: "Katayuan ng Furnishing",
+        furnished: "Furnished",
+        unfurnished: "Unfurnished",
+        partially: "Bahagyang Furnished",
+        description: "Deskripsyon",
+        descriptionPlaceholder: "Sabihin sa amin ang kaunti tungkol sa iyong ari-arian. Ano ang nagpapa-espesyal dito?",
+        houseRules: "Mga Panuntunan sa Bahay (Opsyonal)",
+        rulesPlaceholder: "hal., Bawal ang alagang hayop, bawal manigarilyo sa loob, atbp.",
+        uploadPhotos: "Mag-upload ng mga Litrato",
+        photosDescription: "Mag-upload ng mga de-kalidad na larawan para maka-attract ng mas maraming interes. Ang unang larawan ang magiging cover photo.",
+        imageUploadFailed: "Nabigo ang Pag-upload ng Larawan",
+        imageUploadError: "Nagkaroon ng error sa pag-proseso ng iyong mga larawan. Pakisubukang muli.",
+        listingCreated: "Nagawa na ang Listing!",
+        listingCreatedSuccess: "Matagumpay na na-lista ang iyong bagong ari-arian.",
+        submitting: "Nagsusumite...",
+        createListingBtn: "Gumawa ng Listing"
+    }
+};
+
 const listingFormSchema = z.object({
   title: z.string().min(5, { message: 'Title must be at least 5 characters long.' }),
   propertyType: z.enum(['apartment', 'room', 'bedspace', 'commercial', 'house'], {
@@ -53,7 +170,7 @@ type ListingFormValues = z.infer<typeof listingFormSchema>;
 type LocationData = typeof locationData;
 
 export default function CreateListingPage() {
-  const { isAuthenticated, role, user } = useAuth();
+  const { isAuthenticated, role, user, language } = useAuth();
   const { addProperty } = usePropertyContext();
   const router = useRouter();
   const { toast } = useToast();
@@ -62,6 +179,8 @@ export default function CreateListingPage() {
   const [selectedRegion, setSelectedRegion] = useState<keyof LocationData | ''>('');
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
+  
+  const translations = t[language];
 
   const form = useForm<ListingFormValues>({
     resolver: zodResolver(listingFormSchema),
@@ -103,8 +222,8 @@ export default function CreateListingPage() {
         console.error("Error converting images to Data URIs", error);
         toast({
             variant: 'destructive',
-            title: 'Image Upload Failed',
-            description: 'There was an error processing your images. Please try again.',
+            title: translations.imageUploadFailed,
+            description: translations.imageUploadError,
         });
         setIsSubmitting(false);
         return;
@@ -131,8 +250,8 @@ export default function CreateListingPage() {
     addProperty(newProperty as any);
 
     toast({
-      title: 'Listing Created!',
-      description: 'Your new property has been successfully listed.',
+      title: translations.listingCreated,
+      description: translations.listingCreatedSuccess,
     });
     
     setIsSubmitting(false);
@@ -199,16 +318,16 @@ export default function CreateListingPage() {
       <div className="mb-8 flex items-center gap-4">
         <PlusCircle className="h-10 w-10 text-primary" />
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Create a New Listing</h1>
-          <p className="text-muted-foreground">Fill out the details below to put your property on the market.</p>
+          <h1 className="text-3xl font-bold tracking-tight">{translations.createNewListing}</h1>
+          <p className="text-muted-foreground">{translations.fillDetails}</p>
         </div>
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <Card>
             <CardHeader>
-              <CardTitle>Property Details</CardTitle>
-              <CardDescription>Start with the basics. You can add more details later.</CardDescription>
+              <CardTitle>{translations.propertyDetails}</CardTitle>
+              <CardDescription>{translations.startWithBasics}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <FormField
@@ -216,11 +335,11 @@ export default function CreateListingPage() {
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Listing Title</FormLabel>
+                    <FormLabel>{translations.listingTitle}</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Cozy 1-Bedroom Apartment in Makati" {...field} />
+                      <Input placeholder={translations.titlePlaceholder} {...field} />
                     </FormControl>
-                    <FormDescription>A catchy title helps attract renters.</FormDescription>
+                    <FormDescription>{translations.titleDescription}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -231,19 +350,19 @@ export default function CreateListingPage() {
                   name="propertyType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Property Type</FormLabel>
+                      <FormLabel>{translations.propertyType}</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select a property type" />
+                            <SelectValue placeholder={translations.selectPropertyType} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="apartment"><Building className="mr-2 h-4 w-4" /> Apartment</SelectItem>
-                          <SelectItem value="house"><Home className="mr-2 h-4 w-4" /> House</SelectItem>
-                          <SelectItem value="room"><BedDouble className="mr-2 h-4 w-4" /> Room</SelectItem>
-                          <SelectItem value="bedspace"><Bed className="mr-2 h-4 w-4" /> Bedspace</SelectItem>
-                          <SelectItem value="commercial"><Warehouse className="mr-2 h-4 w-4" /> Commercial</SelectItem>
+                          <SelectItem value="apartment"><Building className="mr-2 h-4 w-4" /> {translations.apartment}</SelectItem>
+                          <SelectItem value="house"><Home className="mr-2 h-4 w-4" /> {translations.house}</SelectItem>
+                          <SelectItem value="room"><BedDouble className="mr-2 h-4 w-4" /> {translations.room}</SelectItem>
+                          <SelectItem value="bedspace"><Bed className="mr-2 h-4 w-4" /> {translations.bedspace}</SelectItem>
+                          <SelectItem value="commercial"><Warehouse className="mr-2 h-4 w-4" /> {translations.commercial}</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -255,8 +374,8 @@ export default function CreateListingPage() {
           </Card>
            <Card>
             <CardHeader>
-                <CardTitle>Location</CardTitle>
-                <CardDescription>Specify the location of your property using the dropdowns below.</CardDescription>
+                <CardTitle>{translations.location}</CardTitle>
+                <CardDescription>{translations.locationDescription}</CardDescription>
             </CardHeader>
             <CardContent className="grid grid-cols-1 gap-6 md:grid-cols-2">
                  <FormField
@@ -264,10 +383,10 @@ export default function CreateListingPage() {
                     name="region"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Region</FormLabel>
+                            <FormLabel>{translations.region}</FormLabel>
                             <Select onValueChange={handleRegionChange} defaultValue={field.value}>
                                 <FormControl>
-                                    <SelectTrigger><SelectValue placeholder="Select a region" /></SelectTrigger>
+                                    <SelectTrigger><SelectValue placeholder={translations.selectRegion} /></SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
                                     {Object.entries(locationData).map(([regionCode, regionDetails]) => (
@@ -284,10 +403,10 @@ export default function CreateListingPage() {
                     name="province"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Province</FormLabel>
+                            <FormLabel>{translations.province}</FormLabel>
                             <Select onValueChange={handleProvinceChange} value={field.value} disabled={!selectedRegion}>
                                 <FormControl>
-                                    <SelectTrigger><SelectValue placeholder="Select a province" /></SelectTrigger>
+                                    <SelectTrigger><SelectValue placeholder={translations.selectProvince} /></SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
                                     {provinces.map(province => (
@@ -304,10 +423,10 @@ export default function CreateListingPage() {
                     name="city"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>City / Municipality</FormLabel>
+                            <FormLabel>{translations.city}</FormLabel>
                             <Select onValueChange={handleCityChange} value={field.value} disabled={!selectedProvince}>
                                 <FormControl>
-                                    <SelectTrigger><SelectValue placeholder="Select a city/municipality" /></SelectTrigger>
+                                    <SelectTrigger><SelectValue placeholder={translations.selectCity} /></SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
                                      {cities.map(city => (
@@ -324,10 +443,10 @@ export default function CreateListingPage() {
                     name="barangay"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Barangay</FormLabel>
+                            <FormLabel>{translations.barangay}</FormLabel>
                             <Select onValueChange={field.onChange} value={field.value} disabled={!selectedCity}>
                                 <FormControl>
-                                    <SelectTrigger><SelectValue placeholder="Select a barangay" /></SelectTrigger>
+                                    <SelectTrigger><SelectValue placeholder={translations.selectBarangay} /></SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
                                     {barangays.map(barangay => (
@@ -344,9 +463,9 @@ export default function CreateListingPage() {
                     name="streetAddress"
                     render={({ field }) => (
                         <FormItem className="md:col-span-2">
-                        <FormLabel>Street, Building, or Landmark (Optional)</FormLabel>
+                        <FormLabel>{translations.streetAddress}</FormLabel>
                         <FormControl>
-                            <Input placeholder="e.g., 123 Rizal St, The Grand Towers" {...field} />
+                            <Input placeholder={translations.streetPlaceholder} {...field} />
                         </FormControl>
                         <FormMessage />
                         </FormItem>
@@ -357,8 +476,8 @@ export default function CreateListingPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Rental Costs</CardTitle>
-              <CardDescription>Define the pricing structure for your property.</CardDescription>
+              <CardTitle>{translations.rentalCosts}</CardTitle>
+              <CardDescription>{translations.rentalCostsDescription}</CardDescription>
             </CardHeader>
             <CardContent className="grid grid-cols-1 gap-6 md:grid-cols-3">
                <FormField
@@ -366,9 +485,9 @@ export default function CreateListingPage() {
                   name="monthlyRent"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Monthly Rent (PHP)</FormLabel>
+                      <FormLabel>{translations.monthlyRent}</FormLabel>
                       <FormControl>
-                        <Input type="number" placeholder="25000" {...field} />
+                        <Input type="number" placeholder={translations.rentPlaceholder} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -379,9 +498,9 @@ export default function CreateListingPage() {
                   name="advance"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Advance Payment (Months)</FormLabel>
+                      <FormLabel>{translations.advancePayment}</FormLabel>
                       <FormControl>
-                        <Input type="number" placeholder="1" {...field} />
+                        <Input type="number" placeholder={translations.advancePlaceholder} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -392,9 +511,9 @@ export default function CreateListingPage() {
                   name="deposit"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Security Deposit (Months)</FormLabel>
+                      <FormLabel>{translations.securityDeposit}</FormLabel>
                       <FormControl>
-                        <Input type="number" placeholder="2" {...field} />
+                        <Input type="number" placeholder={translations.depositPlaceholder} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -405,8 +524,8 @@ export default function CreateListingPage() {
 
           <Card>
             <CardHeader>
-                <CardTitle>Availability and Description</CardTitle>
-                <CardDescription>Provide more information for potential renters.</CardDescription>
+                <CardTitle>{translations.availabilityAndDescription}</CardTitle>
+                <CardDescription>{translations.availabilityDescription}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -415,7 +534,7 @@ export default function CreateListingPage() {
                         name="availableFrom"
                         render={({ field }) => (
                         <FormItem className="flex flex-col">
-                            <FormLabel>Available From</FormLabel>
+                            <FormLabel>{translations.availableFrom}</FormLabel>
                             <Popover>
                             <PopoverTrigger asChild>
                                 <FormControl>
@@ -429,7 +548,7 @@ export default function CreateListingPage() {
                                     {field.value ? (
                                     format(field.value, "PPP")
                                     ) : (
-                                    <span>Pick a date</span>
+                                    <span>{translations.pickADate}</span>
                                     )}
                                     <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                 </Button>
@@ -456,7 +575,7 @@ export default function CreateListingPage() {
                         name="furnishing"
                         render={({ field }) => (
                             <FormItem className="space-y-3">
-                                <FormLabel>Furnishing Status</FormLabel>
+                                <FormLabel>{translations.furnishingStatus}</FormLabel>
                                 <FormControl>
                                     <RadioGroup
                                     onValueChange={field.onChange}
@@ -467,19 +586,19 @@ export default function CreateListingPage() {
                                         <FormControl>
                                         <RadioGroupItem value="furnished" />
                                         </FormControl>
-                                        <FormLabel className="font-normal">Furnished</FormLabel>
+                                        <FormLabel className="font-normal">{translations.furnished}</FormLabel>
                                     </FormItem>
                                     <FormItem className="flex items-center space-x-2 space-y-0">
                                         <FormControl>
                                         <RadioGroupItem value="unfurnished" />
                                         </FormControl>
-                                        <FormLabel className="font-normal">Unfurnished</FormLabel>
+                                        <FormLabel className="font-normal">{translations.unfurnished}</FormLabel>
                                     </FormItem>
                                      <FormItem className="flex items-center space-x-2 space-y-0">
                                         <FormControl>
                                         <RadioGroupItem value="partially" />
                                         </FormControl>
-                                        <FormLabel className="font-normal">Partially</FormLabel>
+                                        <FormLabel className="font-normal">{translations.partially}</FormLabel>
                                     </FormItem>
                                     </RadioGroup>
                                 </FormControl>
@@ -493,10 +612,10 @@ export default function CreateListingPage() {
                     name="description"
                     render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Description</FormLabel>
+                        <FormLabel>{translations.description}</FormLabel>
                         <FormControl>
                             <Textarea
-                            placeholder="Tell us a little bit about your property. What makes it special?"
+                            placeholder={translations.descriptionPlaceholder}
                             className="resize-y min-h-[120px]"
                             {...field}
                             />
@@ -510,10 +629,10 @@ export default function CreateListingPage() {
                     name="rules"
                     render={({ field }) => (
                         <FormItem>
-                        <FormLabel>House Rules (Optional)</FormLabel>
+                        <FormLabel>{translations.houseRules}</FormLabel>
                         <FormControl>
                             <Textarea
-                            placeholder="e.g., No pets allowed, no smoking indoors, etc."
+                            placeholder={translations.rulesPlaceholder}
                             className="resize-y"
                             {...field}
                             />
@@ -527,12 +646,12 @@ export default function CreateListingPage() {
                     name="photos"
                     render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Upload Photos</FormLabel>
+                        <FormLabel>{translations.uploadPhotos}</FormLabel>
                         <FormControl>
                             <Input type="file" multiple accept="image/*" {...form.register('photos')} />
                         </FormControl>
                          <FormDescription>
-                            Upload high-quality images to attract more interest. The first image will be the cover photo.
+                           {translations.photosDescription}
                         </FormDescription>
                         <FormMessage />
                         </FormItem>
@@ -543,7 +662,7 @@ export default function CreateListingPage() {
           
           <div className="flex justify-end">
             <Button type="submit" size="lg" disabled={isSubmitting}>
-                {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...</> : 'Create Listing'}
+                {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {translations.submitting}</> : translations.createListingBtn}
             </Button>
           </div>
         </form>
@@ -551,3 +670,5 @@ export default function CreateListingPage() {
     </div>
   );
 }
+
+    

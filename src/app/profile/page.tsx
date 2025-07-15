@@ -12,10 +12,30 @@ import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePropertyContext } from '@/context/property-context';
 
+const t = {
+    en: {
+        loading: "Loading...",
+        userDetailsNotFound: "User details not found.",
+        contactViaEmail: "Contact via Email",
+        myListings: (count: number) => `My Listings (${count})`,
+        noListings: "You have no listings yet",
+        noListingsDesc: "You can view your listings here once you create them.",
+    },
+    tl: {
+        loading: "Naglo-load...",
+        userDetailsNotFound: "Hindi nahanap ang mga detalye ng user.",
+        contactViaEmail: "Makipag-ugnayan sa pamamagitan ng Email",
+        myListings: (count: number) => `Aking mga Listing (${count})`,
+        noListings: "Wala ka pang mga listing",
+        noListingsDesc: "Maaari mong tingnan ang iyong mga listing dito kapag nagawa mo na ang mga ito.",
+    }
+}
+
 export default function ProfilePage() {
-  const { user, isAuthenticated, role } = useAuth();
+  const { user, isAuthenticated, role, language } = useAuth();
   const { properties } = usePropertyContext();
   const router = useRouter();
+  const translations = t[language];
 
   useEffect(() => {
     if (isAuthenticated === false) {
@@ -54,7 +74,7 @@ export default function ProfilePage() {
   );
 
   if (!ownerDetails) {
-    return <div>User details not found.</div>;
+    return <div>{translations.userDetailsNotFound}</div>;
   }
 
   return (
@@ -70,7 +90,7 @@ export default function ProfilePage() {
           <div className="mt-2 flex justify-center space-x-4 md:justify-start">
             <a href={`mailto:${ownerDetails.email}`} className="flex items-center text-sm text-muted-foreground hover:text-primary">
               <Mail className="mr-1.5 h-4 w-4" />
-              <span>Contact via Email</span>
+              <span>{translations.contactViaEmail}</span>
             </a>
             {ownerDetails.phone && (
               <a href={`tel:${ownerDetails.phone}`} className="flex items-center text-sm text-muted-foreground hover:text-primary">
@@ -87,7 +107,7 @@ export default function ProfilePage() {
       {role === 'owner' && (
         <div>
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-                <h2 className="text-3xl font-bold">My Listings ({userProperties.length})</h2>
+                <h2 className="text-3xl font-bold">{translations.myListings(userProperties.length)}</h2>
             </div>
             {userProperties.length > 0 ? (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -102,9 +122,9 @@ export default function ProfilePage() {
             </div>
             ) : (
             <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/30 bg-card py-12 text-center">
-                <h3 className="text-xl font-semibold">You have no listings yet</h3>
+                <h3 className="text-xl font-semibold">{translations.noListings}</h3>
                 <p className="mt-2 mb-4 text-muted-foreground">
-                You can view your listings here once you create them.
+                {translations.noListingsDesc}
                 </p>
             </div>
             )}
@@ -113,3 +133,5 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+    

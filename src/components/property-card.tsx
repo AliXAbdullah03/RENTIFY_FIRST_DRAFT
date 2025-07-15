@@ -21,6 +21,48 @@ import { Separator } from './ui/separator';
 import { DeleteListingDialog } from './delete-listing-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { Label } from './ui/label';
+import { useAuth } from '@/context/auth-context';
+
+const t = {
+    en: {
+        availableNow: "Available Now",
+        featured: "Featured",
+        paused: "Paused",
+        perMonth: "/month",
+        bedspace: "Bedspace",
+        car: "Car",
+        views: "views",
+        inquiries: "inquiries",
+        feature: "Feature",
+        listingPaused: "Listing Paused",
+        listingPausedDesc: "This listing is now hidden from search results.",
+        editClicked: "Edit Clicked",
+        editClickedDesc: "You would be redirected to the edit page for this listing.",
+        listingFeatured: "Listing Featured!",
+        listingFeaturedDesc: "This listing will now be shown to more renters.",
+        featureRemoved: "Feature Removed",
+        featureRemovedDesc: "This listing is no longer featured."
+    },
+    tl: {
+        availableNow: "Available Na",
+        featured: "Tampok",
+        paused: "Nakahinto",
+        perMonth: "/buwan",
+        bedspace: "Bedspace",
+        car: "Sasakyan",
+        views: "pagtingin",
+        inquiries: "mga tanong",
+        feature: "Itampok",
+        listingPaused: "Listing ay Ipinahinto",
+        listingPausedDesc: "Ang listing na ito ay nakatago na ngayon sa mga resulta ng paghahanap.",
+        editClicked: "Edit ay Pinindot",
+        editClickedDesc: "Dadalhin ka sa pahina ng pag-edit para sa listing na ito.",
+        listingFeatured: "Listing ay Itinampok!",
+        listingFeaturedDesc: "Ang listing na ito ay ipapakita na ngayon sa mas maraming umuupa.",
+        featureRemoved: "Tampok ay Tinanggal",
+        featureRemovedDesc: "Ang listing na ito ay hindi na itinatampok."
+    }
+};
 
 interface PropertyCardProps {
   property: Property;
@@ -31,6 +73,9 @@ interface PropertyCardProps {
 
 export function PropertyCard({ property, view, role, onDelete = () => {} }: PropertyCardProps) {
   const { toast } = useToast();
+  const { language } = useAuth();
+  const translations = t[language];
+
   const isGridView = view === 'grid';
   const isOwnerView = role === 'owner';
   const CardWrapper = isOwnerView ? 'div' : Link;
@@ -38,26 +83,23 @@ export function PropertyCard({ property, view, role, onDelete = () => {} }: Prop
 
   const handlePause = () => {
     toast({
-      title: 'Listing Paused',
-      description: 'This listing is now hidden from search results.',
+      title: translations.listingPaused,
+      description: translations.listingPausedDesc,
     });
   };
 
   const handleEdit = () => {
     toast({
-      title: 'Edit Clicked',
-      description: 'You would be redirected to the edit page for this listing.',
+      title: translations.editClicked,
+      description: translations.editClickedDesc,
     });
   };
 
   const handleFeatureToggle = (isFeatured: boolean) => {
-    // In a real app, this would trigger a payment flow if isFeatured is true.
-    // Here, we just show a toast.
     toast({
-        title: isFeatured ? 'Listing Featured!' : 'Feature Removed',
-        description: isFeatured ? 'This listing will now be shown to more renters.' : 'This listing is no longer featured.',
+        title: isFeatured ? translations.listingFeatured : translations.featureRemoved,
+        description: isFeatured ? translations.listingFeaturedDesc : translations.featureRemovedDesc,
     });
-    // Here you would also update the property state globally.
   }
 
   return (
@@ -77,16 +119,16 @@ export function PropertyCard({ property, view, role, onDelete = () => {} }: Prop
             data-ai-hint={`${property.type} exterior`}
           />
            {property.availableNow && (
-              <Badge variant="secondary" className="absolute top-2 right-2">Available Now</Badge>
+              <Badge variant="secondary" className="absolute top-2 right-2">{translations.availableNow}</Badge>
             )}
             {property.featured && (
                 <Badge variant="default" className="absolute top-2 left-2 flex items-center gap-1">
-                    <Star className="h-3 w-3" /> Featured
+                    <Star className="h-3 w-3" /> {translations.featured}
                 </Badge>
             )}
             {isOwnerView && property.paused && (
                  <Badge variant={"destructive"} className="absolute top-2 left-2">
-                    Paused
+                    {translations.paused}
                  </Badge>
             )}
         </div>
@@ -95,7 +137,13 @@ export function PropertyCard({ property, view, role, onDelete = () => {} }: Prop
           <CardHeader className="p-0">
             <div className="flex items-start justify-between gap-2">
               <CardTitle className="text-lg font-bold leading-tight group-hover:text-primary mb-1">
-                {isOwnerView ? <Link href={`/properties/${property.id}`} className="hover:underline">{property.title}</Link> : property.title}
+                {isOwnerView ? (
+                  <Link href={`/properties/${property.id}`} className="hover:underline">
+                    {property.title}
+                  </Link>
+                ) : (
+                  property.title
+                )}
               </CardTitle>
             </div>
              <div className="flex items-center text-sm text-muted-foreground">
@@ -111,7 +159,7 @@ export function PropertyCard({ property, view, role, onDelete = () => {} }: Prop
           <CardFooter className="p-0 mt-4 flex items-end justify-between">
              <div className="text-lg font-bold text-primary">
               ${property.price}
-              <span className="text-sm font-normal text-muted-foreground">/month</span>
+              <span className="text-sm font-normal text-muted-foreground">{translations.perMonth}</span>
             </div>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               {(property.type === 'house' || property.type === 'apartment' || property.type === 'room') && property.details.beds && (
@@ -129,7 +177,7 @@ export function PropertyCard({ property, view, role, onDelete = () => {} }: Prop
                {property.type === 'bedspace' && (
                  <div className="flex items-center gap-1.5">
                     <BedDouble className="h-4 w-4" />
-                    <span>Bedspace</span>
+                    <span>{translations.bedspace}</span>
                   </div>
                )}
                {property.type === 'commercial' && property.details.sqft && (
@@ -141,7 +189,7 @@ export function PropertyCard({ property, view, role, onDelete = () => {} }: Prop
                {property.type === 'car' && (
                 <div className="flex items-center gap-1.5">
                   <Car className="h-4 w-4" />
-                  <span>Car</span>
+                  <span>{translations.car}</span>
                 </div>
                 )}
             </div>
@@ -154,17 +202,17 @@ export function PropertyCard({ property, view, role, onDelete = () => {} }: Prop
                     <div className="flex justify-around text-sm">
                         <div className="flex items-center gap-1.5 text-muted-foreground">
                             <Eye className="h-4 w-4" />
-                            <span>{property.analytics?.views ?? Math.floor(Math.random() * 500)} views</span>
+                            <span>{property.analytics?.views ?? Math.floor(Math.random() * 500)} {translations.views}</span>
                         </div>
                          <div className="flex items-center gap-1.5 text-muted-foreground">
                             <MessageSquare className="h-4 w-4" />
-                            <span>{property.analytics?.inquiries ?? Math.floor(Math.random() * 50)} inquiries</span>
+                            <span>{property.analytics?.inquiries ?? Math.floor(Math.random() * 50)} {translations.inquiries}</span>
                         </div>
                     </div>
                      <div className="flex items-center justify-between gap-2">
                          <div className="flex items-center space-x-2">
                             <Switch id={`feature-${property.id}`} defaultChecked={property.featured} onCheckedChange={handleFeatureToggle} />
-                            <Label htmlFor={`feature-${property.id}`}>Feature</Label>
+                            <Label htmlFor={`feature-${property.id}`}>{translations.feature}</Label>
                         </div>
                         <div className="flex gap-1">
                             <Button variant="outline" size="icon" onClick={handleEdit}>
@@ -183,3 +231,5 @@ export function PropertyCard({ property, view, role, onDelete = () => {} }: Prop
     </CardWrapper>
   );
 }
+
+    

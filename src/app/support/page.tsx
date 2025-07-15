@@ -12,9 +12,63 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { LifeBuoy, Send } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
+const t = {
+    en: {
+        loading: "Loading...",
+        supportCenter: "Support Center",
+        getHelp: "Need help? Find answers to your questions here.",
+        faq: "Frequently Asked Questions",
+        faq1Title: "How do I list my property?",
+        faq1Content: "You can list your property by navigating to the \"Create Listing\" page from the sidebar or your profile. Fill out the required details, upload images, and submit the form.",
+        faq2Title: "Is there a fee for listing?",
+        faq2Content: "Currently, listing on Rentify is free! We may introduce premium features in the future, but standard listings will remain free of charge.",
+        faq3Title: "How do I contact a property owner?",
+        faq3Content: "On each property details page, you will find a \"Contact Host\" button. This will allow you to send a message directly to the owner.",
+        faq4Title: "How can I reset my password?",
+        faq4Content: "You can reset your password from the Settings page. You will need to enter your current password to set a new one.",
+        contactSupport: "Contact Support",
+        contactSupportDesc: "Can't find an answer? Fill out the form below and we'll get back to you.",
+        yourName: "Your Name",
+        yourNamePlaceholder: "John Doe",
+        yourEmail: "Your Email",
+        yourEmailPlaceholder: "john.doe@example.com",
+        subject: "Subject",
+        subjectPlaceholder: "e.g., Issue with my listing",
+        message: "Message",
+        messagePlaceholder: "Please describe your issue in detail...",
+        sendMessage: "Send Message",
+    },
+    tl: {
+        loading: "Naglo-load...",
+        supportCenter: "Sentro ng Suporta",
+        getHelp: "Kailangan ng tulong? Hanapin ang mga sagot sa iyong mga tanong dito.",
+        faq: "Mga Madalas Itanong",
+        faq1Title: "Paano ko i-lilista ang aking ari-arian?",
+        faq1Content: "Maaari mong i-lista ang iyong ari-arian sa pamamagitan ng pag-navigate sa pahina ng \"Gumawa ng Listing\" mula sa sidebar o sa iyong profile. Punan ang mga kinakailangang detalye, mag-upload ng mga larawan, at isumite ang form.",
+        faq2Title: "May bayad ba ang paglilista?",
+        faq2Content: "Sa kasalukuyan, ang paglilista sa Rentify ay libre! Maaari kaming magpakilala ng mga premium na feature sa hinaharap, ngunit ang mga karaniwang listing ay mananatiling walang bayad.",
+        faq3Title: "Paano ako makikipag-ugnayan sa isang may-ari ng ari-arian?",
+        faq3Content: "Sa bawat pahina ng detalye ng ari-arian, makikita mo ang isang pindutan ng \"Makipag-ugnayan sa Host\". Papayagan ka nitong magpadala ng mensahe nang direkta sa may-ari.",
+        faq4Title: "Paano ko mai-reset ang aking password?",
+        faq4Content: "Maaari mong i-reset ang iyong password mula sa pahina ng Mga Setting. Kailangan mong ipasok ang iyong kasalukuyang password upang magtakda ng bago.",
+        contactSupport: "Makipag-ugnayan sa Suporta",
+        contactSupportDesc: "Hindi mahanap ang sagot? Punan ang form sa ibaba at babalikan ka namin.",
+        yourName: "Iyong Pangalan",
+        yourNamePlaceholder: "Juan Dela Cruz",
+        yourEmail: "Iyong Email",
+        yourEmailPlaceholder: "juan.delacruz@example.com",
+        subject: "Paksa",
+        subjectPlaceholder: "hal., Problema sa aking listing",
+        message: "Mensahe",
+        messagePlaceholder: "Mangyaring ilarawan ang iyong isyu nang detalyado...",
+        sendMessage: "Ipadala ang Mensahe",
+    }
+}
+
 export default function SupportPage() {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, language } = useAuth();
     const router = useRouter();
+    const translations = t[language];
 
     useEffect(() => {
         if (isAuthenticated === false) {
@@ -47,38 +101,38 @@ export default function SupportPage() {
   return (
     <div className="mx-auto max-w-4xl space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Support Center</h1>
+        <h1 className="text-3xl font-bold tracking-tight">{translations.supportCenter}</h1>
         <p className="text-muted-foreground">
-          Need help? Find answers to your questions here.
+          {translations.getHelp}
         </p>
       </div>
       
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <div className="space-y-4">
-            <h2 className="text-2xl font-semibold">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-semibold">{translations.faq}</h2>
             <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1">
-                <AccordionTrigger>How do I list my property?</AccordionTrigger>
+                <AccordionTrigger>{translations.faq1Title}</AccordionTrigger>
                 <AccordionContent>
-                You can list your property by navigating to the "Create Listing" page from the sidebar or your profile. Fill out the required details, upload images, and submit the form.
+                {translations.faq1Content}
                 </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
-                <AccordionTrigger>Is there a fee for listing?</AccordionTrigger>
+                <AccordionTrigger>{translations.faq2Title}</AccordionTrigger>
                 <AccordionContent>
-                Currently, listing on Rentify is free! We may introduce premium features in the future, but standard listings will remain free of charge.
+                {translations.faq2Content}
                 </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3">
-                <AccordionTrigger>How do I contact a property owner?</AccordionTrigger>
+                <AccordionTrigger>{translations.faq3Title}</AccordionTrigger>
                 <AccordionContent>
-                On each property details page, you will find a "Contact Host" button. This will allow you to send a message directly to the owner.
+                {translations.faq3Content}
                 </AccordionContent>
             </AccordionItem>
              <AccordionItem value="item-4">
-                <AccordionTrigger>How can I reset my password?</AccordionTrigger>
+                <AccordionTrigger>{translations.faq4Title}</AccordionTrigger>
                 <AccordionContent>
-                You can reset your password from the Settings page. You will need to enter your current password to set a new one.
+                {translations.faq4Content}
                 </AccordionContent>
             </AccordionItem>
             </Accordion>
@@ -89,33 +143,33 @@ export default function SupportPage() {
                 <CardHeader>
                     <CardTitle className="flex items-center">
                         <LifeBuoy className="mr-2 h-5 w-5" />
-                        Contact Support
+                        {translations.contactSupport}
                     </CardTitle>
                     <CardDescription>
-                        Can't find an answer? Fill out the form below and we'll get back to you.
+                       {translations.contactSupportDesc}
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form className="space-y-4">
                          <div className="space-y-2">
-                            <Label htmlFor="name">Your Name</Label>
-                            <Input id="name" placeholder="John Doe" />
+                            <Label htmlFor="name">{translations.yourName}</Label>
+                            <Input id="name" placeholder={translations.yourNamePlaceholder} />
                         </div>
                          <div className="space-y-2">
-                            <Label htmlFor="email">Your Email</Label>
-                            <Input id="email" type="email" placeholder="john.doe@example.com" />
+                            <Label htmlFor="email">{translations.yourEmail}</Label>
+                            <Input id="email" type="email" placeholder={translations.yourEmailPlaceholder} />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="subject">Subject</Label>
-                            <Input id="subject" placeholder="e.g., Issue with my listing" />
+                            <Label htmlFor="subject">{translations.subject}</Label>
+                            <Input id="subject" placeholder={translations.subjectPlaceholder} />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="message">Message</Label>
-                            <Textarea id="message" placeholder="Please describe your issue in detail..." className="min-h-[120px]"/>
+                            <Label htmlFor="message">{translations.message}</Label>
+                            <Textarea id="message" placeholder={translations.messagePlaceholder} className="min-h-[120px]"/>
                         </div>
                         <Button type="submit" className="w-full">
                             <Send className="mr-2 h-4 w-4" />
-                            Send Message
+                            {translations.sendMessage}
                         </Button>
                     </form>
                 </CardContent>
@@ -125,3 +179,5 @@ export default function SupportPage() {
     </div>
   );
 }
+
+    

@@ -19,11 +19,74 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { SmartSearchDialog } from '@/components/smart-search-dialog';
 import { Button } from '@/components/ui/button';
 
+const t = {
+    en: {
+        loading: "Loading...",
+        heroTitle: "Your Next Chapter, Found",
+        heroSubtitle: "Discover a place you'll love to live. Unforgettable rentals at your fingertips.",
+        searchPlaceholder: "Search by location (Region, City, Barangay)...",
+        priceRange: "Price Range",
+        availableNow: "Available Now",
+        all: "All",
+        apartments: "Apartments",
+        rooms: "Rooms",
+        bedspace: "Bedspace",
+        commercial: "Commercial",
+        furnishing: "Furnishing",
+        any: "Any",
+        furnished: "Furnished",
+        unfurnished: "Unfurnished",
+        smartSearch: "Smart Search",
+        gridView: "Grid view",
+        listView: "List view",
+        mapView: "Map view",
+        myListings: "My Listings",
+        smartSearchResults: (count: number) => `Showing ${count} smart search results`,
+        clearSearch: "Clear Search",
+        mapComingSoon: "Map View Coming Soon",
+        mapUnderDevelopment: "Interactive map feature is under development.",
+        noListingsFound: "No Listings Found",
+        noListingsDescription: "Try adjusting your filters or check back later.",
+        noListingsSmartSearch: "Your smart search didn't return any results. Try a different query.",
+        noListingsOwner: "You haven't created any listings yet."
+    },
+    tl: {
+        loading: "Naglo-load...",
+        heroTitle: "Ang Iyong Susunod na Kabanata, Natagpuan",
+        heroSubtitle: "Tuklasin ang isang lugar na magugustuhan mong tirahan. Mga di malilimutang paupahan sa iyong mga kamay.",
+        searchPlaceholder: "Maghanap ayon sa lokasyon (Rehiyon, Lungsod, Barangay)...",
+        priceRange: "Saklaw ng Presyo",
+        availableNow: "Available Na Ngayon",
+        all: "Lahat",
+        apartments: "Mga Apartment",
+        rooms: "Mga Kwarto",
+        bedspace: "Bedspace",
+        commercial: "Commercial",
+        furnishing: "Furnishing",
+        any: "Kahit ano",
+        furnished: "Furnished",
+        unfurnished: "Unfurnished",
+        smartSearch: "Smart Search",
+        gridView: "Grid view",
+        listView: "List view",
+        mapView: "Map view",
+        myListings: "Aking mga Listing",
+        smartSearchResults: (count: number) => `Nagpapakita ng ${count} resulta ng smart search`,
+        clearSearch: "I-clear ang Paghahanap",
+        mapComingSoon: "Malapit na ang Map View",
+        mapUnderDevelopment: "Ang interactive na feature ng mapa ay kasalukuyang ginagawa.",
+        noListingsFound: "Walang Nahanap na Listing",
+        noListingsDescription: "Subukang ayusin ang iyong mga filter o bumalik sa ibang pagkakataon.",
+        noListingsSmartSearch: "Ang iyong smart search ay walang naibalik na resulta. Subukan ang ibang query.",
+        noListingsOwner: "Wala ka pang nagagawang listing."
+    }
+};
+
 const MAX_PRICE = 10000;
 
 export default function ListingsPage() {
   const { properties, deleteProperty } = usePropertyContext();
-  const { isAuthenticated, role } = useAuth();
+  const { isAuthenticated, role, language } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialType = searchParams.get('type') || 'all';
@@ -34,6 +97,8 @@ export default function ListingsPage() {
   const [availableNow, setAvailableNow] = useState(false);
   const [furnishing, setFurnishing] = useState<'any' | 'furnished' | 'unfurnished'>('any');
   const [smartSearchResults, setSmartSearchResults] = useState<string[] | null>(null);
+
+  const translations = t[language];
 
   useEffect(() => {
     if (isAuthenticated === false) {
@@ -105,9 +170,9 @@ export default function ListingsPage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/40 to-transparent" />
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
-                    <h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter">Your Next Chapter, Found</h1>
+                    <h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter">{translations.heroTitle}</h1>
                     <p className="mt-4 max-w-2xl text-lg text-neutral-200">
-                        Discover a place you'll love to live. Unforgettable rentals at your fingertips.
+                        {translations.heroSubtitle}
                     </p>
                     </div>
                 </div>
@@ -118,13 +183,13 @@ export default function ListingsPage() {
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                             <Input
                                 type="search"
-                                placeholder="Search by location (Region, City, Barangay)..."
+                                placeholder={translations.searchPlaceholder}
                                 className="w-full rounded-lg bg-background/80 pl-10 py-3 text-base"
                             />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="price-range" className="flex justify-between text-sm">
-                                <span>Price Range</span>
+                                <span>{translations.priceRange}</span>
                                 <span>${priceRange[0]} - ${priceRange[1]}{priceRange[1] === MAX_PRICE ? '+' : ''}</span>
                             </Label>
                             <Slider
@@ -140,7 +205,7 @@ export default function ListingsPage() {
                         </div>
                         <div className="flex items-center space-x-2 pt-5">
                             <Checkbox id="available-now" checked={availableNow} onCheckedChange={(checked) => setAvailableNow(!!checked)} disabled={!!smartSearchResults} />
-                            <Label htmlFor="available-now">Available Now</Label>
+                            <Label htmlFor="available-now">{translations.availableNow}</Label>
                         </div>
                     </div>
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
@@ -154,28 +219,28 @@ export default function ListingsPage() {
                                     aria-disabled={!!smartSearchResults}
                                     style={{ pointerEvents: smartSearchResults ? 'none' : 'auto' }}
                                 >
-                                    <TabsTrigger value="all">All</TabsTrigger>
-                                    <TabsTrigger value="apartment">Apartments</TabsTrigger>
-                                    <TabsTrigger value="room">Rooms</TabsTrigger>
-                                    <TabsTrigger value="bedspace">Bedspace</TabsTrigger>
-                                    <TabsTrigger value="commercial">Commercial</TabsTrigger>
+                                    <TabsTrigger value="all">{translations.all}</TabsTrigger>
+                                    <TabsTrigger value="apartment">{translations.apartments}</TabsTrigger>
+                                    <TabsTrigger value="room">{translations.rooms}</TabsTrigger>
+                                    <TabsTrigger value="bedspace">{translations.bedspace}</TabsTrigger>
+                                    <TabsTrigger value="commercial">{translations.commercial}</TabsTrigger>
                                 </TabsList>
                             </Tabs>
                         </div>
                         <div className="flex items-center space-x-4">
-                            <Label>Furnishing</Label>
+                            <Label>{translations.furnishing}</Label>
                             <RadioGroup value={furnishing} onValueChange={(value) => setFurnishing(value as any)} className="flex space-x-2" disabled={!!smartSearchResults}>
                                 <div className="flex items-center space-x-1">
                                     <RadioGroupItem value="any" id="any"/>
-                                    <Label htmlFor="any">Any</Label>
+                                    <Label htmlFor="any">{translations.any}</Label>
                                 </div>
                                 <div className="flex items-center space-x-1">
                                     <RadioGroupItem value="furnished" id="furnished"/>
-                                    <Label htmlFor="furnished">Furnished</Label>
+                                    <Label htmlFor="furnished">{translations.furnished}</Label>
                                 </div>
                                 <div className="flex items-center space-x-1">
                                     <RadioGroupItem value="unfurnished" id="unfurnished"/>
-                                    <Label htmlFor="unfurnished">Unfurnished</Label>
+                                    <Label htmlFor="unfurnished">{translations.unfurnished}</Label>
                                 </div>
                             </RadioGroup>
                         </div>
@@ -189,13 +254,13 @@ export default function ListingsPage() {
                             }}
                             aria-label="View options"
                             >
-                                <ToggleGroupItem value="grid" aria-label="Grid view">
+                                <ToggleGroupItem value="grid" aria-label={translations.gridView}>
                                     <LayoutGrid className="h-5 w-5" />
                                 </ToggleGroupItem>
-                                <ToggleGroupItem value="list" aria-label="List view">
+                                <ToggleGroupItem value="list" aria-label={translations.listView}>
                                     <List className="h-5 w-5" />
                                 </ToggleGroupItem>
-                                <ToggleGroupItem value="map" aria-label="Map view">
+                                <ToggleGroupItem value="map" aria-label={translations.mapView}>
                                     <Map className="h-5 w-5" />
                                 </ToggleGroupItem>
                             </ToggleGroup>
@@ -207,15 +272,15 @@ export default function ListingsPage() {
 
         {role === 'owner' && (
             <div className="mb-6 flex items-center justify-between">
-                <h1 className="text-3xl font-bold tracking-tight">My Listings</h1>
+                <h1 className="text-3xl font-bold tracking-tight">{translations.myListings}</h1>
                 <ToggleGroup
                     type="single"
                     value={view}
                     onValueChange={(value) => { if (value) setView(value); }}
                     aria-label="View options"
                 >
-                    <ToggleGroupItem value="grid" aria-label="Grid view"><LayoutGrid className="h-5 w-5" /></ToggleGroupItem>
-                    <ToggleGroupItem value="list" aria-label="List view"><List className="h-5 w-5" /></ToggleGroupItem>
+                    <ToggleGroupItem value="grid" aria-label={translations.gridView}><LayoutGrid className="h-5 w-5" /></ToggleGroupItem>
+                    <ToggleGroupItem value="list" aria-label={translations.listView}><List className="h-5 w-5" /></ToggleGroupItem>
                 </ToggleGroup>
             </div>
         )}
@@ -224,9 +289,9 @@ export default function ListingsPage() {
         <div className="mb-6 flex items-center justify-between rounded-lg border border-primary/50 bg-primary/10 p-3">
             <div className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-primary" />
-                <p className="font-medium">Showing {smartSearchResults.length} smart search results</p>
+                <p className="font-medium">{translations.smartSearchResults(smartSearchResults.length)}</p>
             </div>
-            <Button variant="ghost" size="sm" onClick={clearSmartSearch}>Clear Search</Button>
+            <Button variant="ghost" size="sm" onClick={clearSmartSearch}>{translations.clearSearch}</Button>
         </div>
       )}
 
@@ -243,8 +308,8 @@ export default function ListingsPage() {
           />
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center text-white">
-              <h2 className="text-3xl font-bold">Map View Coming Soon</h2>
-              <p className="mt-2 text-lg text-muted-foreground">Interactive map feature is under development.</p>
+              <h2 className="text-3xl font-bold">{translations.mapComingSoon}</h2>
+              <p className="mt-2 text-lg text-muted-foreground">{translations.mapUnderDevelopment}</p>
             </div>
           </div>
         </div>
@@ -270,9 +335,9 @@ export default function ListingsPage() {
             </div>
           ) : (
             <div className="text-center py-20 rounded-lg bg-card/80 backdrop-blur-sm border border-border">
-              <h2 className="text-2xl font-bold">No Listings Found</h2>
-              <p className="text-muted-foreground mt-2">{smartSearchResults ? "Your smart search didn't return any results. Try a different query." : "Try adjusting your filters or check back later."}</p>
-               {role === 'owner' && <p className="text-muted-foreground mt-2">You haven't created any listings yet.</p>}
+              <h2 className="text-2xl font-bold">{translations.noListingsFound}</h2>
+              <p className="text-muted-foreground mt-2">{smartSearchResults ? translations.noListingsSmartSearch : translations.noListingsDescription}</p>
+               {role === 'owner' && <p className="text-muted-foreground mt-2">{translations.noListingsOwner}</p>}
             </div>
           )}
         </>
@@ -280,3 +345,5 @@ export default function ListingsPage() {
     </div>
   );
 }
+
+    

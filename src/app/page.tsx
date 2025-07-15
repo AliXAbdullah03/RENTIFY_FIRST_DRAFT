@@ -6,16 +6,69 @@ import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight, Car, Home as HomeIcon, Building, Search, BedDouble } from 'lucide-react';
 import { PropertyCard } from '@/components/property-card';
 import { usePropertyContext } from '@/context/property-context';
+import { useAuth } from '@/context/auth-context';
 
-const categories = [
-  { name: 'Apartments', icon: HomeIcon, href: '/listings?type=apartment' },
-  { name: 'Rooms', icon: BedDouble, href: '/listings?type=room' },
-  { name: 'Bedspace', icon: Building, href: '/listings?type=bedspace' },
-  { name: 'Commercial', icon: Car, href: '/listings?type=commercial' },
-];
+const t = {
+    en: {
+        heroTitle: "Find Your Next Rental in the Philippines",
+        heroSubtitle: "Discover a seamless rental experience. From condos in Manila to beach houses in Palawan, find exactly what you need with Rentify.",
+        startExploring: "Start Exploring",
+        browseByCategory: "Browse by Category",
+        browseSubtitle: "Find the perfect space that fits your needs.",
+        apartments: "Apartments",
+        rooms: "Rooms",
+        bedspace: "Bedspace",
+        commercial: "Commercial",
+        featuredListings: "Featured Listings",
+        featuredSubtitle: "Discover our most popular rentals across the archipelago.",
+        viewAllListings: "View All Listings",
+        howItWorks: "How It Works",
+        howItWorksSubtitle: "Renting on Rentify is simple, secure, and built for you.",
+        step1Title: "1. Find Your Place",
+        step1Desc: "Use our smart filters to browse thousands of listings from trusted owners.",
+        step2Title: "2. Connect & Secure",
+        step2Desc: "Contact owners, schedule viewings, and pay securely through our platform.",
+        step3Title: "3. Move In",
+        step3Desc: "Arrange collection and enjoy your new home. It's that easy!",
+        footer: "© {year} Rentify Philippines. All rights reserved."
+    },
+    tl: {
+        heroTitle: "Hanapin ang Iyong Susunod na Paupahan sa Pilipinas",
+        heroSubtitle: "Tuklasin ang isang tuluy-tuloy na karanasan sa pag-upa. Mula sa mga condo sa Maynila hanggang sa mga beach house sa Palawan, hanapin kung ano mismo ang kailangan mo sa Rentify.",
+        startExploring: "Simulan ang Pag-explore",
+        browseByCategory: "Mag-browse ayon sa Kategorya",
+        browseSubtitle: "Hanapin ang perpektong espasyo na angkop sa iyong mga pangangailangan.",
+        apartments: "Mga Apartment",
+        rooms: "Mga Kwarto",
+        bedspace: "Bedspace",
+        commercial: "Komersyal",
+        featuredListings: "Mga Itinatampok na Listing",
+        featuredSubtitle: "Tuklasin ang aming pinakasikat na mga paupahan sa buong kapuluan.",
+        viewAllListings: "Tingnan Lahat ng Listing",
+        howItWorks: "Paano Ito Gumagana",
+        howItWorksSubtitle: "Ang pag-upa sa Rentify ay simple, secure, at ginawa para sa iyo.",
+        step1Title: "1. Hanapin ang Iyong Lugar",
+        step1Desc: "Gamitin ang aming mga smart filter para mag-browse ng libu-libong listing mula sa mga pinagkakatiwalaang may-ari.",
+        step2Title: "2. Kumonekta at Mag-secure",
+        step2Desc: "Makipag-ugnayan sa mga may-ari, mag-iskedyul ng mga viewing, at magbayad nang secure sa pamamagitan ng aming platform.",
+        step3Title: "3. Lumipat",
+        step3Desc: "Ayusin ang pagkuha at i-enjoy ang iyong bagong tahanan. Ganoon lang kadali!",
+        footer: "© {year} Rentify Philippines. Lahat ng karapatan ay nakalaan."
+    }
+};
 
 export default function LandingPage() {
   const { properties } = usePropertyContext();
+  const { language } = useAuth();
+  const translations = t[language];
+  
+  const categories = [
+    { name: translations.apartments, icon: HomeIcon, href: '/listings?type=apartment' },
+    { name: translations.rooms, icon: BedDouble, href: '/listings?type=room' },
+    { name: translations.bedspace, icon: Building, href: '/listings?type=bedspace' },
+    { name: translations.commercial, icon: Car, href: '/listings?type=commercial' },
+  ];
+
   const featuredProperties = properties.filter(p => p.featured).slice(0, 4);
 
   return (
@@ -37,14 +90,14 @@ export default function LandingPage() {
             <div className="container relative z-10 px-4 md:px-6">
                 <div className="flex flex-col items-center space-y-4 text-center">
                     <h1 className="text-4xl font-extrabold tracking-tighter text-white sm:text-5xl md:text-6xl lg:text-7xl">
-                        Find Your Next Rental in the Philippines
+                        {translations.heroTitle}
                     </h1>
                     <p className="mx-auto max-w-[700px] text-neutral-200 md:text-xl">
-                        Discover a seamless rental experience. From condos in Manila to beach houses in Palawan, find exactly what you need with Rentify.
+                        {translations.heroSubtitle}
                     </p>
                     <Button size="lg" asChild>
                         <Link href="/listings">
-                            Start Exploring <ArrowRight className="ml-2 h-5 w-5" />
+                            {translations.startExploring} <ArrowRight className="ml-2 h-5 w-5" />
                         </Link>
                     </Button>
                 </div>
@@ -54,9 +107,9 @@ export default function LandingPage() {
         <section id="categories" className="w-full py-12 md:py-24 lg:py-32 bg-background">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="flex flex-col items-center justify-center space-y-4 text-center">
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Browse by Category</h2>
+                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">{translations.browseByCategory}</h2>
                     <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed">
-                        Find the perfect space that fits your needs.
+                        {translations.browseSubtitle}
                     </p>
                 </div>
                 <div className="mx-auto grid grid-cols-2 lg:grid-cols-4 gap-8 py-12">
@@ -78,9 +131,9 @@ export default function LandingPage() {
         <section id="featured" className="w-full py-12 md:py-24 lg:py-32 bg-secondary">
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Featured Listings</h2>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">{translations.featuredListings}</h2>
               <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed">
-                Discover our most popular rentals across the archipelago.
+                {translations.featuredSubtitle}
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -91,7 +144,7 @@ export default function LandingPage() {
              <div className="mt-12 text-center">
                 <Button variant="outline" asChild size="lg">
                     <Link href="/listings">
-                        View All Listings <ArrowRight className="ml-2 h-4 w-4" />
+                        {translations.viewAllListings} <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                 </Button>
             </div>
@@ -102,9 +155,9 @@ export default function LandingPage() {
         <section className="w-full py-12 md:py-24 lg:py-32">
             <div className="container mx-auto px-4 md:px-6">
                  <div className="flex flex-col items-center justify-center space-y-4 text-center">
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">How It Works</h2>
+                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">{translations.howItWorks}</h2>
                     <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed">
-                        Renting on Rentify is simple, secure, and built for you.
+                        {translations.howItWorksSubtitle}
                     </p>
                 </div>
                  <div className="mx-auto grid max-w-5xl items-start gap-8 py-12 sm:grid-cols-3">
@@ -114,8 +167,8 @@ export default function LandingPage() {
                                 <Search className="h-10 w-10"/>
                            </div>
                         </div>
-                        <h3 className="text-xl font-bold">1. Find Your Place</h3>
-                        <p className="text-muted-foreground">Use our smart filters to browse thousands of listings from trusted owners.</p>
+                        <h3 className="text-xl font-bold">{translations.step1Title}</h3>
+                        <p className="text-muted-foreground">{translations.step1Desc}</p>
                     </div>
                     <div className="grid gap-2 text-center">
                        <div className="flex justify-center items-center mb-4">
@@ -123,8 +176,8 @@ export default function LandingPage() {
                                 <HomeIcon className="h-10 w-10"/>
                            </div>
                         </div>
-                        <h3 className="text-xl font-bold">2. Connect & Secure</h3>
-                        <p className="text-muted-foreground">Contact owners, schedule viewings, and pay securely through our platform.</p>
+                        <h3 className="text-xl font-bold">{translations.step2Title}</h3>
+                        <p className="text-muted-foreground">{translations.step2Desc}</p>
                     </div>
                     <div className="grid gap-2 text-center">
                         <div className="flex justify-center items-center mb-4">
@@ -132,8 +185,8 @@ export default function LandingPage() {
                                 <ArrowRight className="h-10 w-10"/>
                            </div>
                         </div>
-                        <h3 className="text-xl font-bold">3. Move In</h3>
-                        <p className="text-muted-foreground">Arrange collection and enjoy your new home. It's that easy!</p>
+                        <h3 className="text-xl font-bold">{translations.step3Title}</h3>
+                        <p className="text-muted-foreground">{translations.step3Desc}</p>
                     </div>
                 </div>
             </div>
@@ -141,8 +194,10 @@ export default function LandingPage() {
 
       </main>
       <footer className="flex items-center justify-center w-full h-24 border-t">
-            <p className="text-xs text-muted-foreground">&copy; {new Date().getFullYear()} Rentify Philippines. All rights reserved.</p>
+            <p className="text-xs text-muted-foreground">{translations.footer.replace('{year}', new Date().getFullYear().toString())}</p>
       </footer>
     </div>
   );
 }
+
+    
