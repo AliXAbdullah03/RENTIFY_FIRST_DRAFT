@@ -16,13 +16,15 @@ import { properties, owners } from '@/lib/mock-data';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, MapPin } from 'lucide-react';
+import { CheckCircle, MapPin, AlertTriangle } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useToast } from '@/hooks/use-toast';
 
 export default function PropertyDetailPage({ params }: { params: { id: string } }) {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (isAuthenticated === false) {
@@ -67,6 +69,13 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
   }
 
   const owner = owners.find((o) => o.id === property.ownerId);
+
+  const handleReport = () => {
+    toast({
+        title: "Listing Reported",
+        description: "Thank you for your feedback. We will review this listing shortly.",
+    });
+  }
 
   return (
     <div className="container mx-auto max-w-5xl">
@@ -145,6 +154,10 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
               <a href={`mailto:${owner.email}`} className="w-full">
                 <Button variant="secondary" className="mt-4 w-full">Contact Host</Button>
               </a>
+               <Button variant="destructive" className="mt-2 w-full" onClick={handleReport}>
+                <AlertTriangle className="mr-2 h-4 w-4" />
+                Report Listing
+               </Button>
             </div>
           )}
         </div>
