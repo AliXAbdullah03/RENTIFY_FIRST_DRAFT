@@ -21,16 +21,20 @@ import { cn } from '@/lib/utils';
 import { CalendarIcon, Home, Building, BedDouble, Warehouse, PlusCircle, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
+import locationData from '@/lib/ph-locations.json';
 
 const listingFormSchema = z.object({
   title: z.string().min(5, { message: 'Title must be at least 5 characters long.' }),
   propertyType: z.enum(['apartment', 'room', 'bedspace', 'commercial'], {
     required_error: 'You need to select a property type.',
   }),
+  region: z.string({ required_error: 'Please select a region.'}),
+  province: z.string({ required_error: 'Please select a province.'}),
+  city: z.string({ required_error: 'Please select a city/municipality.'}),
+  barangay: z.string({ required_error: 'Please select a barangay.'}),
   monthlyRent: z.coerce.number().positive({ message: 'Monthly rent must be a positive number.' }),
   advance: z.coerce.number().min(0, { message: 'Advance payment cannot be negative.' }),
   deposit: z.coerce.number().min(0, { message: 'Deposit cannot be negative.' }),
-  location: z.string().min(5, { message: 'Location must be at least 5 characters long.' }),
   availableFrom: z.date({
     required_error: 'An availability date is required.',
   }),
@@ -41,6 +45,8 @@ const listingFormSchema = z.object({
 
 type ListingFormValues = z.infer<typeof listingFormSchema>;
 
+type LocationData = typeof locationData;
+
 export default function CreateListingPage() {
   const { isAuthenticated, role, user } = useAuth();
   const { addProperty } = usePropertyContext();
@@ -48,11 +54,9 @@ export default function CreateListingPage() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    if (isAuthenticated === false || (isAuthenticated && role !== 'owner')) {
-      router.push('/login');
-    }
-  }, [isAuthenticated, role, router]);
+  const [selectedRegion, setSelectedRegion] = useState<keyof LocationData | ''>('');
+  const [selectedProvince, setSelectedProvince] = useState('');
+  const [selectedCity, setSelectedCity] = useState('');
 
   const form = useForm<ListingFormValues>({
     resolver: zodResolver(listingFormSchema),
@@ -61,6 +65,12 @@ export default function CreateListingPage() {
       deposit: 0,
     },
   });
+
+  useEffect(() => {
+    if (isAuthenticated === false || (isAuthenticated && role !== 'owner')) {
+      router.push('/login');
+    }
+  }, [isAuthenticated, role, router]);
 
   const fileToDataUri = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -90,13 +100,15 @@ export default function CreateListingPage() {
         return;
     }
 
+    const fullLocation = `${data.barangay}, ${data.city}, ${Object.values((locationData as LocationData)[data.region as keyof LocationData].province_list)[0]}`;
+
     const newProperty = {
       id: `prop-${Date.now()}`,
       title: data.title,
       description: data.description,
       type: data.propertyType,
       price: data.monthlyRent,
-      location: data.location,
+      location: `${data.barangay}, ${data.city}`,
       images: photoDataUris.length > 0 ? photoDataUris : ['https://placehold.co/600x400.png'],
       featured: false,
       ownerId: 'owner-1', // Hardcoded for now
@@ -116,6 +128,35 @@ export default function CreateListingPage() {
     setIsSubmitting(false);
     router.push('/listings');
   }
+
+  const handleRegionChange = (value: string) => {
+    form.setValue('region', value);
+    setSelectedRegion(value as keyof LocationData);
+    form.resetField('province');
+    form.resetField('city');
+    form.resetField('barangay');
+    setSelectedProvince('');
+    setSelectedCity('');
+  };
+
+  const handleProvinceChange = (value: string) => {
+    form.setValue('province', value);
+    setSelectedProvince(value);
+    form.resetField('city');
+    form.resetField('barangay');
+    setSelectedCity('');
+  };
+
+   const handleCityChange = (value: string) => {
+    form.setValue('city', value);
+    setSelectedCity(value);
+    form.resetField('barangay');
+  };
+
+  const provinces = selectedRegion ? Object.keys((locationData as LocationData)[selectedRegion].province_list) : [];
+  const cities = selectedRegion && selectedProvince ? Object.keys((locationData as LocationData)[selectedRegion].province_list[selectedProvince].municipality_list) : [];
+  const barangays = selectedRegion && selectedProvince && selectedCity ? (locationData as LocationData)[selectedRegion].province_list[selectedProvince].municipality_list[selectedCity].barangay_list : [];
+
 
   if (!isAuthenticated || role !== 'owner') {
     return (
@@ -175,7 +216,6 @@ export default function CreateListingPage() {
                 )}
               />
 
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <FormField
                   control={form.control}
                   name="propertyType"
@@ -199,23 +239,97 @@ export default function CreateListingPage() {
                     </FormItem>
                   )}
                 />
+
+            </CardContent>
+          </Card>
+           <Card>
+            <CardHeader>
+                <CardTitle>Location</CardTitle>
+                <CardDescription>Specify the location of your property using the dropdowns below.</CardDescription>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 gap-6 md:grid-cols-2">
                  <FormField
                     control={form.control}
-                    name="location"
+                    name="region"
                     render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Location</FormLabel>
-                        <FormControl>
-                            <Input placeholder="e.g., Poblacion, Makati City" {...field} />
-                        </FormControl>
-                        <FormDescription>Be as specific as possible.</FormDescription>
-                        <FormMessage />
+                            <FormLabel>Region</FormLabel>
+                            <Select onValueChange={handleRegionChange} defaultValue={field.value}>
+                                <FormControl>
+                                    <SelectTrigger><SelectValue placeholder="Select a region" /></SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {Object.entries(locationData).map(([regionCode, regionDetails]) => (
+                                        <SelectItem key={regionCode} value={regionCode}>{regionDetails.region_name}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
                         </FormItem>
                     )}
                 />
-              </div>
+                 <FormField
+                    control={form.control}
+                    name="province"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Province</FormLabel>
+                            <Select onValueChange={handleProvinceChange} value={field.value} disabled={!selectedRegion}>
+                                <FormControl>
+                                    <SelectTrigger><SelectValue placeholder="Select a province" /></SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {provinces.map(province => (
+                                        <SelectItem key={province} value={province}>{province}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                 <FormField
+                    control={form.control}
+                    name="city"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>City / Municipality</FormLabel>
+                            <Select onValueChange={handleCityChange} value={field.value} disabled={!selectedProvince}>
+                                <FormControl>
+                                    <SelectTrigger><SelectValue placeholder="Select a city/municipality" /></SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                     {cities.map(city => (
+                                        <SelectItem key={city} value={city}>{city}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                 <FormField
+                    control={form.control}
+                    name="barangay"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Barangay</FormLabel>
+                            <Select onValueChange={field.onChange} value={field.value} disabled={!selectedCity}>
+                                <FormControl>
+                                    <SelectTrigger><SelectValue placeholder="Select a barangay" /></SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {barangays.map(barangay => (
+                                        <SelectItem key={barangay} value={barangay}>{barangay}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
             </CardContent>
-          </Card>
+           </Card>
 
           <Card>
             <CardHeader>
@@ -375,5 +489,3 @@ export default function CreateListingPage() {
     </div>
   );
 }
-
-    

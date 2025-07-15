@@ -1,0 +1,58 @@
+
+{
+  "NCR": {
+    "region_name": "National Capital Region (NCR)",
+    "province_list": {
+      "Metro Manila": {
+        "municipality_list": {
+          "Makati City": {
+            "barangay_list": ["Poblacion", "Bel-Air", "Dasmarinas Village", "Forbes Park", "Urdaneta"]
+          },
+          "Quezon City": {
+            "barangay_list": ["Diliman", "Cubao", "Novaliches", "Project 6", "Santa Mesa Heights"]
+          },
+          "Taguig City": {
+            "barangay_list": ["Bonifacio Global City", "Ususan", "Pinagsama", "Signal Village"]
+          }
+        }
+      }
+    }
+  },
+  "03": {
+    "region_name": "Region III (Central Luzon)",
+    "province_list": {
+      "Pampanga": {
+        "municipality_list": {
+          "Angeles City": {
+            "barangay_list": ["Balibago", "Salapungan", "Anunas", "Malabanias"]
+          },
+          "Mabalacat City": {
+            "barangay_list": ["Dau", "Lakandula", "Mabiga", "Paralay"]
+          }
+        }
+      },
+      "Tarlac": {
+        "municipality_list": {
+          "Tarlac City": {
+            "barangay_list": ["San Roque", "San Vicente", "Tariji", "Tibag"]
+          }
+        }
+      }
+    }
+  },
+  "07": {
+    "region_name": "Region VII (Central Visayas)",
+    "province_list": {
+      "Cebu": {
+        "municipality_list": {
+          "Cebu City": {
+            "barangay_list": ["Lahug", "Guadalupe", "Tisa", "Mabolo"]
+          },
+          "Mandaue City": {
+            "barangay_list": ["Banilad", "Cabancalan", "Subangdaku", "Tipolo"]
+          }
+        }
+      }
+    }
+  }
+}
