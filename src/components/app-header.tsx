@@ -11,6 +11,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
@@ -23,6 +25,7 @@ import {
   LogOut,
   User as UserIcon,
   MessageSquare,
+  Globe
 } from 'lucide-react';
 import { Logo } from './logo';
 import { cn } from '@/lib/utils';
@@ -30,6 +33,7 @@ import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/context/auth-context';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from './ui/badge';
+import React from 'react';
 
 const loggedOutNavItems: any[] = [
   // No items for logged out users in the main nav
@@ -51,6 +55,7 @@ const ownerNavItems = [
 export function AppHeader() {
   const pathname = usePathname();
   const { user, role, logout } = useAuth();
+  const [language, setLanguage] = React.useState("en");
   
   const navItems = role === 'renter' ? renterNavItems : (role === 'owner' ? ownerNavItems : loggedOutNavItems);
 
@@ -84,6 +89,22 @@ export function AppHeader() {
       </div>
 
       <div className="ml-auto flex items-center gap-2 md:gap-4">
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon">
+                    <Globe className="h-5 w-5" />
+                    <span className="sr-only">Change language</span>
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Select Language</DropdownMenuLabel>
+                <DropdownMenuRadioGroup value={language} onValueChange={setLanguage}>
+                    <DropdownMenuRadioItem value="en">English</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="tl">Tagalog / Taglish</DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+        </DropdownMenu>
+
         {user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
